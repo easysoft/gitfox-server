@@ -1,8 +1,10 @@
 package yaml
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"strings"
 )
 
 type (
@@ -21,9 +23,25 @@ type (
 	}
 )
 
+// errWhenClause 是无法识别的 when 写法统一返回的错误。
+var errWhenClause = errors.New("failed to unmarshal when clause")
+
 // UnmarshalJSON implements the unmarshal interface.
 func (v *When) UnmarshalJSON(data []byte) error {
-	// First try to parse as a complex object that might contain changes field
+	// null / 空白内容不包含任何条件信息，视为无法识别。
+	if trimmed := bytes.TrimSpace(data); len(trimmed) == 0 || bytes.Equal(trimmed, []byte("null")) {
+		return errWhenClause
+	}
+
+	// 解析表达式或运行策略字符串。
+	if err := json.Unmarshal(data, &v.Eval); err == nil {
+		if strings.TrimSpace(v.Eval) == "" {
+			return errWhenClause
+		}
+		return nil
+	}
+
+	// 解析对象形式：只识别 eval / changes。带 cond 键的对象不在支持范围内
 	type whenTemp struct {
 		Eval    string   `json:"eval,omitempty"`
 		Changes []string `json:"changes,omitempty"`
@@ -32,35 +50,27 @@ func (v *When) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &tmp); err == nil {
 		v.Eval = tmp.Eval
 		v.Changes = tmp.Changes
-		// If only changes field was set, return early
-		if len(v.Changes) > 0 || v.Eval != "" {
+		if strings.TrimSpace(v.Eval) != "" || len(v.Changes) > 0 {
 			return nil
 		}
 	}
 
-	// parse the expression string.
-	if v.Eval == "" { // Only try to parse as string if not already parsed above
-		if err := json.Unmarshal(data, &v.Eval); err == nil {
-			return nil
-		}
-	} else if v.Eval != "" {
-		// 如果已经解析到了Eval字段值，直接返回
+	// 解析声明式 when 子句数组。
+	var conds []map[string]*Expr
+	if err := json.Unmarshal(data, &conds); err == nil && len(conds) > 0 {
+		v.Cond = conds
 		return nil
 	}
 
-	// parse the declarative when clause array.
-	if err := json.Unmarshal(data, &v.Cond); err == nil {
+	// 解析声明式 when 子句。
+	cond := map[string]*Expr{}
+	if err := json.Unmarshal(data, &cond); err == nil && len(cond) > 0 {
+		v.Cond = append(v.Cond, cond)
 		return nil
 	}
 
-	// parse the declarative when clause.
-	vv := map[string]*Expr{}
-	if err := json.Unmarshal(data, &vv); err == nil {
-		v.Cond = append(v.Cond, vv)
-		return nil
-	}
-
-	return errors.New("failed to unmarshal when clause")
+	// 走到这里说明是无法识别的 when 写法返回错误让整份配置解析失败
+	return errWhenClause
 }
 
 // MarshalJSON implements the marshal interface.

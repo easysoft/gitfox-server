@@ -8,10 +8,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/easysoft/gitfox-community/app/constant"
 	"github.com/easysoft/gitfox-community/app/service/pipeline"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 	harness "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/engine"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
@@ -359,22 +361,11 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 				step_.Privileged = c.isPrivileged(step_)
 				step_.ID = fmt.Sprintf("%s_%d", step_.ID, args.Build.ID)
 
-				// if src.When != nil {
-				// 	// 处理when.eval条件
-				// 	if when := src.When.Eval; when != "" {
-				// 		onSuccess, onFailure, _ := evalif(when, inputs)
-				// 		switch {
-				// 		case onSuccess && onFailure:
-				// 			step_.RunPolicy = engine.RunAlways
-				// 		case onSuccess:
-				// 			step_.RunPolicy = engine.RunOnSuccess
-				// 		case onFailure:
-				// 			step_.RunPolicy = engine.RunOnFailure
-				// 		default:
-				// 			step_.RunPolicy = engine.RunNever
-				// 		}
-				// 	}
-				// }
+				// 根据 step 级 when 条件计算运行策略；条件无法求值时让整份配置编译失败
+				if err := applyStepRunPolicy(ctx, step_, src.When, inputs); err != nil {
+					return nil, err
+				}
+
 				spec.Steps = append(spec.Steps, step_)
 			}
 		}
@@ -564,6 +555,52 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 	}
 
 	return spec, nil
+}
+
+// applyStepRunPolicy 根据 step 的 when 条件设置容器运行策略。
+// 表达式无法求值时返回错误：与 stage 级 when 的处理保持一致，让该 stage 直接失败。
+func applyStepRunPolicy(ctx context.Context, step *engine.Step, when *harness.When, inputs map[string]interface{}) error {
+	if when == nil {
+		return nil
+	}
+
+	code := strings.TrimSpace(when.Eval)
+	if code == "" {
+		return nil
+	}
+
+	// 直接填写运行策略值（always/onSuccess/onFailure）时无需做表达式求值。
+	if slices.Contains(constant.RunPolicyList, code) {
+		switch constant.RunPolicy(code) {
+		case constant.RunPolicyAlways:
+			step.RunPolicy = engine.RunAlways
+		case constant.RunPolicyOnFailure:
+			step.RunPolicy = engine.RunOnFailure
+		case constant.RunPolicyOnSuccess:
+			step.RunPolicy = engine.RunOnSuccess
+		}
+		return nil
+	}
+
+	onSuccess, onFailure, err := evalif(code, inputs)
+	if err != nil {
+		logger.GetLogger(ctx).Errorf("[pipeline]: cannot evaluate step when condition %q: %v", code, err)
+		return fmt.Errorf("cannot evaluate step when condition %q: %w", code, err)
+	}
+
+	switch {
+	case onSuccess && onFailure:
+		step.RunPolicy = engine.RunAlways
+	case onSuccess:
+		step.RunPolicy = engine.RunOnSuccess
+	case onFailure:
+		step.RunPolicy = engine.RunOnFailure
+	default:
+		// (false, false)：条件不成立，跳过该 step
+		step.RunPolicy = engine.RunNever
+	}
+
+	return nil
 }
 
 // isPrivileged checks whether the privileged flag should be set to true for the step or not.

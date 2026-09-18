@@ -243,12 +243,12 @@ func (t *teardown) cancelDownstream(
 			continue
 		}
 
-		var skip bool
-		if failed && s.RunPolicy != string(constant.RunPolicyOnFailure) {
-			skip = true
-		}
-		if !failed && s.RunPolicy != string(constant.RunPolicyOnSuccess) {
-			skip = true
+		// 根据阶段运行策略决定是否跳过。
+		skip := failed
+		if s.RunPolicy == string(constant.RunPolicyAlways) {
+			skip = false
+		} else if s.RunPolicy == string(constant.RunPolicyOnFailure) {
+			skip = !failed
 		}
 		if !skip {
 			continue

@@ -27,6 +27,7 @@ import (
 	specresolver "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/resolver"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/script"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 var _ Triggerer = (*triggerer)(nil)
@@ -152,6 +153,14 @@ func (t *triggerer) Trigger(
 		)
 	}
 
+	// 所有阶段都被 when 条件跳过时直接结束 execution，避免流水线一直停留在 pending。
+	if allStagesSkipped(stages) {
+		if err := t.finishSkippedExecution(ctx, execution); err != nil {
+			log.Errorf("[trigger]: cannot finish skipped execution: %s", err)
+		}
+		return execution, nil
+	}
+
 	for _, stage := range stages {
 		if stage.Status != constant.CIStatusPending {
 			continue
@@ -165,6 +174,43 @@ func (t *triggerer) Trigger(
 	}
 
 	return execution, nil
+}
+
+// allStagesSkipped 判断是否所有阶段都被 when 条件跳过。
+func allStagesSkipped(stages []*stageModel.Stage) bool {
+	for _, stage := range stages {
+		if stage.Status != constant.CIStatusSkipped {
+			return false
+		}
+	}
+	return len(stages) > 0
+}
+
+// finishSkippedExecution 把所有阶段都被跳过的 execution 直接置为 skipped，
+// 并同步流水线的最近执行结果。
+func (t *triggerer) finishSkippedExecution(ctx context.Context, execution *executionModel.Execution) error {
+	log := logger.GetLogger(ctx).With("execution.id", execution.ID)
+
+	now := datetime.NowLocalTime()
+	execution.Status = constant.CIStatusSkipped
+	execution.FinishedDate = now
+	if err := t.executionStore.Update(ctx, execution); err != nil {
+		return err
+	}
+
+	pipeline, err := t.pipelineService.GetPipelineByID(ctx, int64(execution.PipelineID))
+	if err != nil {
+		log.Warnw("trigger: cannot find pipeline for skipped execution", "error", err)
+		return nil
+	}
+	pipeline.LastExec = execution.FinishedDate
+	pipeline.LastResult = string(execution.Status)
+	if err := t.pipelineService.UpdatePipeline(ctx, pipeline); err != nil {
+		log.Warnw("trigger: cannot update pipeline result for skipped execution", "error", err)
+	}
+
+	log.Info("trigger: all stages are skipped, execution finished as skipped")
+	return nil
 }
 
 // parseV1Stages tries to parse the yaml into a list of stages and returns an error
@@ -234,6 +280,8 @@ func parseV1Stages(
 			switch stage.Spec.(type) {
 			case *v1yaml.StageCI:
 				runPolicy := string(constant.RunPolicyOnSuccess)
+				// when 条件在成功、失败状态下都不成立时，该阶段被跳过。
+				skipStage := false
 				if stage.When != nil {
 					if when := stage.When.Eval; when != "" {
 						trimmedWhen := strings.TrimSpace(when)
@@ -242,7 +290,7 @@ func parseV1Stages(
 							runPolicy = trimmedWhen
 						} else {
 							// Evaluate as expression
-							onSuccess, onFailure, err := script.EvalWhen(when, inputParams)
+							onSuccess, onFailure, err := script.EvalWhen(trimmedWhen, inputParams)
 							if err != nil {
 								return nil, fmt.Errorf("could not resolve when condition for stage: %w", err)
 							}
@@ -253,6 +301,9 @@ func parseV1Stages(
 								runPolicy = string(constant.RunPolicyOnSuccess)
 							case onFailure:
 								runPolicy = string(constant.RunPolicyOnFailure)
+							default:
+								// (false, false)：条件不成立，整个阶段跳过
+								skipStage = true
 							}
 						}
 					}
@@ -266,6 +317,10 @@ func parseV1Stages(
 				// If the stage has no dependencies, it can be picked up for execution.
 				if len(dependsOn) == 0 {
 					status = constant.CIStatusPending
+				}
+				if skipStage {
+					// 阶段级跳过：以 skipped 状态入库，不参与调度，也不再成为下游阶段的依赖。
+					status = constant.CIStatusSkipped
 				}
 				temp := &stageModel.Stage{
 					ExecutionID: execution.ID,
@@ -299,7 +354,13 @@ func parseV1Stages(
 					}
 				}
 
-				prevStage = temp.Code
+				if skipStage {
+					now := datetime.NowLocalTime()
+					temp.Started = now
+					temp.Finished = now
+				} else {
+					prevStage = temp.Code
+				}
 				stages = append(stages, temp)
 			default:
 				return nil, fmt.Errorf("only CI and template stages are supported in v1 at the moment")
