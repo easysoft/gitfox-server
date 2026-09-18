@@ -5,8 +5,8 @@ package repo
 import (
 	"context"
 
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	"github.com/easysoft/gitfox-community/pkg/database"
 )
 
 type RepoPageResult = *database.PageResult[*repoModel.Repo]
@@ -20,5 +20,6 @@ type Interface interface {
 	HardDelete(ctx context.Context, id uint) error
 	GetBySpaceAndIdentifier(ctx context.Context, spaceID uint, identifier string) (*repoModel.Repo, error)
 	List(ctx context.Context, filter repoModel.ReqFilter) (RepoPageResult, error)
+	ListAllGitRepos(ctx context.Context) ([]*repoModel.Repo, error)
 	GetMigrate(ctx context.Context) ([]*repoModel.Repo, error)
 }

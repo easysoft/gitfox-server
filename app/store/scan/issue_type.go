@@ -3,9 +3,9 @@ package scan
 import (
 	"encoding/json"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	scanModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/scan"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	scanModel "github.com/easysoft/gitfox-community/app/model/scan"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 	"gorm.io/gorm"
 )
 
@@ -22,6 +22,7 @@ type ScanIssue struct {
 	OldCode         string                        `gorm:"column:oldCode"`
 	NewCode         string                        `gorm:"column:newCode"`
 	PpmID           int64                         `gorm:"column:ppmID"`
+	ExecutionID     int64                         `gorm:"column:pipelineExecutionID"`
 	RepoID          int64                         `gorm:"column:repoID"`
 	RepoBranch      string                        `gorm:"column:repoBranch"`
 	CreatedByTaskID int64                         `gorm:"column:createdByTaskID"`
@@ -83,6 +84,7 @@ type issueJoin struct {
 	OldCode         string                        `gorm:"column:oldCode"`
 	NewCode         string                        `gorm:"column:newCode"`
 	PpmID           int64                         `gorm:"column:ppmID"`
+	ExecutionID     int64                         `gorm:"column:pipelineExecutionID"`
 	PpmTitle        string                        `gorm:"column:ppmTitle"`
 	RepoID          int64                         `gorm:"column:repoID"`
 	RepoBranch      string                        `gorm:"column:repoBranch"`
@@ -130,6 +132,7 @@ func mapIssueJoinToModel(in *issueJoin) *scanModel.ScanIssueInfo {
 		OldCode:         in.OldCode,
 		NewCode:         in.NewCode,
 		PpmID:           in.PpmID,
+		ExecutionID:     in.ExecutionID,
 		PpmTitle:        in.PpmTitle,
 		RepoID:          in.RepoID,
 		RepoBranch:      in.RepoBranch,

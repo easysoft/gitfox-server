@@ -5,11 +5,11 @@ import (
 	stderr "errors"
 	"fmt"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/paths"
+	"github.com/easysoft/gitfox-community/pkg/paths"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/app/constant"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	"github.com/easysoft/gitfox-community/pkg/database"
 	"gorm.io/gorm"
 )
 
@@ -241,6 +241,27 @@ func (s *Store) GetMigrate(ctx context.Context) ([]*repoModel.Repo, error) {
 	if err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}
+	// 转换为 model 类型
+	repoModels := make([]*repoModel.Repo, len(repos))
+	for i, repo := range repos {
+		repoModels[i] = mapToModel(*repo)
+	}
+
+	return repoModels, nil
+}
+
+// ListAllGitRepos 一次性查询所有未删除的git代码库。
+func (s *Store) ListAllGitRepos(ctx context.Context) ([]*repoModel.Repo, error) {
+	var repos []*Repository
+	err := s.db.WithContext(ctx).
+		Where("deleted = ?", 0).
+		Where("scmType = ?", "git").
+		Order("id ASC").
+		Find(&repos).Error
+	if err != nil {
+		return nil, database.ProcessSQLErrorf(ctx, err)
+	}
+
 	// 转换为 model 类型
 	repoModels := make([]*repoModel.Repo, len(repos))
 	for i, repo := range repos {
