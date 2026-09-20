@@ -5,6 +5,7 @@ import (
 
 	pipelineModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/pipeline"
 	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
+	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/sqladapter"
 )
 
 // CreatePlugin 创建插件
@@ -119,10 +120,11 @@ type PluginWithGroupRow struct {
 func (s *Store) GetAllWithGroup(ctx context.Context) ([]*pipelineModel.PluginWithGroup, error) {
 	var rows []PluginWithGroupRow
 
-	// 使用 JOIN 关联查询插件和分组
-	err := s.db.WithContext(ctx).
-		Table("ops_plugins p").
-		Select("p.*, g.name as group_name, g.desc as group_desc").
+	// 使用 JOIN 关联查询插件和分组；desc 为达梦保留字，按方言引用
+	db := s.db.WithContext(ctx)
+	a := sqladapter.GetAdapterByDB(db)
+	err := db.Table("ops_plugins p").
+		Select("p.*, g.name as group_name, " + a.QuoteIdentifier("g.desc") + " as group_desc").
 		Joins("LEFT JOIN ops_plugin_group g ON p.groupID = g.id").
 		Where("p.deleted = 0 AND g.deleted = 0").
 		Find(&rows).Error

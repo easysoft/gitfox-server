@@ -6,6 +6,7 @@ import (
 	model "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/artifact"
 	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
 	pkgErrors "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
+	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/sqladapter"
 
 	"github.com/guregu/null"
 	"gorm.io/gorm"
@@ -192,7 +193,9 @@ func (c *assets) SearchExtendBlob(ctx context.Context, options ...SearchOption) 
 
 	var rows []*assetExtendRow
 	result := db.Model(&ArtifactAsset{}).
-		Select("ops_artifact_assets.*, ops_artifact_blobs.storageID, ops_artifact_blobs.ref, ops_artifact_blobs.size").
+		Select("ops_artifact_assets.*, ops_artifact_blobs.storageID, " +
+			sqladapter.GetAdapterByDB(db).QuoteIdentifier("ops_artifact_blobs.ref") +
+			", ops_artifact_blobs.size").
 		Joins("left join ops_artifact_blobs on ops_artifact_blobs.id = ops_artifact_assets.blobID").
 		Order("id asc").Scan(&rows)
 	if result.Error != nil {

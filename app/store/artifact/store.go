@@ -9,6 +9,7 @@ import (
 	model "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/artifact"
 	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
 	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
+	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/sqladapter"
 
 	"gorm.io/gorm"
 )
@@ -54,16 +55,22 @@ func (s *Store) MetaAssets() MetaAssetInterface { return s.metaAssets }
 func (s *Store) Blobs() BlobInterface           { return s.blobs }
 func (s *Store) Nodes() TreeNodeInterface       { return s.nodes }
 
+// assetListSelectColumns 返回资产列表 SELECT 字段；ref 为达梦保留字，按方言引用。
+func assetListSelectColumns(db *gorm.DB) string {
+	return `ops_artifact_assets.id,ops_artifact_assets.basename,ops_artifact_assets.contentType,
+			ops_artifact_assets.checksum,
+			ops_artifact_assets.createdBy,ops_artifact_assets.createdDate,
+			ops_artifact_assets.editedBy,ops_artifact_assets.editedDate,
+			ops_artifact_blobs.size,` + sqladapter.GetAdapterByDB(db).QuoteIdentifier("ops_artifact_blobs.ref")
+}
+
 // ListAssets 查询资产
 func (s *Store) ListAssets(ctx context.Context, VersionID int64) ([]*model.ArtifactAssetsRes, error) {
 	// ListAssets 拉取 version 下未删除资产，并联表补齐 blob 大小与引用信息。
 	result := make([]*model.ArtifactAssetsRes, 0)
-	stmt := s.db.WithContext(ctx).Model(&ArtifactAsset{}).
-		Select(`ops_artifact_assets.id,ops_artifact_assets.basename,ops_artifact_assets.contentType,
-			ops_artifact_assets.checksum,
-			ops_artifact_assets.createdBy,ops_artifact_assets.createdDate,
-			ops_artifact_assets.editedBy,ops_artifact_assets.editedDate,
-			ops_artifact_blobs.size,ops_artifact_blobs.ref`).
+	db := s.db.WithContext(ctx)
+	stmt := db.Model(&ArtifactAsset{}).
+		Select(assetListSelectColumns(db)).
 		Joins(`LEFT JOIN ops_artifact_blobs on ops_artifact_assets.blobID=ops_artifact_blobs.id`).
 		Where(`ops_artifact_assets.versionID = ?`, VersionID).
 		Where(`ops_artifact_assets.deleted = 0`)
@@ -181,12 +188,9 @@ func applyAssetListCommonFilters(stmt *gorm.DB, req *model.ListAssetReq) *gorm.D
 
 // assetListBaseStmt 资产列表基础语句：仅 SELECT 字段 + LEFT JOIN blobs 拿大小/引用。
 func (s *Store) assetListBaseStmt(ctx context.Context) *gorm.DB {
-	return s.db.WithContext(ctx).Model(&ArtifactAsset{}).
-		Select(`ops_artifact_assets.id,ops_artifact_assets.basename,ops_artifact_assets.contentType,
-			ops_artifact_assets.checksum,
-			ops_artifact_assets.createdBy,ops_artifact_assets.createdDate,
-			ops_artifact_assets.editedBy,ops_artifact_assets.editedDate,
-			ops_artifact_blobs.size,ops_artifact_blobs.ref`).
+	db := s.db.WithContext(ctx)
+	return db.Model(&ArtifactAsset{}).
+		Select(assetListSelectColumns(db)).
 		Joins(`LEFT JOIN ops_artifact_blobs on ops_artifact_assets.blobID=ops_artifact_blobs.id`)
 }
 
@@ -257,12 +261,9 @@ func assetListSortColumn(sortField string) string {
 func (s *Store) ListGroupAssets(ctx context.Context, groupID int64) ([]*model.ArtifactAssetsRes, error) {
 	// ListGroupAssets 面向 generic/raw group 级资产，查询逻辑与 version 资产分开。
 	var dst []*model.ArtifactAssetsRes
-	stmt := s.db.WithContext(ctx).Model(&ArtifactAsset{}).
-		Select(`ops_artifact_assets.id,ops_artifact_assets.basename,ops_artifact_assets.contentType,
-			ops_artifact_assets.checksum,
-			ops_artifact_assets.createdBy,ops_artifact_assets.createdDate,
-			ops_artifact_assets.editedBy,ops_artifact_assets.editedDate,
-			ops_artifact_blobs.size,ops_artifact_blobs.ref`).
+	db := s.db.WithContext(ctx)
+	stmt := db.Model(&ArtifactAsset{}).
+		Select(assetListSelectColumns(db)).
 		Joins(`LEFT JOIN ops_artifact_blobs on ops_artifact_assets.blobID=ops_artifact_blobs.id`).
 		Where(`ops_artifact_assets.groupID = ?`, groupID).
 		Where(`ops_artifact_assets.deleted = 0`)
@@ -299,12 +300,9 @@ func parseAssetsRes(ctx context.Context, items []*model.ArtifactAssetsRes) {
 func (s *Store) GetAsset(ctx context.Context, assetID int64) (*model.ArtifactAssetsRes, error) {
 	// GetAsset 读取单个资产详情，并把字符串字段反序列化为结构化响应。
 	var result model.ArtifactAssetsRes
-	stmt := s.db.WithContext(ctx).Model(&ArtifactAsset{}).
-		Select(`ops_artifact_assets.id,ops_artifact_assets.basename,ops_artifact_assets.contentType,
-			ops_artifact_assets.checksum,
-			ops_artifact_assets.createdBy,ops_artifact_assets.createdDate,
-			ops_artifact_assets.editedBy,ops_artifact_assets.editedDate,
-			ops_artifact_blobs.size,ops_artifact_blobs.ref`).
+	db := s.db.WithContext(ctx)
+	stmt := db.Model(&ArtifactAsset{}).
+		Select(assetListSelectColumns(db)).
 		Joins(`LEFT JOIN ops_artifact_blobs on ops_artifact_assets.blobID=ops_artifact_blobs.id`).
 		Where(`ops_artifact_assets.id = ?`, assetID).
 		Where(`ops_artifact_assets.deleted = 0`)
