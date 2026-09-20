@@ -19,6 +19,8 @@ vars:
   GIT_COMMIT:
     sh: git rev-parse --short HEAD 2>/dev/null || echo "unknown"
 
+  RELEASE: 'false'
+
   VERSION_PKG: gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/common
   LDFLAGS: "-w -s \
     -X '{{.VERSION_PKG}}.Version={{.BUILD_RELEASE}}' \
@@ -278,7 +280,12 @@ tasks:
       DOCKER_TAG_DATE:
         sh: date '+%Y%m%d'
       TAG:
-        sh: echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
+        sh: |
+          if [ "{{.RELEASE}}" = "true" ]; then
+            echo "{{.BUILD_RELEASE}}" | tr '/' '-'
+          else
+            echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
+          fi
       PLATFORMS: 'linux/amd64,linux/arm64'
       DOCKERFILE: 'deploy/Dockerfile'
       BUILDER: 'multiarch'
@@ -294,7 +301,12 @@ tasks:
       DOCKER_TAG_DATE:
         sh: date '+%Y%m%d'
       TAG:
-        sh: echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
+        sh: |
+          if [ "{{.RELEASE}}" = "true" ]; then
+            echo "{{.BUILD_RELEASE}}" | tr '/' '-'
+          else
+            echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
+          fi
       PLATFORM: 'linux/amd64'
       DOCKERFILE: 'deploy/Dockerfile'
       BUILDER: 'multiarch'
