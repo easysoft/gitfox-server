@@ -141,7 +141,7 @@ func (t *teardown) do(ctx context.Context, stage *stageModel.StageWithSteps) err
 		return err
 	}
 
-	err = t.cancelDownstream(ctx, stages)
+	err = t.cancelDownstream(ctx, execution, stages)
 	if err != nil {
 		log.Errorw("manager: cannot cancel downstream builds",
 			"error", err,
@@ -227,6 +227,7 @@ func (t *teardown) do(ctx context.Context, stage *stageModel.StageWithSteps) err
 //nolint:gocognit // refactor if needed
 func (t *teardown) cancelDownstream(
 	ctx context.Context,
+	execution *executionModel.Execution,
 	stages []*stageModel.StageWithSteps,
 ) error {
 	failed := false
@@ -265,9 +266,12 @@ func (t *teardown) cancelDownstream(
 			"stage.depends_on", strings.Join(s.Depends, ","),
 		)
 
-		log.Debug("manager: skipping step")
+		// when 条件推导出的运行策略与流水线当前状态不匹配时，该阶段被跳过。
+		skipMessage := fmt.Sprintf("执行条件：%s，运算结果：true，跳过当前阶段。", s.RunPolicy)
 
 		s.Status = constant.CIStatusSkipped
+		// 跳过：状态记为 skipped，跳过原因写入 errorLog 返回给前端。
+		s.ErrorLog = skipMessage
 		s.Started = datetime.NowLocalTime()
 		s.Finished = datetime.NowLocalTime()
 		err := t.StageSvc.Update(noContext, &s.Stage)
@@ -277,8 +281,27 @@ func (t *teardown) cancelDownstream(
 			)
 			errs = multierror.Append(errs, err)
 		}
+		// 阶段被跳过时，阶段内的任务也记为 skipped。
+		if err := t.createSkippedSteps(ctx, execution, &s.Stage); err != nil {
+			log.Errorw("manager: cannot create skipped steps", "error", err)
+		}
 	}
 	return errs
+}
+
+// createSkippedSteps 把被跳过的阶段内的任务记为 skipped。
+func (t *teardown) createSkippedSteps(ctx context.Context, execution *executionModel.Execution, stage *stageModel.Stage) error {
+	file, err := t.PipelineSvc.GetPipelineContent(ctx, int64(execution.PipelineID))
+	if err != nil {
+		return err
+	}
+
+	stepsByStage, err := StageStepsFromYAML(file.Data, PipelineLookupFunc(ctx, t.PipelineSvc))
+	if err != nil {
+		return err
+	}
+	records := SkippedStepRecords(stepsByStage[stage.Code], stage.ID, execution.ID)
+	return CreateSkippedSteps(ctx, t.StepSvc, records)
 }
 
 func isexecutionComplete(stages []*stageModel.StageWithSteps) bool {

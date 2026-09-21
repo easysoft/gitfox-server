@@ -6,6 +6,7 @@ package runtime
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/engine"
@@ -14,8 +15,8 @@ import (
 	"github.com/drone/drone-go/drone"
 	"github.com/drone/runner-go/environ"
 	"github.com/drone/runner-go/livelog/extractor"
-	"github.com/easysoft/gitfox-community/pkg/logger"
 	"github.com/drone/runner-go/pipeline"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 	"github.com/hashicorp/go-multierror"
 	"github.com/natessilva/dag"
 	"golang.org/x/sync/semaphore"
@@ -204,10 +205,10 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 	case step.RunPolicy == engine.RunAlways:
 		break
 	case step.RunPolicy == engine.RunOnFailure && state.Failed() == false:
-		state.Skip(step.Name)
+		e.skipStepByWhen(state, step, log)
 		return e.reporter.ReportStep(noContext, state, step.Name)
 	case step.RunPolicy == engine.RunOnSuccess && state.Failed():
-		state.Skip(step.Name)
+		e.skipStepByWhen(state, step, log)
 		return e.reporter.ReportStep(noContext, state, step.Name)
 	case state.Finished(step.Name):
 		// skip if the step if already in a finished state,
@@ -241,6 +242,11 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 	wc := e.streamer.Stream(noContext, state, step.Name)
 	replaceSecrets := extend.FromSecretContext(ctx)
 	wc = newReplacer(wc, mapToSecrets(replaceSecrets))
+
+	// when 条件成立时，写进该步骤的执行日志，流水线页面可见
+	if step.WhenCondition != "" {
+		fmt.Fprintf(wc, "执行条件：%s，运算结果：true，执行当前步骤。\n", step.WhenCondition)
+	}
 
 	// wrap writer in extrator
 	ext := extractor.New(wc)
@@ -318,6 +324,34 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 		result = multierror.Append(result, err)
 	}
 	return result
+}
+
+// skipStepByWhen 跳过当前步骤：
+// 把步骤状态置为 skipped；跳过原因写入 step.Error，随上报落库为 errorLog。
+func (e *Execer) skipStepByWhen(state *pipeline.State, step *engine.Step, log *logger.SugaredMateLogger) {
+	if step.WhenCondition != "" {
+		wc := e.streamer.Stream(noContext, state, step.Name)
+		if _, err := fmt.Fprintf(wc, "执行条件：%s，运算结果：false，跳过当前步骤。\n", step.WhenCondition); err != nil {
+			log.Warnln("cannot write skip log.")
+		}
+		if err := wc.Close(); err != nil {
+			log.Warnln("cannot upload skip log.")
+		}
+	}
+
+	state.Skip(step.Name)
+	markStepSkippedByWhen(state, step)
+}
+
+// markStepSkippedByWhen 把 when 条件跳过当前步骤的原因写入 step
+func markStepSkippedByWhen(state *pipeline.State, step *engine.Step) {
+	if step.WhenCondition == "" {
+		return
+	}
+	target := state.Find(step.Name)
+	state.Lock()
+	target.Error = fmt.Sprintf("执行条件：%s，运算结果：false，跳过当前步骤。", step.WhenCondition)
+	state.Unlock()
 }
 
 // helper function returns the named step from the state.

@@ -313,12 +313,7 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 	}
 
 	for _, src := range spec.Steps {
-		// steps that are skipped are ignored and are not stored
-		// in the drone database, nor displayed in the UI.
-		if src.RunPolicy == engine.RunNever {
-			continue
-		}
-		stage.Steps = append(stage.Steps, &drone.Step{
+		step := &drone.Step{
 			Name:      fmt.Sprintf("%s::%s", src.ID, src.Name),
 			Number:    len(stage.Steps) + 1,
 			StageID:   stage.ID,
@@ -328,7 +323,19 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 			Detached:  src.Detach,
 			DependsOn: src.DependsOn,
 			// Display:   src.Display,
-		})
+		}
+
+		// when 条件不成立（RunNever）时：状态记为 skipped、原因写入 errorLog，与阶段跳过时的表现保持一致。
+		// 没有 when 条件的 RunNever step（例如挂载本地卷时禁用的 clone）仍按原逻辑不入库。
+		if src.RunPolicy == engine.RunNever {
+			if src.WhenCondition == "" {
+				continue
+			}
+			step.Status = drone.StatusSkipped
+			step.Error = fmt.Sprintf("执行条件：%s，运算结果：false，跳过当前步骤。", src.WhenCondition)
+		}
+
+		stage.Steps = append(stage.Steps, step)
 	}
 
 	stage.Started = time.Now().Unix()

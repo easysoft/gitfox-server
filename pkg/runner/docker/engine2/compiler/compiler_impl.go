@@ -569,6 +569,9 @@ func applyStepRunPolicy(ctx context.Context, step *engine.Step, when *harness.Wh
 		return nil
 	}
 
+	// 记录原始 when 条件，运行时据此输出执行/跳过日志
+	step.WhenCondition = code
+
 	// 直接填写运行策略值（always/onSuccess/onFailure）时无需做表达式求值。
 	if slices.Contains(constant.RunPolicyList, code) {
 		switch constant.RunPolicy(code) {

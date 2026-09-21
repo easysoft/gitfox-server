@@ -52,6 +52,8 @@ type (
 		User         string            `json:"user,omitempty"`
 		Volumes      []*VolumeMount    `json:"volumes,omitempty"`
 		WorkingDir   string            `json:"working_dir,omitempty"`
+		// WhenCondition 记录 step 的 when 条件，运行时据此输出相关日志。
+		WhenCondition string `json:"when_condition,omitempty"`
 
 		Display string
 	}

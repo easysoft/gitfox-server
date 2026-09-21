@@ -14,6 +14,7 @@ import (
 	"github.com/easysoft/gitfox-community/app/pipeline/scheduler"
 
 	pipelineSvc "github.com/easysoft/gitfox-community/app/service/pipeline"
+	stepSvc "github.com/easysoft/gitfox-community/app/service/step"
 	executionStore "github.com/easysoft/gitfox-community/app/store/execution"
 	stageStore "github.com/easysoft/gitfox-community/app/store/stage"
 	"github.com/easysoft/gitfox-community/pkg/config"
@@ -22,7 +23,6 @@ import (
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	"github.com/easysoft/gitfox-community/pkg/logger"
 	v1yaml "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
-	"github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse"
 	normalize "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/normalize"
 	specresolver "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/resolver"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
@@ -68,16 +68,18 @@ type triggerer struct {
 	pipelineService pipelineSvc.Interface
 	executionStore  executionStore.Interface
 	stageStore      stageStore.Interface
+	stepService     stepSvc.Interface
 	scheduler       scheduler.Scheduler
 	tx              dbtx.TxRunner
 	config          *config.Config
 }
 
-func New(pipelineService pipelineSvc.Interface, executionStore executionStore.Interface, stageStore stageStore.Interface, scheduler scheduler.Scheduler, tx dbtx.TxRunner, cfg *config.Config) Triggerer {
+func New(pipelineService pipelineSvc.Interface, executionStore executionStore.Interface, stageStore stageStore.Interface, stepService stepSvc.Interface, scheduler scheduler.Scheduler, tx dbtx.TxRunner, cfg *config.Config) Triggerer {
 	return &triggerer{
 		pipelineService: pipelineService,
 		executionStore:  executionStore,
 		stageStore:      stageStore,
+		stepService:     stepService,
 		scheduler:       scheduler,
 		tx:              tx,
 		config:          cfg,
@@ -153,6 +155,11 @@ func (t *triggerer) Trigger(
 		)
 	}
 
+	// 被 when 条件跳过的阶段，阶段内的任务也标记为 skipped。
+	if err := t.createSkippedStageSteps(ctx, file.Data, execution, stages); err != nil {
+		log.Errorf("[trigger]: cannot create skipped steps: %s", err)
+	}
+
 	// 所有阶段都被 when 条件跳过时直接结束 execution，避免流水线一直停留在 pending。
 	if allStagesSkipped(stages) {
 		if err := t.finishSkippedExecution(ctx, execution); err != nil {
@@ -213,6 +220,36 @@ func (t *triggerer) finishSkippedExecution(ctx context.Context, execution *execu
 	return nil
 }
 
+// createSkippedStageSteps 把被 when 条件跳过的阶段内的任务也标记为 skipped。
+func (t *triggerer) createSkippedStageSteps(ctx context.Context, data []byte, execution *executionModel.Execution, stages []*stageModel.Stage) error {
+	hasSkipped := false
+	for _, stage := range stages {
+		if stage.Status == constant.CIStatusSkipped {
+			hasSkipped = true
+			break
+		}
+	}
+	if !hasSkipped {
+		return nil
+	}
+
+	stepsByStage, err := manager.StageStepsFromYAML(data, manager.PipelineLookupFunc(ctx, t.pipelineService))
+	if err != nil {
+		return err
+	}
+
+	for _, stage := range stages {
+		if stage.Status != constant.CIStatusSkipped {
+			continue
+		}
+		records := manager.SkippedStepRecords(stepsByStage[stage.Code], stage.ID, execution.ID)
+		if err := manager.CreateSkippedSteps(ctx, t.stepService, records); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // parseV1Stages tries to parse the yaml into a list of stages and returns an error
 // if we are unable to do so or the yaml contains something unexpected.
 // Currently, all the stages will be executed one after the other on completion.
@@ -250,15 +287,7 @@ func parseV1Stages(
 	var prevStage string
 
 	// expand stage level plugins
-	lookupFunc := func(name, kind, typ, version string) (*v1yaml.Config, error) {
-		// Call the pipeline service to resolve the plugin
-		yamlConfig, err := pipelineService.Resolve(ctx, kind, typ, name)
-		if err != nil {
-			return nil, err
-		}
-		// Convert pipelineModel.Yaml to v1yaml.Config via JSON
-		return parse.ToConfig(yamlConfig)
-	}
+	lookupFunc := manager.PipelineLookupFunc(ctx, pipelineService)
 
 	if err := specresolver.Resolve(config, lookupFunc); err != nil {
 		return nil, fmt.Errorf("could not resolve yaml plugins/templates: %w", err)
@@ -282,6 +311,8 @@ func parseV1Stages(
 				runPolicy := string(constant.RunPolicyOnSuccess)
 				// when 条件在成功、失败状态下都不成立时，该阶段被跳过。
 				skipStage := false
+				// 条件不成立时把原因写入 errorLog，随阶段详情返回给前端。
+				whenErrorLog := ""
 				if stage.When != nil {
 					if when := stage.When.Eval; when != "" {
 						trimmedWhen := strings.TrimSpace(when)
@@ -305,6 +336,11 @@ func parseV1Stages(
 								// (false, false)：条件不成立，整个阶段跳过
 								skipStage = true
 							}
+						}
+
+						// when 条件不成立时把跳过原因写入 errorLog
+						if skipStage {
+							whenErrorLog = fmt.Sprintf("执行条件：%s，运算结果：false，跳过当前阶段。", trimmedWhen)
 						}
 					}
 				}
@@ -330,6 +366,7 @@ func parseV1Stages(
 					Depends:     dependsOn,
 					Status:      status,
 					RunPolicy:   runPolicy,
+					ErrorLog:    whenErrorLog,
 				}
 
 				// Inline fixStageDetail logic
