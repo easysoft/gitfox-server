@@ -20,7 +20,7 @@ func (s *Store) CreatePipelineContent(ctx context.Context, content *pipelineMode
 // UpdatePipelineContent 更新流水线内容
 func (s *Store) UpdatePipelineContent(ctx context.Context, content *pipelineModel.PipelineContent) error {
 	if err := s.db.WithContext(ctx).Where("pipelineID = ?", content.PipelineID).Updates(&PipelineContent{
-		Data: content.Data, // 只更新 data 字段，其他字段保持不变
+		Data: string(content.Data), // 只更新 data 字段，其他字段保持不变
 	}).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
@@ -42,7 +42,7 @@ func mapModelToPipelineContent(content *pipelineModel.PipelineContent) *Pipeline
 		ID:         content.ID,
 		PipelineID: content.PipelineID,
 		Version:    content.Version,
-		Data:       content.Data,
+		Data:       string(content.Data),
 		Variables:  database.NoNull(content.Variables),
 		CreatedBy:  content.CreatedBy,
 	}
@@ -52,18 +52,18 @@ func mapModelToPipelineContent(content *pipelineModel.PipelineContent) *Pipeline
 func mapPipelineContentToModel(content PipelineContent) *pipelineModel.PipelineContent {
 	// 数据库中 data 字段存储的是 base64 编码后的字符串
 	// 需要解码成原始字节数据供后续使用
-	decodedData, err := base64.StdEncoding.DecodeString(string(content.Data))
+	decodedData, err := base64.StdEncoding.DecodeString(content.Data)
 	if err != nil {
 		// 如果解码失败，可能数据库中存储的就是原始数据，直接使用
-		decodedData = content.Data
+		decodedData = []byte(content.Data)
 	}
 
 	return &pipelineModel.PipelineContent{
 		ID:          content.ID,
 		PipelineID:  content.PipelineID,
 		Version:     content.Version,
-		Data:        decodedData,          // 解码后的原始字节数据
-		DataStr:     string(content.Data), // 数据库中的 base64 字符串
+		Data:        decodedData,  // 解码后的原始字节数据
+		DataStr:     content.Data, // 数据库中的 base64 字符串
 		Variables:   content.Variables.String,
 		CreatedBy:   content.CreatedBy,
 		CreatedDate: content.CreatedDate,

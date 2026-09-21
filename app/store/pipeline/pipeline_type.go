@@ -54,7 +54,7 @@ type PipelineContent struct {
 	ID          int64           `gorm:"column:id;primaryKey;autoIncrement;comment:'自增主键'"`
 	PipelineID  int64           `gorm:"column:pipelineID;not null;comment:'关联的流水线ID'"`
 	Version     int             `gorm:"column:version;not null;default:0;comment:'流水线版本'"`
-	Data        []byte          `gorm:"column:data"`
+	Data        string          `gorm:"column:data"`
 	Variables   sql.NullString  `gorm:"column:variables"`
 	CreatedBy   string          `gorm:"column:createdBy;not null;default:'';comment:'创建人'"`
 	CreatedDate *datetime.Local `gorm:"column:createdDate;comment:'创建时间'"`
