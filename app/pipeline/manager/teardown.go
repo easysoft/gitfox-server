@@ -267,7 +267,7 @@ func (t *teardown) cancelDownstream(
 		)
 
 		// when 条件推导出的运行策略与流水线当前状态不匹配时，该阶段被跳过。
-		skipMessage := fmt.Sprintf("执行条件：%s，运算结果：true，跳过当前阶段。", s.RunPolicy)
+		skipMessage := fmt.Sprintf("执行条件：%s，运算结果：false，跳过当前阶段。", s.RunPolicy)
 
 		s.Status = constant.CIStatusSkipped
 		// 跳过：状态记为 skipped，跳过原因写入 errorLog 返回给前端。
