@@ -184,13 +184,6 @@ func NewApp(mode string) (*App, func(), error) {
 		return nil, nil, err
 	}
 	txRunnerImpl := dbtx.NewTxRunner(db)
-	triggererTriggerer := triggerer.New(pipelineService, executionStore, stageStore, stepService, schedulerScheduler, txRunnerImpl, config)
-	cancelerCanceler := canceler.New(executionStore, pipelineStore, stageStore, stepStore, schedulerScheduler)
-	executionService := execution2.NewExecutionService(executionStore, stageStore)
-	executionController := execution3.NewController(triggererTriggerer, cancelerCanceler, executionService, pipelineService, repoService, gitService)
-	runnerService := runner2.NewService(runnerStore)
-	url := provider.NewURLConfig(config)
-	stageService := stage2.NewStageService(stageStore)
 	eventsConfig := provider.NewEventConfig()
 	universalClient := provider.NewEventRedisClient()
 	system, err := provider.ProvideEventSystem(eventsConfig, universalClient)
@@ -205,6 +198,13 @@ func NewApp(mode string) (*App, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
+	triggererTriggerer := triggerer.New(pipelineService, executionStore, stageStore, stepService, schedulerScheduler, txRunnerImpl, config, streamer, reporter)
+	cancelerCanceler := canceler.New(executionStore, pipelineStore, stageStore, stepStore, schedulerScheduler)
+	executionService := execution2.NewExecutionService(executionStore, stageStore)
+	executionController := execution3.NewController(triggererTriggerer, cancelerCanceler, executionService, pipelineService, repoService, gitService)
+	runnerService := runner2.NewService(runnerStore)
+	url := provider.NewURLConfig(config)
+	stageService := stage2.NewStageService(stageStore)
 	eventsReporter, err := provider.ProvidePullReqReporter(system)
 	if err != nil {
 		cleanup2()

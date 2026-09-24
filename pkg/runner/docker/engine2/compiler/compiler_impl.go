@@ -316,8 +316,10 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 	// collate the input params
 	inputs := map[string]interface{}{
 		// "repo":   inputs.Repo(args.Repo),
-		"build":  inputs.Build(args.Build),
-		"inputs": inputs.Inputs(pipeline.Inputs, args.Build.Params),
+		"build": inputs.Build(args.Build),
+		// parameters 与运行期表达式上下文保持一致（流水线 inputs 默认值 + 触发参数）
+		"parameters": inputs.Inputs(pipeline.Inputs, args.Build.Params),
+		"inputs":     inputs.Inputs(pipeline.Inputs, args.Build.Params),
 		"secrets": map[string]interface{}{
 			"get": func(name string) string {
 				s, _ := c.findSecret(
@@ -361,10 +363,8 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 				step_.Privileged = c.isPrivileged(step_)
 				step_.ID = fmt.Sprintf("%s_%d", step_.ID, args.Build.ID)
 
-				// 根据 step 级 when 条件计算运行策略；条件无法求值时让整份配置编译失败
-				if err := applyStepRunPolicy(ctx, step_, src.When, inputs); err != nil {
-					return nil, err
-				}
+				// 根据 step 级 when 条件计算运行策略；条件无法求值时该步骤失败。
+				applyStepRunPolicy(ctx, step_, src.When, inputs)
 
 				spec.Steps = append(spec.Steps, step_)
 			}
@@ -558,15 +558,17 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 }
 
 // applyStepRunPolicy 根据 step 的 when 条件设置容器运行策略。
-// 表达式无法求值时返回错误：与 stage 级 when 的处理保持一致，让该 stage 直接失败。
-func applyStepRunPolicy(ctx context.Context, step *engine.Step, when *harness.When, inputs map[string]interface{}) error {
+//
+// 表达式无法求值时不让整份配置编译失败：把该步骤置为不执行（RunNever），失败原因写入
+// WhenError 交给运行时——运行时会把这步标记为失败，同一 stage 的其他步骤照常调度。
+func applyStepRunPolicy(ctx context.Context, step *engine.Step, when *harness.When, inputs map[string]interface{}) {
 	if when == nil {
-		return nil
+		return
 	}
 
 	code := strings.TrimSpace(when.Eval)
 	if code == "" {
-		return nil
+		return
 	}
 
 	// 记录原始 when 条件，运行时据此输出执行/跳过日志
@@ -582,13 +584,15 @@ func applyStepRunPolicy(ctx context.Context, step *engine.Step, when *harness.Wh
 		case constant.RunPolicyOnSuccess:
 			step.RunPolicy = engine.RunOnSuccess
 		}
-		return nil
+		return
 	}
 
 	onSuccess, onFailure, err := evalif(code, inputs)
 	if err != nil {
 		logger.GetLogger(ctx).Errorf("[pipeline]: cannot evaluate step when condition %q: %v", code, err)
-		return fmt.Errorf("cannot evaluate step when condition %q: %w", code, err)
+		step.RunPolicy = engine.RunNever
+		step.WhenError = fmt.Sprintf(harness.WhenEvalFailedStepTmpl, code, err)
+		return
 	}
 
 	switch {
@@ -602,8 +606,6 @@ func applyStepRunPolicy(ctx context.Context, step *engine.Step, when *harness.Wh
 		// (false, false)：条件不成立，跳过该 step
 		step.RunPolicy = engine.RunNever
 	}
-
-	return nil
 }
 
 // isPrivileged checks whether the privileged flag should be set to true for the step or not.

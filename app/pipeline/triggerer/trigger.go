@@ -8,12 +8,14 @@ import (
 	"strings"
 
 	"github.com/easysoft/gitfox-community/app/constant"
+	events "github.com/easysoft/gitfox-community/app/events/pipeline"
 	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
 	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
 	"github.com/easysoft/gitfox-community/app/pipeline/manager"
 	"github.com/easysoft/gitfox-community/app/pipeline/scheduler"
 
 	pipelineSvc "github.com/easysoft/gitfox-community/app/service/pipeline"
+	"github.com/easysoft/gitfox-community/app/service/sse"
 	stepSvc "github.com/easysoft/gitfox-community/app/service/step"
 	executionStore "github.com/easysoft/gitfox-community/app/store/execution"
 	stageStore "github.com/easysoft/gitfox-community/app/store/stage"
@@ -72,9 +74,21 @@ type triggerer struct {
 	scheduler       scheduler.Scheduler
 	tx              dbtx.TxRunner
 	config          *config.Config
+	sseStreamer     sse.Streamer
+	reporter        events.Reporter
 }
 
-func New(pipelineService pipelineSvc.Interface, executionStore executionStore.Interface, stageStore stageStore.Interface, stepService stepSvc.Interface, scheduler scheduler.Scheduler, tx dbtx.TxRunner, cfg *config.Config) Triggerer {
+func New(
+	pipelineService pipelineSvc.Interface,
+	executionStore executionStore.Interface,
+	stageStore stageStore.Interface,
+	stepService stepSvc.Interface,
+	scheduler scheduler.Scheduler,
+	tx dbtx.TxRunner,
+	cfg *config.Config,
+	sseStreamer sse.Streamer,
+	reporter events.Reporter,
+) Triggerer {
 	return &triggerer{
 		pipelineService: pipelineService,
 		executionStore:  executionStore,
@@ -83,6 +97,8 @@ func New(pipelineService pipelineSvc.Interface, executionStore executionStore.In
 		scheduler:       scheduler,
 		tx:              tx,
 		config:          cfg,
+		sseStreamer:     sseStreamer,
+		reporter:        reporter,
 	}
 }
 
@@ -148,23 +164,30 @@ func (t *triggerer) Trigger(
 		return nil, errors.WithI18nKey(err, i18n.PipelineTriggerV1ParseError)
 	}
 
-	if err := t.createExecutionWithStagesWithTx(ctx, execution, stages); err != nil {
+	// 被 when 条件跳过的阶段，阶段内的任务也要落库为 skipped。
+	skippedSteps, err := t.skippedStageSteps(ctx, file.Data, stages)
+	if err != nil {
+		return nil, errors.WithI18nKey(
+			fmt.Errorf("could not parse skipped steps: %w", err),
+			i18n.ExecutionTriggerError,
+		)
+	}
+
+	// 全部阶段被跳过的 execution 不会经过 setup/teardown。
+	allSkipped := allStagesSkipped(stages)
+
+	// 事务：execution + 阶段 + 被跳过阶段内的任务 + 全跳过时的收尾。
+	if err := t.createExecutionWithStagesWithTx(ctx, execution, stages, skippedSteps, allSkipped); err != nil {
 		return nil, errors.WithI18nKey(
 			fmt.Errorf("could not create execution: %w", err),
 			i18n.ExecutionTriggerError,
 		)
 	}
 
-	// 被 when 条件跳过的阶段，阶段内的任务也标记为 skipped。
-	if err := t.createSkippedStageSteps(ctx, file.Data, execution, stages); err != nil {
-		log.Errorf("[trigger]: cannot create skipped steps: %s", err)
-	}
-
-	// 所有阶段都被 when 条件跳过时直接结束 execution，避免流水线一直停留在 pending。
-	if allStagesSkipped(stages) {
-		if err := t.finishSkippedExecution(ctx, execution); err != nil {
-			log.Errorf("[trigger]: cannot finish skipped execution: %s", err)
-		}
+	if allSkipped {
+		finalizer := t.finalizer()
+		finalizer.Publish(ctx, execution)
+		log.Info("[trigger]: all stages are skipped, execution finished as skipped")
 		return execution, nil
 	}
 
@@ -193,35 +216,8 @@ func allStagesSkipped(stages []*stageModel.Stage) bool {
 	return len(stages) > 0
 }
 
-// finishSkippedExecution 把所有阶段都被跳过的 execution 直接置为 skipped，
-// 并同步流水线的最近执行结果。
-func (t *triggerer) finishSkippedExecution(ctx context.Context, execution *executionModel.Execution) error {
-	log := logger.GetLogger(ctx).With("execution.id", execution.ID)
-
-	now := datetime.NowLocalTime()
-	execution.Status = constant.CIStatusSkipped
-	execution.FinishedDate = now
-	if err := t.executionStore.Update(ctx, execution); err != nil {
-		return err
-	}
-
-	pipeline, err := t.pipelineService.GetPipelineByID(ctx, int64(execution.PipelineID))
-	if err != nil {
-		log.Warnw("trigger: cannot find pipeline for skipped execution", "error", err)
-		return nil
-	}
-	pipeline.LastExec = execution.FinishedDate
-	pipeline.LastResult = string(execution.Status)
-	if err := t.pipelineService.UpdatePipeline(ctx, pipeline); err != nil {
-		log.Warnw("trigger: cannot update pipeline result for skipped execution", "error", err)
-	}
-
-	log.Info("trigger: all stages are skipped, execution finished as skipped")
-	return nil
-}
-
-// createSkippedStageSteps 把被 when 条件跳过的阶段内的任务也标记为 skipped。
-func (t *triggerer) createSkippedStageSteps(ctx context.Context, data []byte, execution *executionModel.Execution, stages []*stageModel.Stage) error {
+// skippedStageSteps 预解析流水线 YAML，取出各阶段的任务定义（键为阶段 code）。
+func (t *triggerer) skippedStageSteps(ctx context.Context, data []byte, stages []*stageModel.Stage) (map[string][]*v1yaml.Step, error) {
 	hasSkipped := false
 	for _, stage := range stages {
 		if stage.Status == constant.CIStatusSkipped {
@@ -230,14 +226,13 @@ func (t *triggerer) createSkippedStageSteps(ctx context.Context, data []byte, ex
 		}
 	}
 	if !hasSkipped {
-		return nil
+		return nil, nil
 	}
+	return manager.StageStepsFromYAML(data, manager.PipelineLookupFunc(ctx, t.pipelineService))
+}
 
-	stepsByStage, err := manager.StageStepsFromYAML(data, manager.PipelineLookupFunc(ctx, t.pipelineService))
-	if err != nil {
-		return err
-	}
-
+// createSkippedStageSteps 把被 when 条件跳过的阶段内的任务也标记为 skipped。
+func (t *triggerer) createSkippedStageSteps(ctx context.Context, stepsByStage map[string][]*v1yaml.Step, execution *executionModel.Execution, stages []*stageModel.Stage) error {
 	for _, stage := range stages {
 		if stage.Status != constant.CIStatusSkipped {
 			continue
@@ -340,7 +335,7 @@ func parseV1Stages(
 
 						// when 条件不成立时把跳过原因写入 errorLog
 						if skipStage {
-							whenErrorLog = fmt.Sprintf("执行条件：%s，运算结果：false，跳过当前阶段。", trimmedWhen)
+							whenErrorLog = fmt.Sprintf(v1yaml.WhenSkippedStageTmpl, trimmedWhen)
 						}
 					}
 				}
@@ -487,12 +482,39 @@ func (t *triggerer) createExecutionWithStages(
 	return nil
 }
 
+// createExecutionWithStagesWithTx 在同一个事务里创建 execution、阶段、被跳过阶段内的任务，
+// 并在全跳过时一并完成收尾（状态/时间/流水线汇总），保证不会留下中间态。
 func (t *triggerer) createExecutionWithStagesWithTx(
 	ctx context.Context,
 	execution *executionModel.Execution,
 	stages []*stageModel.Stage,
+	skippedSteps map[string][]*v1yaml.Step,
+	finalizeSkipped bool,
 ) error {
-	return t.tx.WithTx(ctx, func(ctx context.Context) error {
-		return t.createExecutionWithStages(ctx, execution, stages)
+	return t.tx.WithTx(ctx, func(txCtx context.Context) error {
+		if err := t.createExecutionWithStages(txCtx, execution, stages); err != nil {
+			return fmt.Errorf("cannot create execution: %w", err)
+		}
+		if err := t.createSkippedStageSteps(txCtx, skippedSteps, execution, stages); err != nil {
+			return fmt.Errorf("cannot create skipped steps: %w", err)
+		}
+		if finalizeSkipped {
+			finalizer := t.finalizer()
+			if err := finalizer.Finalize(txCtx, execution, constant.CIStatusSkipped); err != nil {
+				return fmt.Errorf("cannot finish skipped execution: %w", err)
+			}
+		}
+		return nil
 	})
+}
+
+// finalizer 组装统一的执行收尾器（与 teardown 共用）。
+func (t *triggerer) finalizer() manager.ExecutionFinalizer {
+	return manager.ExecutionFinalizer{
+		ExecutionUpdater: t.executionStore,
+		StageLister:      t.stageStore,
+		PipelineSvc:      t.pipelineService,
+		SSEStreamer:      t.sseStreamer,
+		Reporter:         t.reporter,
+	}
 }

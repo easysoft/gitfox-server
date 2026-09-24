@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"sync"
 
+	harness "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/engine"
 	"github.com/easysoft/gitfox-community/pkg/runner/extend"
 
@@ -245,7 +246,7 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 
 	// when 条件成立时，写进该步骤的执行日志，流水线页面可见
 	if step.WhenCondition != "" {
-		fmt.Fprintf(wc, "执行条件：%s，运算结果：true，执行当前步骤。\n", step.WhenCondition)
+		fmt.Fprintf(wc, harness.WhenExecutedStepTmpl+"\n", step.WhenCondition)
 	}
 
 	// wrap writer in extrator
@@ -331,7 +332,7 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 func (e *Execer) skipStepByWhen(state *pipeline.State, step *engine.Step, log *logger.SugaredMateLogger) {
 	if step.WhenCondition != "" {
 		wc := e.streamer.Stream(noContext, state, step.Name)
-		if _, err := fmt.Fprintf(wc, "执行条件：%s，运算结果：false，跳过当前步骤。\n", step.WhenCondition); err != nil {
+		if _, err := fmt.Fprintf(wc, harness.WhenSkippedStepTmpl+"\n", step.WhenCondition); err != nil {
 			log.Warnln("cannot write skip log.")
 		}
 		if err := wc.Close(); err != nil {
@@ -340,18 +341,10 @@ func (e *Execer) skipStepByWhen(state *pipeline.State, step *engine.Step, log *l
 	}
 
 	state.Skip(step.Name)
-	markStepSkippedByWhen(state, step)
-}
-
-// markStepSkippedByWhen 把 when 条件跳过当前步骤的原因写入 step
-func markStepSkippedByWhen(state *pipeline.State, step *engine.Step) {
-	if step.WhenCondition == "" {
-		return
+	if step.WhenCondition != "" {
+		target := state.Find(step.Name)
+		target.Error = fmt.Sprintf(harness.WhenSkippedStepTmpl, step.WhenCondition)
 	}
-	target := state.Find(step.Name)
-	state.Lock()
-	target.Error = fmt.Sprintf("执行条件：%s，运算结果：false，跳过当前步骤。", step.WhenCondition)
-	state.Unlock()
 }
 
 // helper function returns the named step from the state.

@@ -2,6 +2,7 @@ package triggerer
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/easysoft/gitfox-community/app/constant"
@@ -9,6 +10,7 @@ import (
 	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
 	stepModel "github.com/easysoft/gitfox-community/app/model/step"
 	stepSvc "github.com/easysoft/gitfox-community/app/service/step"
+	v1yaml "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 )
 
 // whenSkipDoc 是 when 条件跳过的样例流水线：
@@ -130,7 +132,7 @@ func TestParseV1StagesWhenSkip(t *testing.T) {
 	}
 
 	// 参考错误信息的方式：跳过的阶段状态仍为 skipped，跳过原因写入 errorLog 返回给前端。
-	wantSkipLog := `执行条件：${{ build.ref == 'refs/heads/main' }}，运算结果：false，跳过当前阶段。`
+	wantSkipLog := fmt.Sprintf(v1yaml.WhenSkippedStageTmpl, `${{ build.ref == 'refs/heads/main' }}`)
 	if stages[0].ErrorLog != wantSkipLog {
 		t.Errorf("跳过的阶段 errorLog = %q, want %q", stages[0].ErrorLog, wantSkipLog)
 	}
@@ -172,12 +174,16 @@ func TestCreateSkippedStageSteps(t *testing.T) {
 
 	execution := &executionModel.Execution{ID: 5, PipelineID: 3}
 	stages := []*stageModel.Stage{
-		{ID: 11, Code: "prepare", Status: constant.CIStatusSkipped, ErrorLog: "执行条件：xx，运算结果：false，跳过当前阶段。"},
+		{ID: 11, Code: "prepare", Status: constant.CIStatusSkipped, ErrorLog: fmt.Sprintf(v1yaml.WhenSkippedStageTmpl, "xx")},
 		{ID: 12, Code: "build", Status: constant.CIStatusPending},
 		{ID: 13, Code: "notify", Status: constant.CIStatusWaitingOnDeps},
 	}
 
-	if err := tr.createSkippedStageSteps(context.Background(), []byte(whenSkipDoc), execution, stages); err != nil {
+	stepsByStage, err := tr.skippedStageSteps(context.Background(), []byte(whenSkipDoc), stages)
+	if err != nil {
+		t.Fatalf("skippedStageSteps: %v", err)
+	}
+	if err := tr.createSkippedStageSteps(context.Background(), stepsByStage, execution, stages); err != nil {
 		t.Fatalf("createSkippedStageSteps: %v", err)
 	}
 
@@ -209,7 +215,11 @@ func TestCreateSkippedStageStepsWithoutSkip(t *testing.T) {
 	execution := &executionModel.Execution{ID: 5, PipelineID: 3}
 	stages := []*stageModel.Stage{{ID: 12, Code: "build", Status: constant.CIStatusPending}}
 
-	if err := tr.createSkippedStageSteps(context.Background(), []byte(whenSkipDoc), execution, stages); err != nil {
+	stepsByStage, err := tr.skippedStageSteps(context.Background(), []byte(whenSkipDoc), stages)
+	if err != nil {
+		t.Fatalf("skippedStageSteps: %v", err)
+	}
+	if err := tr.createSkippedStageSteps(context.Background(), stepsByStage, execution, stages); err != nil {
 		t.Fatalf("createSkippedStageSteps: %v", err)
 	}
 	if len(stepSvc_.created) != 0 {

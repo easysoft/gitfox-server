@@ -55,6 +55,9 @@ type (
 		// WhenCondition 记录 step 的 when 条件，运行时据此输出相关日志。
 		WhenCondition string `json:"when_condition,omitempty"`
 
+		// WhenError 记录 step 级 when 求值失败的原因；运行时据此把该步骤标记为失败。
+		WhenError string `json:"when_error,omitempty"`
+
 		Display string
 	}
 

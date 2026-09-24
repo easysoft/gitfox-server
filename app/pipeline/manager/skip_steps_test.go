@@ -11,6 +11,7 @@ import (
 	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
 	stepModel "github.com/easysoft/gitfox-community/app/model/step"
 	"github.com/easysoft/gitfox-community/app/service/pipeline"
+	"github.com/easysoft/gitfox-community/app/service/stage"
 	"github.com/easysoft/gitfox-community/app/service/step"
 	v1yaml "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 )
@@ -120,6 +121,29 @@ func (f *fakeContentSvc) GetPipelineContent(_ context.Context, _ int64) (*pipeli
 	return f.file, nil
 }
 
+// countingContentSvc 记录 GetPipelineContent 的调用次数。
+type countingContentSvc struct {
+	pipeline.Interface
+	file  *pipelineModel.PipelineFile
+	calls int
+}
+
+func (f *countingContentSvc) GetPipelineContent(_ context.Context, _ int64) (*pipelineModel.PipelineFile, error) {
+	f.calls++
+	return f.file, nil
+}
+
+// fakeStageSvc 记录阶段状态更新。
+type fakeStageSvc struct {
+	stage.Interface
+	updated int
+}
+
+func (f *fakeStageSvc) Update(_ context.Context, _ *stageModel.Stage) error {
+	f.updated++
+	return nil
+}
+
 // fakeSkipStepSvc 记录创建的任务记录。
 type fakeSkipStepSvc struct {
 	step.Interface
@@ -142,8 +166,13 @@ func TestTeardownCreateSkippedSteps(t *testing.T) {
 	execution := &executionModel.Execution{ID: 7, PipelineID: 3}
 	stage := &stageModel.Stage{ID: 11, Code: "prepare"}
 
-	if err := td.createSkippedSteps(context.Background(), execution, stage); err != nil {
-		t.Fatalf("createSkippedSteps: %v", err)
+	stepsByStage, err := td.stageStepsFromYAML(context.Background(), execution)
+	if err != nil {
+		t.Fatalf("stageStepsFromYAML: %v", err)
+	}
+	records := SkippedStepRecords(stepsByStage[stage.Code], stage.ID, execution.ID)
+	if err := CreateSkippedSteps(context.Background(), stepSvc, records); err != nil {
+		t.Fatalf("CreateSkippedSteps: %v", err)
 	}
 
 	// prepare 阶段声明了 2 个任务（clone + 分组内的 child）
@@ -160,5 +189,35 @@ func TestTeardownCreateSkippedSteps(t *testing.T) {
 		if s.ErrorLog != "" {
 			t.Errorf("被跳过阶段的任务不写跳过原因（errorLog），got %q", s.ErrorLog)
 		}
+	}
+}
+
+// 多个阶段同时被跳过时，流水线 YAML 只解析一次（避免 N 次 parse/normalize/resolve）。
+func TestCancelDownstreamParsesOnce(t *testing.T) {
+	contentSvc := &countingContentSvc{file: &pipelineModel.PipelineFile{Data: []byte(skipStepsDoc)}}
+	stepSvc := &fakeSkipStepSvc{}
+	stageSvc := &fakeStageSvc{}
+	td := &teardown{PipelineSvc: contentSvc, StepSvc: stepSvc, StageSvc: stageSvc}
+
+	execution := &executionModel.Execution{ID: 7, PipelineID: 3}
+	stages := []*stageModel.StageWithSteps{
+		{Stage: stageModel.Stage{ID: 10, Code: "failed", Status: constant.CIStatusFailure}},
+		{Stage: stageModel.Stage{ID: 11, Code: "prepare", Status: constant.CIStatusWaitingOnDeps, RunPolicy: string(constant.RunPolicyOnSuccess)}},
+		{Stage: stageModel.Stage{ID: 12, Code: "build", Status: constant.CIStatusWaitingOnDeps, RunPolicy: string(constant.RunPolicyOnSuccess)}},
+	}
+
+	if err := td.cancelDownstream(context.Background(), execution, stages); err != nil {
+		t.Fatalf("cancelDownstream: %v", err)
+	}
+
+	if contentSvc.calls != 1 {
+		t.Errorf("GetPipelineContent 调用次数 = %d, want 1", contentSvc.calls)
+	}
+	if stageSvc.updated != 2 {
+		t.Errorf("阶段更新次数 = %d, want 2", stageSvc.updated)
+	}
+	// prepare 2 个任务 + build 1 个任务
+	if len(stepSvc.created) != 3 {
+		t.Errorf("任务记录数 = %d, want 3", len(stepSvc.created))
 	}
 }

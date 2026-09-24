@@ -23,6 +23,15 @@ type (
 	}
 )
 
+// when 条件求值结果对应的日志文案模板。
+const (
+	WhenSkippedStageTmpl      = "执行条件：%s，运算结果：false，跳过当前阶段。"
+	WhenSkippedStepTmpl       = "执行条件：%s，运算结果：false，跳过当前步骤。"
+	WhenExecutedStepTmpl      = "执行条件：%s，运算结果：true，执行当前步骤。"
+	RunPolicySkippedStageTmpl = "运行策略 %s 与流水线当前状态不匹配，跳过当前阶段。"
+	WhenEvalFailedStepTmpl    = "执行条件 %s 无法求值：%v"
+)
+
 // errWhenClause 是无法识别的 when 写法统一返回的错误。
 var errWhenClause = errors.New("failed to unmarshal when clause")
 

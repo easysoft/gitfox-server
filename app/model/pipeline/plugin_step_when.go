@@ -93,7 +93,7 @@ func (v *When) MarshalJSON() ([]byte, error) {
 	if v.Eval != "" {
 		return json.Marshal(v.Eval)
 	}
-	if len(v.Cond) != 0 {
+	if len(v.Cond) > 0 {
 		return json.Marshal(v.Cond)
 	}
 	return []byte("null"), nil
