@@ -20,7 +20,8 @@ func (s *Store) CreatePipeline(ctx context.Context, pipeline *pipelineModel.Pipe
 // UpdatePipeline 更新流水线
 func (s *Store) UpdatePipeline(ctx context.Context, pipeline *pipelineModel.Pipeline) error {
 	dbPipeline := mapModelToPipeline(pipeline)
-	if err := s.db.WithContext(ctx).Model(&Pipeline{}).Where("id = ?", pipeline.ID).Updates(dbPipeline).Error; err != nil {
+	if err := s.db.WithContext(ctx).Model(&Pipeline{}).Where("id = ?", pipeline.ID).
+		Omit("id").Updates(dbPipeline).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
 	return nil

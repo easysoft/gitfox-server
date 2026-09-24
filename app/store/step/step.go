@@ -36,7 +36,7 @@ func (s *Store) Update(ctx context.Context, step *stepModel.Step) error {
 	dbStep := mapToDBModel(step)
 
 	if err := db.Model(&Step{}).Where("id = ?", step.ID).
-		Omit("code", "depends", "fail_policy", "group_id").
+		Omit("id", "code", "depends", "fail_policy", "group_id").
 		Updates(dbStep).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
