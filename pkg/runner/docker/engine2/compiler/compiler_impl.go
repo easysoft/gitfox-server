@@ -320,6 +320,7 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 		// parameters 与运行期表达式上下文保持一致（流水线 inputs 默认值 + 触发参数）
 		"parameters": inputs.Inputs(pipeline.Inputs, args.Build.Params),
 		"inputs":     inputs.Inputs(pipeline.Inputs, args.Build.Params),
+		"global":     argsGlobalParams(args),
 		"secrets": map[string]interface{}{
 			"get": func(name string) string {
 				s, _ := c.findSecret(
@@ -639,6 +640,15 @@ func (c *CompilerImpl) isPrivileged(step *engine.Step) bool {
 		}
 	}
 	return false
+}
+
+// argsGlobalParams 返回供全局命名空间使用的全局参数，
+// 未提供时返回空 map，避免表达式求值取到 nil。
+func argsGlobalParams(args Args) map[string]interface{} {
+	if args.Global == nil {
+		return map[string]interface{}{}
+	}
+	return args.Global
 }
 
 // helper function attempts to find and return the named secret.

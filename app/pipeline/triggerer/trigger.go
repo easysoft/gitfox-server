@@ -67,15 +67,16 @@ type Triggerer interface {
 }
 
 type triggerer struct {
-	pipelineService pipelineSvc.Interface
-	executionStore  executionStore.Interface
-	stageStore      stageStore.Interface
-	stepService     stepSvc.Interface
-	scheduler       scheduler.Scheduler
-	tx              dbtx.TxRunner
-	config          *config.Config
-	sseStreamer     sse.Streamer
-	reporter        events.Reporter
+	pipelineService  pipelineSvc.Interface
+	executionStore   executionStore.Interface
+	stageStore       stageStore.Interface
+	stepService      stepSvc.Interface
+	scheduler        scheduler.Scheduler
+	tx               dbtx.TxRunner
+	config           *config.Config
+	sseStreamer      sse.Streamer
+	reporter         events.Reporter
+	variableResolver GlobalParamResolver
 }
 
 func New(
@@ -88,18 +89,26 @@ func New(
 	cfg *config.Config,
 	sseStreamer sse.Streamer,
 	reporter events.Reporter,
+	variableResolver GlobalParamResolver,
 ) Triggerer {
 	return &triggerer{
-		pipelineService: pipelineService,
-		executionStore:  executionStore,
-		stageStore:      stageStore,
-		stepService:     stepService,
-		scheduler:       scheduler,
-		tx:              tx,
-		config:          cfg,
-		sseStreamer:     sseStreamer,
-		reporter:        reporter,
+		pipelineService:  pipelineService,
+		executionStore:   executionStore,
+		stageStore:       stageStore,
+		stepService:      stepService,
+		scheduler:        scheduler,
+		tx:               tx,
+		config:           cfg,
+		sseStreamer:      sseStreamer,
+		reporter:         reporter,
+		variableResolver: variableResolver,
 	}
+}
+
+// GlobalParamResolver 按参数名查询全局参数表。
+// 返回值：命中的全局参数（name -> value）、需要日志掩码的参数名。
+type GlobalParamResolver interface {
+	ResolveByKeys(ctx context.Context, keys []string) (map[string]string, []string, error)
 }
 
 //nolint:gocognit,gocyclo,cyclop //TODO: Refactor @Vistaar
@@ -140,6 +149,26 @@ func (t *triggerer) Trigger(
 	// 注入插件调用 gitfox API 所需的环境变量（与 scan pipeline 注入保持一致）
 	base.Params["PLUGIN_TOKEN"] = t.config.PipelineAuth.Password
 	base.Params["GITFOX_API_ENDPOINT"] = t.config.URL.Base + "/api/v2"
+
+	if globals, masked, err := t.resolveGlobalParams(ctx, file.Data); err != nil {
+		log.Warnf("[trigger]: resolve global params failed: %v", err)
+	} else {
+		for name, value := range globals {
+			key := inputs.GlobalKey(name)
+			if _, exists := base.Params[key]; !exists {
+				base.Params[key] = value
+			}
+		}
+		if len(masked) > 0 {
+			base.Params[inputs.GlobalMaskKey] = strings.Join(masked, ",")
+		}
+		if len(globals) > 0 {
+			log.Infof("[trigger]: injected %d global params, masked=%v", len(globals), masked)
+		} else if refs := inputs.GlobalRefs(file.Data); len(refs) > 0 {
+			// 流水线引用了全局参数但一条都没命中
+			log.Warnf("[trigger]: global params referenced but not found in table: %v", refs)
+		}
+	}
 
 	tigger := string(base.Action)
 	if tigger == "" {
@@ -275,9 +304,13 @@ func parseV1Stages(
 		return nil, fmt.Errorf("cannot support non-pipeline kinds in v1 at the moment: %w", err)
 	}
 
+	// parameters 只保留普通参数，全局参数单独放进 global 命名空间。
+	plainParams, globalParams, _ := inputs.SplitGlobal(base.Params)
+
 	inputParams := map[string]interface{}{}
 	inputParams["build"] = inputs.Build(manager.ConvertToDroneBuild(execution))
-	inputParams["parameters"] = base.Params
+	inputParams["parameters"] = plainParams
+	inputParams["global"] = globalParams
 
 	var prevStage string
 
@@ -517,4 +550,17 @@ func (t *triggerer) finalizer() manager.ExecutionFinalizer {
 		SSEStreamer:      t.sseStreamer,
 		Reporter:         t.reporter,
 	}
+}
+
+// resolveGlobalParams 扫描流水线 YAML 中引用的全局参数名（${{global.<name>}}），
+// 按名字去全局参数表取值。未接入全局参数表或没有引用时返回空结果。
+func (t *triggerer) resolveGlobalParams(ctx context.Context, config []byte) (map[string]string, []string, error) {
+	if t.variableResolver == nil {
+		return nil, nil, nil
+	}
+	names := inputs.GlobalRefs(config)
+	if len(names) == 0 {
+		return nil, nil, nil
+	}
+	return t.variableResolver.ResolveByKeys(ctx, names)
 }

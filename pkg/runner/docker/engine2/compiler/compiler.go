@@ -51,6 +51,12 @@ type (
 		// Secret returns a named secret value that can be injected
 		// into the pipeline step.
 		Secret secret.Provider
+
+		// Global provides global parameters resolved from the global
+		// parameter table. They are exposed to expressions through the
+		// global namespace and are never injected into the container
+		// environment.
+		Global map[string]interface{}
 	}
 
 	// Compiler compiles the Yaml configuration file to an
