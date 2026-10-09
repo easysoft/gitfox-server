@@ -1,90 +1,61 @@
+/*
+ * @copyright: Copyright 2009-2026 禅道软件（青岛）有限公司(ZenTao Software (Qingdao) Co., Ltd. www.zentao.net)
+ * @license: ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+ * @author: mengyutong <mengyutong@chandao.com>
+ */
 package pipeline
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"strings"
 )
 
 // When defines execution conditions.
 // 当满足条件时执行
 type When struct {
-	Eval    string             `json:"eval,omitempty"`
-	Cond    []map[string]*Expr `json:"cond,omitempty"`
-	Changes []string           `json:"changes,omitempty"`
+	Eval string `json:"eval,omitempty"`
 }
 
-// Expr defines an execution expression.
-// 执行表达式定义
-type Expr struct {
-	Eq  string   `json:"eq,omitempty"`
-	In  []string `json:"in,omitempty"`
-	Not *Expr    `json:"not,omitempty"`
-}
+// errWhenClause 是无法识别的 when 写法统一返回的错误。
+var errWhenClause = errors.New("failed to unmarshal when clause")
 
 // UnmarshalJSON implements the unmarshal interface.
 // 解析JSON数据到When结构体
 func (v *When) UnmarshalJSON(data []byte) error {
-	// First try to parse as a complex object that might contain changes field
+	// null或空白内容，视为无法识别。
+	if trimmed := bytes.TrimSpace(data); len(trimmed) == 0 || bytes.Equal(trimmed, []byte("null")) {
+		return errWhenClause
+	}
+
+	// 解析表达式或运行策略字符串。
+	if err := json.Unmarshal(data, &v.Eval); err == nil {
+		if strings.TrimSpace(v.Eval) == "" {
+			return errWhenClause
+		}
+		return nil
+	}
+
+	// 解析对象形式：只识别 eval。
 	type whenTemp struct {
-		Eval    string   `json:"eval,omitempty"`
-		Changes []string `json:"changes,omitempty"`
+		Eval string `json:"eval,omitempty"`
 	}
 	var tmp whenTemp
-	if err := json.Unmarshal(data, &tmp); err == nil {
+	if err := json.Unmarshal(data, &tmp); err == nil && strings.TrimSpace(tmp.Eval) != "" {
 		v.Eval = tmp.Eval
-		v.Changes = tmp.Changes
-		// If only changes field was set, return early
-		if len(v.Changes) > 0 || v.Eval != "" {
-			return nil
-		}
-	}
-
-	// parse the expression string.
-	if v.Eval == "" { // Only try to parse as string if not already parsed above
-		if err := json.Unmarshal(data, &v.Eval); err == nil {
-			return nil
-		}
-	} else if v.Eval != "" {
-		// 如果已经解析到了Eval字段值，直接返回
 		return nil
 	}
 
-	// parse the declarative when clause array.
-	if err := json.Unmarshal(data, &v.Cond); err == nil {
-		return nil
-	}
-
-	// parse the declarative when clause.
-	vv := map[string]*Expr{}
-	if err := json.Unmarshal(data, &vv); err == nil {
-		v.Cond = append(v.Cond, vv)
-		return nil
-	}
-
-	return errors.New("failed to unmarshal when clause")
+	// 走到这里说明是无法识别的 when 写法返回错误让整份配置解析失败。
+	return errWhenClause
 }
 
 // MarshalJSON implements the marshal interface.
 // 将When结构体转换为JSON数据
 func (v *When) MarshalJSON() ([]byte, error) {
-	if len(v.Changes) > 0 {
-		type whenTemp struct {
-			Eval    string             `json:"eval,omitempty"`
-			Cond    []map[string]*Expr `json:"cond,omitempty"`
-			Changes []string           `json:"changes,omitempty"`
-		}
-		return json.Marshal(whenTemp{
-			Eval:    v.Eval,
-			Cond:    v.Cond,
-			Changes: v.Changes,
-		})
-	}
-
 	if v.Eval != "" {
 		return json.Marshal(v.Eval)
-	}
-	if v.Cond != nil && len(v.Cond) != 0 {
-		return json.Marshal(v.Cond)
 	}
 	return []byte("null"), nil
 }

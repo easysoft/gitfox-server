@@ -5,6 +5,7 @@ import (
 
 	pipelineModel "github.com/easysoft/gitfox-community/app/model/pipeline"
 	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/database/dbtx"
 	"github.com/easysoft/gitfox-community/pkg/errors"
 )
 
@@ -20,7 +21,8 @@ func (s *Store) CreatePipeline(ctx context.Context, pipeline *pipelineModel.Pipe
 // UpdatePipeline 更新流水线
 func (s *Store) UpdatePipeline(ctx context.Context, pipeline *pipelineModel.Pipeline) error {
 	dbPipeline := mapModelToPipeline(pipeline)
-	if err := s.db.WithContext(ctx).Model(&Pipeline{}).Where("id = ?", pipeline.ID).Updates(dbPipeline).Error; err != nil {
+	db := dbtx.GetOrmAccessor(ctx, s.db)
+	if err := db.Model(&Pipeline{}).Where("id = ?", pipeline.ID).Updates(dbPipeline).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
 	return nil
@@ -29,7 +31,8 @@ func (s *Store) UpdatePipeline(ctx context.Context, pipeline *pipelineModel.Pipe
 // GetPipelineByID 根据流水线ID获取流水线（deleted=0）
 func (s *Store) GetPipelineByID(ctx context.Context, id int64) (*pipelineModel.Pipeline, error) {
 	var pipeline Pipeline
-	if err := s.db.WithContext(ctx).Where("id = ? AND deleted = 0", id).First(&pipeline).Error; err != nil {
+	db := dbtx.GetOrmAccessor(ctx, s.db)
+	if err := db.Where("id = ? AND deleted = 0", id).First(&pipeline).Error; err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}
 	return mapPipelineToModel(&pipeline), nil

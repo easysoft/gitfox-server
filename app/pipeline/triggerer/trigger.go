@@ -8,12 +8,15 @@ import (
 	"strings"
 
 	"github.com/easysoft/gitfox-community/app/constant"
+	events "github.com/easysoft/gitfox-community/app/events/pipeline"
 	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
 	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
 	"github.com/easysoft/gitfox-community/app/pipeline/manager"
 	"github.com/easysoft/gitfox-community/app/pipeline/scheduler"
 
 	pipelineSvc "github.com/easysoft/gitfox-community/app/service/pipeline"
+	"github.com/easysoft/gitfox-community/app/service/sse"
+	stepSvc "github.com/easysoft/gitfox-community/app/service/step"
 	executionStore "github.com/easysoft/gitfox-community/app/store/execution"
 	stageStore "github.com/easysoft/gitfox-community/app/store/stage"
 	"github.com/easysoft/gitfox-community/pkg/config"
@@ -22,11 +25,11 @@ import (
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	"github.com/easysoft/gitfox-community/pkg/logger"
 	v1yaml "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
-	"github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse"
 	normalize "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/normalize"
 	specresolver "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/resolver"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/script"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 var _ Triggerer = (*triggerer)(nil)
@@ -67,19 +70,35 @@ type triggerer struct {
 	pipelineService pipelineSvc.Interface
 	executionStore  executionStore.Interface
 	stageStore      stageStore.Interface
+	stepService     stepSvc.Interface
 	scheduler       scheduler.Scheduler
 	tx              dbtx.TxRunner
 	config          *config.Config
+	sseStreamer     sse.Streamer
+	reporter        events.Reporter
 }
 
-func New(pipelineService pipelineSvc.Interface, executionStore executionStore.Interface, stageStore stageStore.Interface, scheduler scheduler.Scheduler, tx dbtx.TxRunner, cfg *config.Config) Triggerer {
+func New(
+	pipelineService pipelineSvc.Interface,
+	executionStore executionStore.Interface,
+	stageStore stageStore.Interface,
+	stepService stepSvc.Interface,
+	scheduler scheduler.Scheduler,
+	tx dbtx.TxRunner,
+	cfg *config.Config,
+	sseStreamer sse.Streamer,
+	reporter events.Reporter,
+) Triggerer {
 	return &triggerer{
 		pipelineService: pipelineService,
 		executionStore:  executionStore,
 		stageStore:      stageStore,
+		stepService:     stepService,
 		scheduler:       scheduler,
 		tx:              tx,
 		config:          cfg,
+		sseStreamer:     sseStreamer,
+		reporter:        reporter,
 	}
 }
 
@@ -145,11 +164,31 @@ func (t *triggerer) Trigger(
 		return nil, errors.WithI18nKey(err, i18n.PipelineTriggerV1ParseError)
 	}
 
-	if err := t.createExecutionWithStagesWithTx(ctx, execution, stages); err != nil {
+	// 被 when 条件跳过的阶段，阶段内的任务也要落库为 skipped。
+	skippedSteps, err := t.skippedStageSteps(ctx, file.Data, stages)
+	if err != nil {
+		return nil, errors.WithI18nKey(
+			fmt.Errorf("could not parse skipped steps: %w", err),
+			i18n.ExecutionTriggerError,
+		)
+	}
+
+	// 全部阶段被跳过的 execution 不会经过 setup/teardown。
+	allSkipped := allStagesSkipped(stages)
+
+	// 事务：execution + 阶段 + 被跳过阶段内的任务 + 全跳过时的收尾。
+	if err := t.createExecutionWithStagesWithTx(ctx, execution, stages, skippedSteps, allSkipped); err != nil {
 		return nil, errors.WithI18nKey(
 			fmt.Errorf("could not create execution: %w", err),
 			i18n.ExecutionTriggerError,
 		)
+	}
+
+	if allSkipped {
+		finalizer := t.finalizer()
+		finalizer.Publish(ctx, execution)
+		log.Info("[trigger]: all stages are skipped, execution finished as skipped")
+		return execution, nil
 	}
 
 	for _, stage := range stages {
@@ -165,6 +204,45 @@ func (t *triggerer) Trigger(
 	}
 
 	return execution, nil
+}
+
+// allStagesSkipped 判断是否所有阶段都被 when 条件跳过。
+func allStagesSkipped(stages []*stageModel.Stage) bool {
+	for _, stage := range stages {
+		if stage.Status != constant.CIStatusSkipped {
+			return false
+		}
+	}
+	return len(stages) > 0
+}
+
+// skippedStageSteps 预解析流水线 YAML，取出各阶段的任务定义（键为阶段 code）。
+func (t *triggerer) skippedStageSteps(ctx context.Context, data []byte, stages []*stageModel.Stage) (map[string][]*v1yaml.Step, error) {
+	hasSkipped := false
+	for _, stage := range stages {
+		if stage.Status == constant.CIStatusSkipped {
+			hasSkipped = true
+			break
+		}
+	}
+	if !hasSkipped {
+		return nil, nil
+	}
+	return manager.StageStepsFromYAML(data, manager.PipelineLookupFunc(ctx, t.pipelineService))
+}
+
+// createSkippedStageSteps 把被 when 条件跳过的阶段内的任务也标记为 skipped。
+func (t *triggerer) createSkippedStageSteps(ctx context.Context, stepsByStage map[string][]*v1yaml.Step, execution *executionModel.Execution, stages []*stageModel.Stage) error {
+	for _, stage := range stages {
+		if stage.Status != constant.CIStatusSkipped {
+			continue
+		}
+		records := manager.SkippedStepRecords(stepsByStage[stage.Code], stage.ID, execution.ID)
+		if err := manager.CreateSkippedSteps(ctx, t.stepService, records); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // parseV1Stages tries to parse the yaml into a list of stages and returns an error
@@ -204,15 +282,7 @@ func parseV1Stages(
 	var prevStage string
 
 	// expand stage level plugins
-	lookupFunc := func(name, kind, typ, version string) (*v1yaml.Config, error) {
-		// Call the pipeline service to resolve the plugin
-		yamlConfig, err := pipelineService.Resolve(ctx, kind, typ, name)
-		if err != nil {
-			return nil, err
-		}
-		// Convert pipelineModel.Yaml to v1yaml.Config via JSON
-		return parse.ToConfig(yamlConfig)
-	}
+	lookupFunc := manager.PipelineLookupFunc(ctx, pipelineService)
 
 	if err := specresolver.Resolve(config, lookupFunc); err != nil {
 		return nil, fmt.Errorf("could not resolve yaml plugins/templates: %w", err)
@@ -234,6 +304,10 @@ func parseV1Stages(
 			switch stage.Spec.(type) {
 			case *v1yaml.StageCI:
 				runPolicy := string(constant.RunPolicyOnSuccess)
+				// when 条件在成功、失败状态下都不成立时，该阶段被跳过。
+				skipStage := false
+				// 条件不成立时把原因写入 errorLog，随阶段详情返回给前端。
+				whenErrorLog := ""
 				if stage.When != nil {
 					if when := stage.When.Eval; when != "" {
 						trimmedWhen := strings.TrimSpace(when)
@@ -242,7 +316,7 @@ func parseV1Stages(
 							runPolicy = trimmedWhen
 						} else {
 							// Evaluate as expression
-							onSuccess, onFailure, err := script.EvalWhen(when, inputParams)
+							onSuccess, onFailure, err := script.EvalWhen(trimmedWhen, inputParams)
 							if err != nil {
 								return nil, fmt.Errorf("could not resolve when condition for stage: %w", err)
 							}
@@ -253,7 +327,15 @@ func parseV1Stages(
 								runPolicy = string(constant.RunPolicyOnSuccess)
 							case onFailure:
 								runPolicy = string(constant.RunPolicyOnFailure)
+							default:
+								// (false, false)：条件不成立，整个阶段跳过
+								skipStage = true
 							}
+						}
+
+						// when 条件不成立时把跳过原因写入 errorLog
+						if skipStage {
+							whenErrorLog = fmt.Sprintf(v1yaml.WhenSkippedStageTmpl, trimmedWhen)
 						}
 					}
 				}
@@ -267,6 +349,10 @@ func parseV1Stages(
 				if len(dependsOn) == 0 {
 					status = constant.CIStatusPending
 				}
+				if skipStage {
+					// 阶段级跳过：以 skipped 状态入库，不参与调度，也不再成为下游阶段的依赖。
+					status = constant.CIStatusSkipped
+				}
 				temp := &stageModel.Stage{
 					ExecutionID: execution.ID,
 					Code:        stage.Id,
@@ -275,6 +361,7 @@ func parseV1Stages(
 					Depends:     dependsOn,
 					Status:      status,
 					RunPolicy:   runPolicy,
+					ErrorLog:    whenErrorLog,
 				}
 
 				// Inline fixStageDetail logic
@@ -299,7 +386,13 @@ func parseV1Stages(
 					}
 				}
 
-				prevStage = temp.Code
+				if skipStage {
+					now := datetime.NowLocalTime()
+					temp.Started = now
+					temp.Finished = now
+				} else {
+					prevStage = temp.Code
+				}
 				stages = append(stages, temp)
 			default:
 				return nil, fmt.Errorf("only CI and template stages are supported in v1 at the moment")
@@ -389,12 +482,39 @@ func (t *triggerer) createExecutionWithStages(
 	return nil
 }
 
+// createExecutionWithStagesWithTx 在同一个事务里创建 execution、阶段、被跳过阶段内的任务，
+// 并在全跳过时一并完成收尾（状态/时间/流水线汇总），保证不会留下中间态。
 func (t *triggerer) createExecutionWithStagesWithTx(
 	ctx context.Context,
 	execution *executionModel.Execution,
 	stages []*stageModel.Stage,
+	skippedSteps map[string][]*v1yaml.Step,
+	finalizeSkipped bool,
 ) error {
-	return t.tx.WithTx(ctx, func(ctx context.Context) error {
-		return t.createExecutionWithStages(ctx, execution, stages)
+	return t.tx.WithTx(ctx, func(txCtx context.Context) error {
+		if err := t.createExecutionWithStages(txCtx, execution, stages); err != nil {
+			return fmt.Errorf("cannot create execution: %w", err)
+		}
+		if err := t.createSkippedStageSteps(txCtx, skippedSteps, execution, stages); err != nil {
+			return fmt.Errorf("cannot create skipped steps: %w", err)
+		}
+		if finalizeSkipped {
+			finalizer := t.finalizer()
+			if err := finalizer.Finalize(txCtx, execution, constant.CIStatusSkipped); err != nil {
+				return fmt.Errorf("cannot finish skipped execution: %w", err)
+			}
+		}
+		return nil
 	})
+}
+
+// finalizer 组装统一的执行收尾器（与 teardown 共用）。
+func (t *triggerer) finalizer() manager.ExecutionFinalizer {
+	return manager.ExecutionFinalizer{
+		ExecutionUpdater: t.executionStore,
+		StageLister:      t.stageStore,
+		PipelineSvc:      t.pipelineService,
+		SSEStreamer:      t.sseStreamer,
+		Reporter:         t.reporter,
+	}
 }
