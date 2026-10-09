@@ -7,10 +7,9 @@ import (
 
 func TestWhenUnmarshal(t *testing.T) {
 	tests := []struct {
-		name  string
-		in    string
-		eval  string
-		conds int
+		name string
+		in   string
+		eval string
 	}{
 		{
 			name: "表达式字符串",
@@ -27,16 +26,6 @@ func TestWhenUnmarshal(t *testing.T) {
 			in:   `{"eval": "${{ always() }}"}`,
 			eval: "${{ always() }}",
 		},
-		{
-			name:  "声明式数组",
-			in:    `[{"branch": {"eq": "main"}}]`,
-			conds: 1,
-		},
-		{
-			name:  "声明式对象",
-			in:    `{"branch": {"eq": "main"}}`,
-			conds: 1,
-		},
 	}
 
 	for _, test := range tests {
@@ -48,20 +37,18 @@ func TestWhenUnmarshal(t *testing.T) {
 			if when.Eval != test.eval {
 				t.Errorf("Eval = %q, want %q", when.Eval, test.eval)
 			}
-			if len(when.Cond) != test.conds {
-				t.Errorf("Cond = %v, want %d 条", when.Cond, test.conds)
-			}
 		})
 	}
 }
 
-// 无法识别的 when 写法（drone 简写、null、空对象、空数组、空字符串、数字等）
+// 无法识别的 when 写法（drone 简写、声明式 cond、changes、null、空对象、空数组、空字符串、数字等）
 // 必须返回错误、让整份配置解析失败：静默忽略条件会让执行行为与预期不符。
 func TestWhenUnmarshalUnrecognized(t *testing.T) {
 	for _, in := range []string{
 		`{"event": "push", "branch": "main"}`,
 		`[{"status": ["success", "failure"]}]`,
 		`{"cond": [{"branch": {"eq": "main"}}]}`,
+		`{"changes": ["src/**"]}`,
 		`true`,
 		`false`,
 		`{}`,

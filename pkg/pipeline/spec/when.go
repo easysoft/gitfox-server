@@ -1,3 +1,8 @@
+/*
+ * @copyright: Copyright 2009-2026 禅道软件（青岛）有限公司(ZenTao Software (Qingdao) Co., Ltd. www.zentao.net)
+ * @license: ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+ * @author: mengyutong <mengyutong@chandao.com>
+ */
 package yaml
 
 import (
@@ -7,21 +12,10 @@ import (
 	"strings"
 )
 
-type (
-	// When defines execution conditions.
-	When struct {
-		Eval    string
-		Cond    []map[string]*Expr
-		Changes []string
-	}
-
-	// Expr defines an execution expression.
-	Expr struct {
-		Eq  string   `json:"eq,omitempty"`
-		In  []string `json:"in,omitempty"`
-		Not *Expr    `json:"not,omitempty"`
-	}
-)
+// When defines execution conditions.
+type When struct {
+	Eval string
+}
 
 // when 条件求值结果对应的日志文案模板。
 const (
@@ -50,58 +44,24 @@ func (v *When) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	// 解析对象形式：只识别 eval / changes。带 cond 键的对象不在支持范围内
+	// 解析对象形式：只识别 eval。
 	type whenTemp struct {
-		Eval    string   `json:"eval,omitempty"`
-		Changes []string `json:"changes,omitempty"`
+		Eval string `json:"eval,omitempty"`
 	}
 	var tmp whenTemp
-	if err := json.Unmarshal(data, &tmp); err == nil {
+	if err := json.Unmarshal(data, &tmp); err == nil && strings.TrimSpace(tmp.Eval) != "" {
 		v.Eval = tmp.Eval
-		v.Changes = tmp.Changes
-		if strings.TrimSpace(v.Eval) != "" || len(v.Changes) > 0 {
-			return nil
-		}
-	}
-
-	// 解析声明式 when 子句数组。
-	var conds []map[string]*Expr
-	if err := json.Unmarshal(data, &conds); err == nil && len(conds) > 0 {
-		v.Cond = conds
 		return nil
 	}
 
-	// 解析声明式 when 子句。
-	cond := map[string]*Expr{}
-	if err := json.Unmarshal(data, &cond); err == nil && len(cond) > 0 {
-		v.Cond = append(v.Cond, cond)
-		return nil
-	}
-
-	// 走到这里说明是无法识别的 when 写法返回错误让整份配置解析失败
+	// 走到这里说明是无法识别的 when 写法，返回错误让整份配置解析失败。
 	return errWhenClause
 }
 
 // MarshalJSON implements the marshal interface.
 func (v *When) MarshalJSON() ([]byte, error) {
-	if len(v.Changes) > 0 {
-		type whenTemp struct {
-			Eval    string             `json:"eval,omitempty"`
-			Cond    []map[string]*Expr `json:"cond,omitempty"`
-			Changes []string           `json:"changes,omitempty"`
-		}
-		return json.Marshal(whenTemp{
-			Eval:    v.Eval,
-			Cond:    v.Cond,
-			Changes: v.Changes,
-		})
-	}
-
 	if v.Eval != "" {
 		return json.Marshal(v.Eval)
-	}
-	if len(v.Cond) > 0 {
-		return json.Marshal(v.Cond)
 	}
 	return []byte("null"), nil
 }
