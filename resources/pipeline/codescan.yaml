@@ -23,4 +23,4 @@ spec:
             spec:
               container:
                 image: hub.zentao.net/ci/gitfoxscan:gitfox-community
-                pull: always
+                pull: if-not-exists

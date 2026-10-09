@@ -23,4 +23,4 @@ spec:
             spec:
               container:
                 image: hub.zentao.net/ci/gitfox-plugin:ai-codereview
-                pull: always
+                pull: if-not-exists
