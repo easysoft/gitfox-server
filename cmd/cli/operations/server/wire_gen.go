@@ -48,6 +48,7 @@ import (
 	step2 "github.com/easysoft/gitfox-community/app/service/step"
 	"github.com/easysoft/gitfox-community/app/service/tag"
 	user2 "github.com/easysoft/gitfox-community/app/service/user"
+	variable2 "github.com/easysoft/gitfox-community/app/service/variable"
 	"github.com/easysoft/gitfox-community/app/store/artifact"
 	"github.com/easysoft/gitfox-community/app/store/branch"
 	"github.com/easysoft/gitfox-community/app/store/execution"
@@ -65,6 +66,7 @@ import (
 	"github.com/easysoft/gitfox-community/app/store/stage"
 	"github.com/easysoft/gitfox-community/app/store/step"
 	"github.com/easysoft/gitfox-community/app/store/user"
+	"github.com/easysoft/gitfox-community/app/store/variable"
 	"github.com/easysoft/gitfox-community/app/store/webhook"
 	"github.com/easysoft/gitfox-community/cmd/cli/operations/provider"
 	"github.com/easysoft/gitfox-community/pkg/auth/authn"
@@ -176,6 +178,7 @@ func NewApp(mode string) (*App, func(), error) {
 	executionStore := execution.NewExecutionStore(db)
 	stageStore := stage.NewStageStore(db)
 	stepStore := step.NewStepStore(db)
+	variableStore := variable.NewVariableStore(db)
 	stepService := step2.NewStepService(stepStore)
 	schedulerScheduler, err := scheduler.New(stageStore, runnerStore, mutexManager)
 	if err != nil {
@@ -198,7 +201,8 @@ func NewApp(mode string) (*App, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	triggererTriggerer := triggerer.New(pipelineService, executionStore, stageStore, stepService, schedulerScheduler, txRunnerImpl, config, streamer, reporter)
+	variableService := variable2.NewService(variableStore)
+	triggererTriggerer := triggerer.New(pipelineService, executionStore, stageStore, stepService, schedulerScheduler, txRunnerImpl, config, streamer, reporter, variableService)
 	cancelerCanceler := canceler.New(executionStore, pipelineStore, stageStore, stepStore, schedulerScheduler)
 	executionService := execution2.NewExecutionService(executionStore, stageStore)
 	executionController := execution3.NewController(triggererTriggerer, cancelerCanceler, executionService, pipelineService, repoService, gitService)

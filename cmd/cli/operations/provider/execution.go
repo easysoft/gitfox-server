@@ -11,9 +11,11 @@ import (
 	executionSvc "github.com/easysoft/gitfox-community/app/service/execution"
 	stageSvc "github.com/easysoft/gitfox-community/app/service/stage"
 	stepSvc "github.com/easysoft/gitfox-community/app/service/step"
+	variableSvc "github.com/easysoft/gitfox-community/app/service/variable"
 	executionStore "github.com/easysoft/gitfox-community/app/store/execution"
 	stageStore "github.com/easysoft/gitfox-community/app/store/stage"
 	stepStore "github.com/easysoft/gitfox-community/app/store/step"
+	variableStore "github.com/easysoft/gitfox-community/app/store/variable"
 	"github.com/easysoft/gitfox-community/pkg/database/dbtx"
 )
 
@@ -50,4 +52,10 @@ var ExecutionWireSet = wire.NewSet(
 	// Transaction runner
 	wire.Bind(new(dbtx.TxRunner), new(*dbtx.TxRunnerImpl)),
 	dbtx.NewTxRunner,
+
+	// 全局参数表（ops_variable）: 只读查询，供触发时解析全局参数
+	wire.Bind(new(triggerer.GlobalParamResolver), new(*variableSvc.Service)),
+	variableSvc.NewService,
+	wire.Bind(new(variableStore.Interface), new(*variableStore.Store)),
+	variableStore.NewVariableStore,
 )
