@@ -42,16 +42,16 @@ func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
 }
 
 // ListByKeys mocks base method.
-func (m *MockInterface) ListByKeys(ctx context.Context, keys []string) (map[string]*variable.Variable, error) {
+func (m *MockInterface) ListByKeys(ctx context.Context, keys []string, scope string) (map[string]*variable.Variable, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListByKeys", ctx, keys)
+	ret := m.ctrl.Call(m, "ListByKeys", ctx, keys, scope)
 	ret0, _ := ret[0].(map[string]*variable.Variable)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListByKeys indicates an expected call of ListByKeys.
-func (mr *MockInterfaceMockRecorder) ListByKeys(ctx, keys any) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) ListByKeys(ctx, keys, scope any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByKeys", reflect.TypeOf((*MockInterface)(nil).ListByKeys), ctx, keys)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByKeys", reflect.TypeOf((*MockInterface)(nil).ListByKeys), ctx, keys, scope)
 }

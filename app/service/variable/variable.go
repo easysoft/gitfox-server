@@ -22,6 +22,7 @@ func NewService(store variableStore.Interface) *Service {
 }
 
 // ResolveByKeys 按参数名（即 YAML 中 ${{global.<name>}} 的 name）查询全局参数表。
+// 全局参数目前固定使用 system 作用域。
 // type=cipher 的行会额外出现在 masked 中，供日志掩码使用。
 func (s *Service) ResolveByKeys(ctx context.Context, keys []string) (map[string]string, []string, error) {
 	resolved := map[string]string{}
@@ -34,7 +35,7 @@ func (s *Service) ResolveByKeys(ctx context.Context, keys []string) (map[string]
 		return resolved, nil, nil
 	}
 
-	rows, err := s.store.ListByKeys(ctx, names)
+	rows, err := s.store.ListByKeys(ctx, names, variableModel.ScopeSystem)
 	if err != nil {
 		return nil, nil, err
 	}

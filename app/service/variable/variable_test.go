@@ -21,11 +21,10 @@ func TestResolveByKeys(t *testing.T) {
 	defer ctrl.Finish()
 
 	store := variableStoreMock.NewMockInterface(ctrl)
-	// 按 YAML 引用到的名字查询；重复项与空白会被去掉。
-	store.EXPECT().ListByKeys(gomock.Any(), []string{"registry", "npm_token"}).Return(map[string]*variableModel.Variable{
+	// 按 YAML 引用到的名字查询，重复项与空白会被去掉。
+	store.EXPECT().ListByKeys(gomock.Any(), []string{"registry", "npm_token"}, variableModel.ScopeSystem).Return(map[string]*variableModel.Variable{
 		"registry":  {Key: "registry", Name: "镜像仓库地址", Value: "registry.gitfox.cn/prod", Scope: variableModel.ScopeSystem},
 		"npm_token": {Key: "npm_token", Value: "s3cr3t", Scope: variableModel.ScopeSystem, Type: variableModel.TypeCipher},
-		"repo_only": {Key: "repo_only", Value: "ignored", Scope: "repo"},
 	}, nil)
 
 	values, masked, err := NewService(store).ResolveByKeys(

@@ -23,15 +23,17 @@ func NewVariableStore(db *gorm.DB) *Store {
 	return &Store{db: db}
 }
 
-// ListByKeys 根据键批量查询未删除的变量，返回 key -> 变量 的映射
-func (s *Store) ListByKeys(ctx context.Context, keys []string) (map[string]*variableModel.Variable, error) {
+// ListByKeys 根据键批量查询指定作用域下未删除的变量，返回 key -> 变量 的映射。
+// 查询始终按作用域过滤，避免跨作用域取到同名变量。
+func (s *Store) ListByKeys(ctx context.Context, keys []string, scope string) (map[string]*variableModel.Variable, error) {
 	result := make(map[string]*variableModel.Variable, len(keys))
 	if len(keys) == 0 {
 		return result, nil
 	}
 
 	var rows []*Variable
-	if err := s.db.WithContext(ctx).Where("`key` IN ? AND deleted = 0", keys).Find(&rows).Error; err != nil {
+	err := s.db.WithContext(ctx).Where("`key` IN ? AND scope = ? AND deleted = 0", keys, scope).Find(&rows).Error
+	if err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}
 

@@ -155,6 +155,7 @@ func (t *triggerer) Trigger(
 	} else {
 		for name, value := range globals {
 			key := inputs.GlobalKey(name)
+			// 若用户传入的变量和全局变量同名，优先使用用户传入的变量
 			if _, exists := base.Params[key]; !exists {
 				base.Params[key] = value
 			}
