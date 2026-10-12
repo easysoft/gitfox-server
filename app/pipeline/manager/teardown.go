@@ -34,6 +34,14 @@ import (
 // state.
 var ErrStageTerminal = errors.New("stage already in terminal state")
 
+// executionReporter is the pipeline event reported once an execution is
+// complete. *events.Reporter implements it; the interface exists so that
+// callers that own only part of the dependency graph (the Finalizer) can be
+// unit tested without a running event producer.
+type executionReporter interface {
+	Executed(ctx context.Context, payload *events.ExecutedPayload)
+}
+
 type teardown struct {
 	PipelineSvc  pipeline.Interface
 	ExecutionSvc execution.Interface
@@ -42,7 +50,7 @@ type teardown struct {
 	PullReqSvc   pullrequest.Interface
 	Scheduler    scheduler.Scheduler
 	SSEStreamer  sse.Streamer
-	Reporter     events.Reporter
+	Reporter     executionReporter
 	PRReporter   *pullreqevents.Reporter
 	Logz         livelog.LogStream
 }
@@ -84,6 +92,22 @@ func (t *teardown) do(ctx context.Context, stage *stageModel.StageWithSteps) err
 		}
 		return fmt.Errorf("%w: stage %d status %s", ErrStageTerminal, stage.ID, existing.Status)
 	}
+
+	return t.complete(ctx, stage, execution)
+}
+
+// complete persists the stage and its steps, releases the step log streams,
+// skips or schedules the downstream stages according to their run policy, and
+// finally rolls the execution up.
+//
+// Callers must establish that the state transition is legitimate: do guards it
+// with ErrStageTerminal, while the Finalizer uses it for stages that are never
+// dispatched. It is safe to re-run — a repeated call only recomputes the
+// rollup.
+func (t *teardown) complete(ctx context.Context, stage *stageModel.StageWithSteps, execution *executionModel.Execution) error {
+	log := logger.GetLogger(ctx).With(
+		"stage.id", stage.ID,
+	)
 
 	pipeline, err := t.PipelineSvc.GetPipelineByID(ctx, int64(execution.PipelineID))
 	if err != nil {
@@ -357,12 +381,18 @@ func (t *teardown) scheduleDownstream(
 			errs = multierror.Append(errs, err)
 		}
 
-		err = t.Scheduler.Schedule()
-		if err != nil {
-			log.Errorw("manager: cannot schedule stage",
-				"error", err,
-			)
-			errs = multierror.Append(errs, err)
+		// A teardown built by the Finalizer carries no scheduler: it is
+		// constructed upstream of the scheduler in the wire graph. The
+		// downstream stages are already flipped to pending, so they are
+		// picked up by the next queue signal instead.
+		if t.Scheduler != nil {
+			err = t.Scheduler.Schedule()
+			if err != nil {
+				log.Errorw("manager: cannot schedule stage",
+					"error", err,
+				)
+				errs = multierror.Append(errs, err)
+			}
 		}
 	}
 	return errs
@@ -386,6 +416,9 @@ func (t *teardown) resync(ctx context.Context, stage *stageModel.Stage) error {
 }
 
 func (t *teardown) reportExecutionCompleted(ctx context.Context, execution *executionModel.Execution) {
+	if t.Reporter == nil {
+		return
+	}
 	t.Reporter.Executed(ctx, &events.ExecutedPayload{
 		PipelineID:   execution.PipelineID,
 		ExecutionNum: execution.ID,

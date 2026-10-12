@@ -35,6 +35,7 @@ func NewApp(mode string) (*App, func(), error) {
 		provider.ScanRuleSetWireSet,
 		provider.ScanRuleWireSet,
 		provider.CommunityAIReviewWireSet,
+		provider.CommunityStageApprovalWireSet,
 		provider.FitWireSet,
 		provider.CommitWireSet,
 		provider.WebhookWireSet,

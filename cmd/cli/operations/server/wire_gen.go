@@ -175,7 +175,8 @@ func NewApp(mode string) (*App, func(), error) {
 	pipelineController := pipeline3.NewController(ciConfig, pipelineService, repoService)
 	executionStore := execution.NewExecutionStore(db)
 	stageStore := stage.NewStageStore(db)
-	schedulerScheduler, err := scheduler.New(stageStore, runnerStore, mutexManager)
+	noopStageApproval := scheduler.NewNoopStageApproval()
+	schedulerScheduler, err := scheduler.New(stageStore, runnerStore, mutexManager, noopStageApproval)
 	if err != nil {
 		cleanup2()
 		cleanup()

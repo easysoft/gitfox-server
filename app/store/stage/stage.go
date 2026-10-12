@@ -35,29 +35,35 @@ func (s *Store) Create(ctx context.Context, stage *stageModel.Stage) error {
 		dependsJSON = string(bytes)
 	}
 
+	approvalConfigJSON, err := marshalApprovalConfig(stage.ApprovalConfig)
+	if err != nil {
+		return err
+	}
+
 	dbStage := &Stage{
-		RepoID:       stage.RepoID,
-		ExecutionID:  stage.ExecutionID,
-		Parent:       stage.Parent,
-		Name:         stage.Name,
-		Code:         stage.Code,
-		SN:           stage.SN,
-		Type:         stage.Type,
-		Host:         stage.Host,
-		OS:           stage.OS,
-		Arch:         stage.Arch,
-		Labels:       labelsJSON,
-		Depends:      dependsJSON,
-		RunPolicy:    stage.RunPolicy,
-		CustomPolicy: stage.CustomPolicy,
-		FailPolicy:   stage.FailPolicy,
-		Started:      stage.Started,
-		Finished:     stage.Finished,
-		Duration:     stage.Duration,
-		Status:       string(stage.Status),
-		ErrorType:    stage.ErrorType,
-		ErrorCode:    stage.ErrorCode,
-		ErrorLog:     database.NullIfEmpty(stage.ErrorLog),
+		RepoID:         stage.RepoID,
+		ExecutionID:    stage.ExecutionID,
+		Parent:         stage.Parent,
+		Name:           stage.Name,
+		Code:           stage.Code,
+		SN:             stage.SN,
+		Type:           stage.Type,
+		Host:           stage.Host,
+		OS:             stage.OS,
+		Arch:           stage.Arch,
+		Labels:         labelsJSON,
+		Depends:        dependsJSON,
+		RunPolicy:      stage.RunPolicy,
+		CustomPolicy:   stage.CustomPolicy,
+		FailPolicy:     stage.FailPolicy,
+		Started:        stage.Started,
+		Finished:       stage.Finished,
+		Duration:       stage.Duration,
+		Status:         string(stage.Status),
+		ApprovalConfig: approvalConfigJSON,
+		ErrorType:      stage.ErrorType,
+		ErrorCode:      stage.ErrorCode,
+		ErrorLog:       database.NullIfEmpty(stage.ErrorLog),
 	}
 
 	if err := db.Create(dbStage).Error; err != nil {
@@ -116,8 +122,13 @@ func (s *Store) Update(ctx context.Context, stage *stageModel.Stage) error {
 
 	// Omit scheduling metadata fields that are set once at creation time.
 	// Runners must not overwrite these via UpdateStage/UpdateStep callbacks.
+	// 注意：这里的名字必须写成 gorm column tag 的值（驼峰），写成 snake_case 会被
+	// GORM 静默忽略、字段照常被覆写（runPolicy/customPolicy/failPolicy 曾因此漏网）。
+	// 每条 Omit 都有 TestStageUpdateKeepsSchedulingColumns / ...KeepsApprovalColumns 兜底。
+	// approvalConfig 创建后不可变；approvalStatus 由禅道 DevOps 侧维护，GitFox 只读。
 	if err := db.Model(&Stage{}).Where("id = ?", stage.ID).
-		Omit("code", "type", "labels", "depends", "run_policy", "custom_policy", "fail_policy").
+		Omit("code", "type", "labels", "depends", "runPolicy", "customPolicy", "failPolicy",
+			"approvalConfig", "approvalStatus").
 		Updates(dbStage).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
@@ -209,30 +220,56 @@ func mapToModel(s *Stage) *stageModel.Stage {
 	}
 
 	return &stageModel.Stage{
-		ID:           s.ID,
-		RepoID:       s.RepoID,
-		ExecutionID:  s.ExecutionID,
-		Parent:       s.Parent,
-		Name:         s.Name,
-		Code:         s.Code,
-		SN:           s.SN,
-		Type:         s.Type,
-		Host:         s.Host,
-		OS:           s.OS,
-		Arch:         s.Arch,
-		Labels:       labels,
-		Depends:      depends,
-		RunPolicy:    s.RunPolicy,
-		CustomPolicy: s.CustomPolicy,
-		FailPolicy:   s.FailPolicy,
-		Started:      s.Started,
-		Finished:     s.Finished,
-		Duration:     s.Duration,
-		Status:       constant.CIStatus(s.Status),
-		ErrorType:    s.ErrorType,
-		ErrorCode:    s.ErrorCode,
-		ErrorLog:     s.ErrorLog.String,
+		ID:             s.ID,
+		RepoID:         s.RepoID,
+		ExecutionID:    s.ExecutionID,
+		Parent:         s.Parent,
+		Name:           s.Name,
+		Code:           s.Code,
+		SN:             s.SN,
+		Type:           s.Type,
+		Host:           s.Host,
+		OS:             s.OS,
+		Arch:           s.Arch,
+		Labels:         labels,
+		Depends:        depends,
+		RunPolicy:      s.RunPolicy,
+		CustomPolicy:   s.CustomPolicy,
+		FailPolicy:     s.FailPolicy,
+		Started:        s.Started,
+		Finished:       s.Finished,
+		Duration:       s.Duration,
+		Status:         constant.CIStatus(s.Status),
+		ApprovalConfig: unmarshalApprovalConfig(s.ApprovalConfig),
+		ApprovalStatus: constant.StageApprovalStatus(s.ApprovalStatus),
+		ErrorType:      s.ErrorType,
+		ErrorCode:      s.ErrorCode,
+		ErrorLog:       s.ErrorLog.String,
 	}
+}
+
+// marshalApprovalConfig 把审批配置序列化为 JSON，空配置写空串（列 NOT NULL DEFAULT ”）。
+func marshalApprovalConfig(a *stageModel.StageApproval) (string, error) {
+	if a == nil {
+		return "", nil
+	}
+	bytes, err := json.Marshal(a)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
+}
+
+// unmarshalApprovalConfig 解析审批配置 JSON，空串/脏数据都返回 nil（不阻断调度）。
+func unmarshalApprovalConfig(raw string) *stageModel.StageApproval {
+	if raw == "" {
+		return nil
+	}
+	var out stageModel.StageApproval
+	if err := json.Unmarshal([]byte(raw), &out); err != nil {
+		return nil
+	}
+	return &out
 }
 
 // ListIncomplete returns a stage list where the stage is incomplete (pending or running)

@@ -446,7 +446,7 @@ func (m *Manager) AfterStage(_ context.Context, stage *stageModel.StageWithSteps
 		Scheduler:    m.Scheduler,
 		StepSvc:      m.StepSvc,
 		StageSvc:     m.StageSvc,
-		Reporter:     m.reporter,
+		Reporter:     &m.reporter,
 		PRReporter:   m.prReporter,
 		PullReqSvc:   m.pullReqSvc,
 	}

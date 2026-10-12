@@ -2,10 +2,12 @@ package triggerer
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"runtime/debug"
 	"slices"
 	"strings"
+	"time"
 
 	"github.com/easysoft/gitfox-community/app/constant"
 	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
@@ -277,6 +279,14 @@ func parseV1Stages(
 					RunPolicy:   runPolicy,
 				}
 
+				if stage.Approval != nil {
+					temp.ApprovalConfig = &stageModel.StageApproval{
+						Approvers: []string(stage.Approval.Approvers),
+						Mode:      stage.Approval.Mode,
+						Timeout:   stage.Approval.Timeout,
+					}
+				}
+
 				// Inline fixStageDetail logic
 				stageCI := stage.Spec.(*v1yaml.StageCI)
 				if stageCI.Runtime != nil {
@@ -327,6 +337,10 @@ func validateV1PipelineSpec(pipeline *v1yaml.Pipeline) error {
 
 // validateV1Stage 校验 stage 的 spec 与 steps 存在
 func validateV1Stage(stage *v1yaml.Stage) error {
+	if err := validateV1StageApproval(stage); err != nil {
+		return err
+	}
+
 	stageCI, ok := stage.Spec.(*v1yaml.StageCI)
 	if !ok {
 		// 非 CI 类型 stage 会在后续解析时报错，这里不重复校验
@@ -339,6 +353,48 @@ func validateV1Stage(stage *v1yaml.Stage) error {
 		if err := validateV1Step(step); err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+// validateV1StageApproval 校验 stage 的 approval 配置（整体省略时不校验）。
+func validateV1StageApproval(stage *v1yaml.Stage) error {
+	a := stage.Approval
+	if a == nil {
+		return nil
+	}
+
+	if len(a.Approvers) == 0 {
+		return fmt.Errorf("check 'approvers' key in approval of stage %q", stage.Id)
+	}
+	if len(a.Approvers) > constant.MaxStageApprovalApprovers {
+		return fmt.Errorf("too many approvers (%d > %d) in approval of stage %q",
+			len(a.Approvers), constant.MaxStageApprovalApprovers, stage.Id)
+	}
+	switch a.Mode {
+	case "", string(constant.StageApprovalModeAnd), string(constant.StageApprovalModeOr):
+	default:
+		return fmt.Errorf("invalid approval mode %q in stage %q", a.Mode, stage.Id)
+	}
+	if a.Timeout != "" {
+		if d, err := time.ParseDuration(a.Timeout); err != nil || d <= 0 {
+			return fmt.Errorf("invalid approval timeout %q in stage %q", a.Timeout, stage.Id)
+		}
+	}
+
+	// approvalConfig 列宽为 constant.MaxApprovalConfigLen，超长会被 DB 拒绝或静默截断，
+	// 这里前置校验，保证用户看到明确错误。
+	raw, err := json.Marshal(&stageModel.StageApproval{
+		Approvers: []string(a.Approvers),
+		Mode:      a.Mode,
+		Timeout:   a.Timeout,
+	})
+	if err != nil {
+		return fmt.Errorf("marshal approval config of stage %q: %w", stage.Id, err)
+	}
+	if len(raw) > constant.MaxApprovalConfigLen {
+		return fmt.Errorf("approval config of stage %q is too long (%d > %d), reduce approvers",
+			stage.Id, len(raw), constant.MaxApprovalConfigLen)
 	}
 	return nil
 }
