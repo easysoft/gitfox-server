@@ -18,6 +18,7 @@ type Stage struct {
 	Failure      *FailureList           `json:"failure,omitempty"`
 	Inputs       map[string]interface{} `json:"inputs,omitempty"`
 	Spec         interface{}            `json:"spec,omitempty"`
+	Approval     *Approval              `json:"approval,omitempty"`
 }
 
 // UnmarshalJSON implement the json.Unmarshaler interface.

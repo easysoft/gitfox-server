@@ -32,7 +32,7 @@ type ExecutionFinalizer struct {
 	StageLister      StageLister
 	PipelineSvc      pipeline.Interface
 	SSEStreamer      sse.Streamer
-	Reporter         events.Reporter
+	Reporter         executionReporter
 }
 
 // Finalize 数据库侧收尾：
@@ -94,8 +94,11 @@ func (f *ExecutionFinalizer) Publish(ctx context.Context, execution *executionMo
 		log.Warnw("finalize: could not publish execution completed event", "error", err)
 	}
 
-	f.Reporter.Executed(ctx, &events.ExecutedPayload{
-		PipelineID:   execution.PipelineID,
-		ExecutionNum: execution.ID,
-	})
+	// 没有配置 reporter（例如仅依赖部分依赖图的调用方）时只发 SSE，跳过事件上报。
+	if f.Reporter != nil {
+		f.Reporter.Executed(ctx, &events.ExecutedPayload{
+			PipelineID:   execution.PipelineID,
+			ExecutionNum: execution.ID,
+		})
+	}
 }

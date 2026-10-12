@@ -178,9 +178,9 @@ func NewApp(mode string) (*App, func(), error) {
 	executionStore := execution.NewExecutionStore(db)
 	stageStore := stage.NewStageStore(db)
 	stepStore := step.NewStepStore(db)
-	variableStore := variable.NewVariableStore(db)
 	stepService := step2.NewStepService(stepStore)
-	schedulerScheduler, err := scheduler.New(stageStore, runnerStore, mutexManager)
+	noopStageApproval := scheduler.NewNoopStageApproval()
+	schedulerScheduler, err := scheduler.New(stageStore, runnerStore, mutexManager, noopStageApproval)
 	if err != nil {
 		cleanup2()
 		cleanup()
@@ -201,6 +201,7 @@ func NewApp(mode string) (*App, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
+	variableStore := variable.NewVariableStore(db)
 	variableService := variable2.NewService(variableStore)
 	triggererTriggerer := triggerer.New(pipelineService, executionStore, stageStore, stepService, schedulerScheduler, txRunnerImpl, config, streamer, reporter, variableService)
 	cancelerCanceler := canceler.New(executionStore, pipelineStore, stageStore, stepStore, schedulerScheduler)
