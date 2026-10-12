@@ -187,13 +187,19 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 		}
 	}()
 
+	// 全局参数以保留前缀随 build params 传入，这里先剥离：全局参数只进 global命名空间。
+	plainParams, globalParams, maskedParams := inputs.SplitGlobal(data.Build.Params)
+	// 剥离后的 build 视图，供 build 命名空间与 compiler 使用。
+	buildForRun := *data.Build
+	buildForRun.Params = plainParams
+
 	envs := environ.Combine(
 		environ.System(data.System),
 		// environ.Repo(data.Repo),
 		environ.Build(data.Build),
 		environ.Stage(stage),
 		// environ.Link(data.Repo, data.Build, data.System), TODO:  pipeline 执行详情链接后续重新实现
-		data.Build.Params,
+		plainParams,
 		extend.Envs(data.Stage, data.Repo),
 	)
 
@@ -249,11 +255,16 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 
 	usedSecrets := make(map[string]string)
 
+	// 全局参数中的密文值复用日志掩码通道；只影响日志输出，不扩大 env 注入范围。
+	for name, value := range maskedParams {
+		usedSecrets[name] = value
+	}
+
 	// create the expressions context that is used
 	// to evaluate expressions in the yaml.
 	inputParams := map[string]interface{}{}
 	// inputParams["repo"] = inputs.Repo(data.Repo)
-	inputParams["build"] = inputs.Build(data.Build)
+	inputParams["build"] = inputs.Build(&buildForRun)
 	inputParams["matrix"] = map[string]interface{}{}
 	inputParams["inputs"] = map[string]interface{}{}
 	inputParams["secrets"] = map[string]interface{}{
@@ -266,13 +277,14 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 		},
 	}
 	inputParams["env"] = envs
+	inputParams["global"] = globalParams
 
 	// extract the inputs and add to the expression contrext
 	walk.Walk(config, func(v interface{}) error {
 		switch vv := v.(type) {
 		case *harness.Pipeline:
 			// inputParams["parameters"] = data.Build.Params
-			inputParams["parameters"] = inputs.Inputs(vv.Inputs, data.Build.Params)
+			inputParams["parameters"] = inputs.Inputs(vv.Inputs, plainParams)
 		}
 		return nil
 	})
@@ -297,12 +309,13 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 	// representation, and then
 	args := compiler.Args{
 		Config: config,
-		Build:  data.Build,
+		Build:  &buildForRun,
 		Stage:  stage,
 		Repo:   argsRepo,
 		System: data.System,
 		Netrc:  data.Netrc,
 		Secret: secret.Static(data.Secrets),
+		Global: globalParams,
 	}
 
 	spec, err := s.Compiler.Compile(ctx, args)
@@ -313,12 +326,7 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 	}
 
 	for _, src := range spec.Steps {
-		// steps that are skipped are ignored and are not stored
-		// in the drone database, nor displayed in the UI.
-		if src.RunPolicy == engine.RunNever {
-			continue
-		}
-		stage.Steps = append(stage.Steps, &drone.Step{
+		step := &drone.Step{
 			Name:      fmt.Sprintf("%s::%s", src.ID, src.Name),
 			Number:    len(stage.Steps) + 1,
 			StageID:   stage.ID,
@@ -328,7 +336,25 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 			Detached:  src.Detach,
 			DependsOn: src.DependsOn,
 			// Display:   src.Display,
-		})
+		}
+
+		// step 级 when 的处理：
+		// 求值失败：该步骤直接标记为失败，原因写入 errorLog，不会让整条 stage 编译失败；
+		// 条件不成立（RunNever）：状态记为 skipped、原因写入 errorLog，与阶段跳过时的表现保持一致。
+		// 没有 when 条件的 RunNever step（例如挂载本地卷时禁用的 clone）仍按原逻辑不入库。
+		switch {
+		case src.WhenError != "":
+			step.Status = drone.StatusError
+			step.Error = src.WhenError
+		case src.RunPolicy == engine.RunNever:
+			if src.WhenCondition == "" {
+				continue
+			}
+			step.Status = drone.StatusSkipped
+			step.Error = fmt.Sprintf(harness.WhenSkippedStepTmpl, src.WhenCondition)
+		}
+
+		stage.Steps = append(stage.Steps, step)
 	}
 
 	stage.Started = time.Now().Unix()

@@ -17,6 +17,7 @@ import (
 	stepModel "github.com/easysoft/gitfox-community/app/model/step"
 	"github.com/easysoft/gitfox-community/app/pipeline/scheduler"
 
+	"github.com/drone/runner-go/client"
 	"github.com/easysoft/gitfox-community/app/service/execution"
 	"github.com/easysoft/gitfox-community/app/service/pipeline"
 	"github.com/easysoft/gitfox-community/app/service/pullrequest"
@@ -27,7 +28,6 @@ import (
 	"github.com/easysoft/gitfox-community/pkg/livelog"
 	"github.com/easysoft/gitfox-community/pkg/logger"
 	urlprovider "github.com/easysoft/gitfox-community/pkg/utils/url"
-	"github.com/drone/runner-go/client"
 )
 
 var noContext = context.Background()
@@ -232,6 +232,12 @@ func (m *Manager) Accept(_ context.Context, id int64, machine string) (*stageMod
 // Write writes a line to the build logs.
 func (m *Manager) Write(ctx context.Context, step int64, line *livelog.Line) error {
 	err := m.Logz.Write(ctx, step, line)
+	// 被跳过的步骤不会走 BeforeStep，日志流可能尚未创建（例如写入 when 跳过原因时），按需创建。
+	if errors.Is(err, livelog.ErrStreamNotFound) {
+		if createErr := m.Logz.Create(ctx, step); createErr == nil {
+			err = m.Logz.Write(ctx, step, line)
+		}
+	}
 	if err != nil {
 		logger.Warnw("manager: cannot write to log stream",
 			"step-id", step,

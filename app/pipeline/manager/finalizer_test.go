@@ -23,11 +23,17 @@ import (
 type stubPipeline struct {
 	pipeline.Interface
 	pipeline    *pipelineModel.Pipeline
+	content     []byte
 	updateCalls int
 }
 
 func (f *stubPipeline) GetPipelineByID(context.Context, int64) (*pipelineModel.Pipeline, error) {
 	return f.pipeline, nil
+}
+
+// GetPipelineContent 供 cancelDownstream 解析被跳过阶段的任务定义。
+func (f *stubPipeline) GetPipelineContent(context.Context, int64) (*pipelineModel.PipelineFile, error) {
+	return &pipelineModel.PipelineFile{Data: f.content}, nil
 }
 
 func (f *stubPipeline) UpdatePipeline(context.Context, *pipelineModel.Pipeline) error {
@@ -122,7 +128,12 @@ type finalizerFixture struct {
 
 func newFinalizerFixture() *finalizerFixture {
 	return &finalizerFixture{
-		pipelineSvc:  &stubPipeline{pipeline: &pipelineModel.Pipeline{ID: 7, SpaceID: 3}},
+		pipelineSvc: &stubPipeline{
+			pipeline: &pipelineModel.Pipeline{ID: 7, SpaceID: 3},
+			// 下游阶段被跳过后要按 YAML 补 skipped 任务；用例里的阶段名（deploy/cleanup）
+			// 不在该 YAML 中，因此只校验阶段状态。
+			content: []byte(skipStepsDoc),
+		},
 		executionSvc: &stubExecution{},
 		stageSvc:     &stubStage{},
 		stepSvc:      &stubStep{},

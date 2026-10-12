@@ -48,6 +48,7 @@ import (
 	step2 "github.com/easysoft/gitfox-community/app/service/step"
 	"github.com/easysoft/gitfox-community/app/service/tag"
 	user2 "github.com/easysoft/gitfox-community/app/service/user"
+	variable2 "github.com/easysoft/gitfox-community/app/service/variable"
 	"github.com/easysoft/gitfox-community/app/store/artifact"
 	"github.com/easysoft/gitfox-community/app/store/branch"
 	"github.com/easysoft/gitfox-community/app/store/execution"
@@ -65,6 +66,7 @@ import (
 	"github.com/easysoft/gitfox-community/app/store/stage"
 	"github.com/easysoft/gitfox-community/app/store/step"
 	"github.com/easysoft/gitfox-community/app/store/user"
+	"github.com/easysoft/gitfox-community/app/store/variable"
 	"github.com/easysoft/gitfox-community/app/store/webhook"
 	"github.com/easysoft/gitfox-community/cmd/cli/operations/provider"
 	"github.com/easysoft/gitfox-community/pkg/auth/authn"
@@ -175,6 +177,8 @@ func NewApp(mode string) (*App, func(), error) {
 	pipelineController := pipeline3.NewController(ciConfig, pipelineService, repoService)
 	executionStore := execution.NewExecutionStore(db)
 	stageStore := stage.NewStageStore(db)
+	stepStore := step.NewStepStore(db)
+	stepService := step2.NewStepService(stepStore)
 	noopStageApproval := scheduler.NewNoopStageApproval()
 	schedulerScheduler, err := scheduler.New(stageStore, runnerStore, mutexManager, noopStageApproval)
 	if err != nil {
@@ -183,15 +187,6 @@ func NewApp(mode string) (*App, func(), error) {
 		return nil, nil, err
 	}
 	txRunnerImpl := dbtx.NewTxRunner(db)
-	triggererTriggerer := triggerer.New(pipelineService, executionStore, stageStore, schedulerScheduler, txRunnerImpl, config)
-	stepStore := step.NewStepStore(db)
-	cancelerCanceler := canceler.New(executionStore, pipelineStore, stageStore, stepStore, schedulerScheduler)
-	executionService := execution2.NewExecutionService(executionStore, stageStore)
-	executionController := execution3.NewController(triggererTriggerer, cancelerCanceler, executionService, pipelineService, repoService, gitService)
-	runnerService := runner2.NewService(runnerStore)
-	url := provider.NewURLConfig(config)
-	stageService := stage2.NewStageService(stageStore)
-	stepService := step2.NewStepService(stepStore)
 	eventsConfig := provider.NewEventConfig()
 	universalClient := provider.NewEventRedisClient()
 	system, err := provider.ProvideEventSystem(eventsConfig, universalClient)
@@ -206,6 +201,15 @@ func NewApp(mode string) (*App, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
+	variableStore := variable.NewVariableStore(db)
+	variableService := variable2.NewService(variableStore)
+	triggererTriggerer := triggerer.New(pipelineService, executionStore, stageStore, stepService, schedulerScheduler, txRunnerImpl, config, streamer, reporter, variableService)
+	cancelerCanceler := canceler.New(executionStore, pipelineStore, stageStore, stepStore, schedulerScheduler)
+	executionService := execution2.NewExecutionService(executionStore, stageStore)
+	executionController := execution3.NewController(triggererTriggerer, cancelerCanceler, executionService, pipelineService, repoService, gitService)
+	runnerService := runner2.NewService(runnerStore)
+	url := provider.NewURLConfig(config)
+	stageService := stage2.NewStageService(stageStore)
 	eventsReporter, err := provider.ProvidePullReqReporter(system)
 	if err != nil {
 		cleanup2()
