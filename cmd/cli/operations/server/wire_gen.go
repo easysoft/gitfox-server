@@ -227,7 +227,8 @@ func NewApp(mode string) (*App, func(), error) {
 	lockerLocker := locker.NewLocker(mutexManager)
 	pullrequestStore := pullrequest.NewPullRequestStore(db)
 	noopPushRequestCleaner := pullrequest2.NewNoopPushRequestCleaner()
-	pullrequestService, err := provider.ProvidePullRequestSvc(eventContext, readerFactory, eventsReaderFactory, eventsReporter, config, gitService, repoService, store, lockerLocker, pullrequestStore, streamer, pubSub, urlProvider, noopPushRequestCleaner)
+	noopAIIssueApplier := pullrequest2.NewNoopAIIssueApplier()
+	pullrequestService, err := provider.ProvidePullRequestSvc(eventContext, readerFactory, eventsReaderFactory, eventsReporter, config, gitService, repoService, store, lockerLocker, pullrequestStore, streamer, pubSub, urlProvider, noopPushRequestCleaner, noopAIIssueApplier)
 	if err != nil {
 		cleanup2()
 		cleanup()

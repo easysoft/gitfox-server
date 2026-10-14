@@ -43,6 +43,7 @@ func registerRepoRoutes(r *gin.RouterGroup, controller *Controller) {
 				repopull.GET(fmt.Sprintf("/:%s/commits", req.PullrequestID), controller.Repo.Commits)
 				repopull.POST(fmt.Sprintf("/:%s/merge", req.PullrequestID), controller.Repo.Merge)
 				repopull.POST(fmt.Sprintf("/:%s/event-trigger", req.PullrequestID), controller.Repo.EventTrigger)
+				repopull.POST(fmt.Sprintf("/:%s/accept", req.PullrequestID), controller.Repo.AcceptAIIssue)
 			}
 		}
 	}

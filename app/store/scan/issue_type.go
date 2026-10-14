@@ -110,6 +110,7 @@ type issueJoin struct {
 	EditedBy        string                        `gorm:"column:editedBy"`
 	TriggerID       int64                         `gorm:"column:triggerID"`
 	TriggerType     constant.ScanPlanTriggerType  `gorm:"column:triggerType"`
+	CanAccept       bool                          `gorm:"column:canAccept"`
 }
 
 func mapIssueJoinToModel(in *issueJoin) *scanModel.ScanIssueInfo {
@@ -157,5 +158,6 @@ func mapIssueJoinToModel(in *issueJoin) *scanModel.ScanIssueInfo {
 		CreatedBy:       in.CreatedBy,
 		EditedBy:        in.EditedBy,
 		Trigger:         trigger,
+		CanAccept:       in.CanAccept,
 	}
 }

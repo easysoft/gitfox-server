@@ -410,4 +410,5 @@ type ScanIssueInfo struct {
 	CreatedBy       string                        `json:"createdBy,omitempty"`
 	EditedBy        string                        `json:"editedBy,omitempty"`
 	Trigger         *ScanTaskTrigger              `json:"trigger"`
+	CanAccept       bool                          `json:"canAccept"`
 }
