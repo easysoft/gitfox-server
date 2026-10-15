@@ -126,16 +126,20 @@ func (t *triggerer) Trigger(
 	base.Params["PLUGIN_TOKEN"] = t.config.PipelineAuth.Password
 	base.Params["GITFOX_API_ENDPOINT"] = t.config.URL.Base + "/api/v2"
 
-	tigger := string(base.Action)
-	if tigger == "" {
-		tigger = "manual"
+	trigger := string(base.Action)
+	createdBy := base.Trigger
+	if trigger == "" {
+		trigger = "manual"
+	}
+	if trigger == "auto" {
+		createdBy = "system"
 	}
 	execution := &executionModel.Execution{
 		Commit:       base.Commit,
 		CommitBefore: base.CommitBefore,
 		PipelineID:   pipelineID,
-		Trigger:      tigger, // 使用 action 取代原先的 event
-		CreatedBy:    base.Trigger,
+		Trigger:      trigger, // 使用 action 取代原先的 event
+		CreatedBy:    createdBy,
 		Parent:       uint(base.Parent),
 		Status:       constant.CIStatusPending,
 		Ref:          base.Ref,
