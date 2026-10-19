@@ -11,6 +11,7 @@ type StageApproval struct {
 	Approvers []string `json:"approvers"`
 	Mode      string   `json:"mode,omitempty"`
 	Timeout   string   `json:"timeout,omitempty"`
+	Percent   int      `json:"percent,omitempty"`
 }
 
 // Stage 流水线执行阶段

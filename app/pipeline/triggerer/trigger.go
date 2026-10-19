@@ -405,6 +405,7 @@ func parseV1Stages(
 						Approvers: []string(stage.Approval.Approvers),
 						Mode:      stage.Approval.Mode,
 						Timeout:   stage.Approval.Timeout,
+						Percent:   stageApprovalPercent(stage.Approval.Percent),
 					}
 				}
 
@@ -503,6 +504,10 @@ func validateV1StageApproval(stage *v1yaml.Stage) error {
 	default:
 		return fmt.Errorf("invalid approval mode %q in stage %q", a.Mode, stage.Id)
 	}
+	if a.Percent != 0 && (a.Percent < constant.MinStageApprovalPercent || a.Percent > constant.MaxStageApprovalPercent) {
+		return fmt.Errorf("invalid approval percent %d in stage %q: must be between %d and %d",
+			a.Percent, stage.Id, constant.MinStageApprovalPercent, constant.MaxStageApprovalPercent)
+	}
 	if a.Timeout != "" {
 		if d, err := time.ParseDuration(a.Timeout); err != nil || d <= 0 {
 			return fmt.Errorf("invalid approval timeout %q in stage %q", a.Timeout, stage.Id)
@@ -515,6 +520,7 @@ func validateV1StageApproval(stage *v1yaml.Stage) error {
 		Approvers: []string(a.Approvers),
 		Mode:      a.Mode,
 		Timeout:   a.Timeout,
+		Percent:   stageApprovalPercent(a.Percent),
 	})
 	if err != nil {
 		return fmt.Errorf("marshal approval config of stage %q: %w", stage.Id, err)
@@ -524,6 +530,15 @@ func validateV1StageApproval(stage *v1yaml.Stage) error {
 			stage.Id, len(raw), constant.MaxApprovalConfigLen)
 	}
 	return nil
+}
+
+// stageApprovalPercent 归一化 approval 的 percent：0（省略）按默认值 100 落库，
+// 让下游（付费版、前端展示）不必再区分「未配置」和「配置为全票」。
+func stageApprovalPercent(percent int) int {
+	if percent == 0 {
+		return constant.DefaultStageApprovalPercent
+	}
+	return percent
 }
 
 // validateV1Step 校验 step 的 spec 完整性

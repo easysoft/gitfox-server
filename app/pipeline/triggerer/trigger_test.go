@@ -36,6 +36,22 @@ func TestValidateV1StageApproval(t *testing.T) {
 		{name: "mode defaulted", approval: &v1yaml.Approval{
 			Approvers: v1yaml.CommaSeparated{"zhangsan"},
 		}},
+		{name: "percent max", approval: &v1yaml.Approval{
+			Approvers: v1yaml.CommaSeparated{"zhangsan"},
+			Percent:   constant.MaxStageApprovalPercent,
+		}},
+		{name: "percent min", approval: &v1yaml.Approval{
+			Approvers: v1yaml.CommaSeparated{"zhangsan"},
+			Percent:   constant.MinStageApprovalPercent,
+		}},
+		{name: "percent above max", approval: &v1yaml.Approval{
+			Approvers: v1yaml.CommaSeparated{"zhangsan"},
+			Percent:   constant.MaxStageApprovalPercent + 1,
+		}, wantErr: "invalid approval percent"},
+		{name: "negative percent", approval: &v1yaml.Approval{
+			Approvers: v1yaml.CommaSeparated{"zhangsan"},
+			Percent:   -1,
+		}, wantErr: "invalid approval percent"},
 		{name: "empty approvers", approval: &v1yaml.Approval{}, wantErr: "check 'approvers' key"},
 		{name: "too many approvers", approval: &v1yaml.Approval{Approvers: tooManyApprovers}, wantErr: "too many approvers"},
 		{name: "invalid mode", approval: &v1yaml.Approval{
@@ -71,5 +87,16 @@ func TestValidateV1StageApproval(t *testing.T) {
 				t.Fatalf("expected error containing %q, got %q", c.wantErr, err.Error())
 			}
 		})
+	}
+}
+
+func TestStageApprovalPercentDefaultsToAll(t *testing.T) {
+	t.Parallel()
+
+	if got := stageApprovalPercent(0); got != constant.DefaultStageApprovalPercent {
+		t.Fatalf("percent = %d, want %d for an omitted percent", got, constant.DefaultStageApprovalPercent)
+	}
+	if got := stageApprovalPercent(60); got != 60 {
+		t.Fatalf("percent = %d, want 60 to be kept as configured", got)
 	}
 }

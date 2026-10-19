@@ -60,6 +60,7 @@ spec:
         approvers: zhangsan,lisi
         mode: or
         timeout: 24h
+        percent: 60
       spec:
         steps:
           - id: run
@@ -107,8 +108,48 @@ spec:
 	if withApproval.Timeout != "24h" {
 		t.Fatalf("expected timeout 24h, got %q", withApproval.Timeout)
 	}
+	if withApproval.Percent != 60 {
+		t.Fatalf("expected percent 60, got %d", withApproval.Percent)
+	}
 
 	if pipeline.Stages[1].Approval != nil {
 		t.Fatalf("expected nil approval on second stage, got %+v", pipeline.Stages[1].Approval)
+	}
+}
+
+func TestParsePipelineApprovalPercentOmitted(t *testing.T) {
+	t.Parallel()
+
+	const pipelineYAML = `
+version: 1
+kind: pipeline
+spec:
+  stages:
+    - id: pkg_install
+      name: stageWithApproval
+      type: ci
+      approval:
+        approvers: zhangsan,lisi
+      spec:
+        steps:
+          - id: run
+            name: run
+            type: run
+            spec:
+              script:
+                - echo 1
+`
+
+	config, err := ParseString(pipelineYAML)
+	if err != nil {
+		t.Fatalf("parse pipeline failed: %v", err)
+	}
+
+	pipeline, ok := config.Spec.(*Pipeline)
+	if !ok {
+		t.Fatalf("unexpected spec type %T", config.Spec)
+	}
+	if got := pipeline.Stages[0].Approval.Percent; got != 0 {
+		t.Fatalf("expected percent to stay unset (0) when omitted, got %d", got)
 	}
 }
