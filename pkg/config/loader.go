@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      caiyan <caiyan@chandao.com>
+
 package config
 
 import (
@@ -447,21 +451,7 @@ func findConfigFilePaths(mode, ext string) (string, error) {
 	return configPath, nil
 }
 
+// composeDatasource 根据数据库驱动拼接 DSN。Datasource 已显式配置时不会被调用。
 func composeDatasource(config *Config) string {
-	// GaussDB（openGauss 兼容 PostgreSQL 协议）使用 key=value 形式的 DSN
-	if config.Database.Driver == "gaussdb" {
-		return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-			config.Database.Host,
-			config.Database.Port,
-			config.Database.User,
-			config.Database.Password,
-			config.Database.Name)
-	}
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=%s",
-		config.Database.User,
-		config.Database.Password,
-		config.Database.Host,
-		config.Database.Port,
-		config.Database.Name,
-		url.QueryEscape(config.Database.Timezone))
+	return composerFor(config.Database.Driver).Compose(config.Database)
 }
