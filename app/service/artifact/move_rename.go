@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package artifact
 
 import (
@@ -106,9 +110,10 @@ func (s *Service) RelocateEntity(ctx context.Context, req *model.RelocateEntityR
 				i18n.ArtifactMoveContainerNotSupported,
 			)
 		}
-		if needRename {
+		// 制品库显示名称不在 OCI 推拉地址中，允许修改。 package/version 的名称参与地址，仍然禁止重命名。
+		if needRename && splitEntityID.Kind != constant.ArtifactEntityKindArtifact {
 			return pkgErrors.WithI18nKey(
-				fmt.Errorf("container artifacts do not support rename"),
+				fmt.Errorf("container package/version do not support rename"),
 				i18n.ArtifactRenameContainerNotSupported,
 			)
 		}

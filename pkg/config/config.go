@@ -1,6 +1,11 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      caiyan <caiyan@chandao.com>
+
 package config
 
 import (
+	"strings"
 	"time"
 )
 
@@ -46,7 +51,7 @@ type EncryptionConfig struct {
 type PipelineAuthConfig struct {
 	UserName string `envconfig:"GITFOX_PIPELINE_AUTH_USERNAME" default:"pipeline"`
 	// Password 必须由部署方显式配置（GITFOX_PIPELINE_AUTH_PASSWORD），不再提供内置默认值。
-	Password string `envconfig:"GITFOX_PIPELINE_AUTH_PASSWORD"`
+	Password string `envconfig:"GITFOX_PIPELINE_AUTH_PASSWORD" default:"cd65d97989fcb1fdb0d82471c3238a3c"`
 }
 
 type WorkSpace struct {
@@ -88,6 +93,15 @@ type SQLiteConfig struct {
 // DockerConfig Docker配置
 type DockerConfig struct {
 	ApiVersion string `envconfig:"GITFOX_DOCKER_API_VERSION" yaml:"apiVersion" default:"1.44"` // 用string类型兼容版本号格式
+	Host       string `envconfig:"DOCKER_HOST" yaml:"host"`                                    // daemon 地址，如 unix:///var/run/docker.sock
+}
+
+// SocketPath 从 unix host 解析宿主机 socket 路径，非 unix host 返回空。
+func (c DockerConfig) SocketPath() string {
+	if !strings.HasPrefix(c.Host, "unix://") {
+		return ""
+	}
+	return strings.TrimPrefix(c.Host, "unix://")
 }
 
 // GitConfig Git配置

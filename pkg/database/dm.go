@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package database
 
 import (
@@ -18,6 +22,10 @@ type DaMengDB gorm.DB
 
 // https://gitee.com/chunanyong/dm#https://gitee.com/link?target=https%3A%2F%2Fpackage.dameng.com%2Feco%2Fadapter
 func NewDaMengDB(dbConf config.DatabaseConfig, logConf config.LoggingConfig) (*DaMengDB, func() error, error) {
+	if err := validateDMConfig(dbConf); err != nil {
+		return nil, nil, err
+	}
+
 	gormWriter := buildGormWriter(logConf, true)
 	logLevel := logger.Warn
 	if dbConf.PrintSQL {
@@ -27,7 +35,7 @@ func NewDaMengDB(dbConf config.DatabaseConfig, logConf config.LoggingConfig) (*D
 	if slowThreshold <= 0 {
 		slowThreshold = 500 * time.Millisecond
 	}
-	db, err := gorm.Open(dameng.Open("dm://SYSDBA:please_change@127.0.0.1:9906"), &gorm.Config{
+	db, err := gorm.Open(dameng.Open(dbConf.Datasource), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   "ops_", // 表名前缀，"repo" 的表应为 "ops_repo"
 			SingularTable: true,   // 使用单数表名，启用此选项时，"repo" 的表将为 "repo"
@@ -83,4 +91,14 @@ func NewDaMengDB(dbConf config.DatabaseConfig, logConf config.LoggingConfig) (*D
 // DB 返回底层的 *gorm.DB 实例
 func (d *DaMengDB) DB() *gorm.DB {
 	return (*gorm.DB)(d)
+}
+
+// validateDMConfig 校验达梦连接配置。
+// 达梦连接串必须显式提供：GITFOX_DB_DATASOURCE=dm://user:pass@host:port?schema=xxx
+// 或由 loader 根据 GITFOX_DB_HOST/PORT/USER/PASSWORD/NAME 拆分字段拼接。
+func validateDMConfig(dbConf config.DatabaseConfig) error {
+	if dbConf.Datasource == "" {
+		return fmt.Errorf("dm datasource is required, set GITFOX_DB_DATASOURCE or GITFOX_DB_HOST/PORT/USER/PASSWORD/NAME")
+	}
+	return nil
 }

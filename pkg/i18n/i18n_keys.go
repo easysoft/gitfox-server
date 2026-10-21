@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package i18n
 
 // 此文件由 i18n-keygen 工具自动生成，请勿手动修改
@@ -74,7 +78,7 @@ const (
 	ArtifactRecycleListSuccess              I18nKey = "artifact.recycle_list_success"                // 制品回收站查询成功.
 	ArtifactRefreshTreeSuccess              I18nKey = "artifact.refresh_tree_success"                // 制品树刷新成功.
 	ArtifactRelocateSuccess                 I18nKey = "artifact.relocate_success"                    // 操作成功.
-	ArtifactRenameContainerNotSupported     I18nKey = "artifact.rename_container_not_supported"      // container 格式制品不支持重命名；镜像名称是推拉地址的一部分,重命名会导致客户端地址失效.
+	ArtifactRenameContainerNotSupported     I18nKey = "artifact.rename_container_not_supported"      // container 格式的镜像包/版本不支持重命名；镜像名称是推拉地址的一部分,重命名会导致客户端地址失效.
 	ArtifactRenameEntityTypeInvalid         I18nKey = "artifact.rename_entity_type_invalid"          // 不支持的重命名实体类型.
 	ArtifactRenameNewNameRequired           I18nKey = "artifact.rename_new_name_required"            // 重命名操作必须指定 newName.
 	ArtifactRenameSiblingConflict           I18nKey = "artifact.rename_sibling_conflict"             // 同级已存在同名实体.
