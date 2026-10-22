@@ -177,16 +177,41 @@ func (t *triggerer) Trigger(
 		}
 	}
 
-	tigger := string(base.Action)
-	if tigger == "" {
-		tigger = "manual"
+	if globals, masked, err := t.resolveGlobalParams(ctx, file.Data); err != nil {
+		log.Warnf("[trigger]: resolve global params failed: %v", err)
+	} else {
+		for name, value := range globals {
+			key := inputs.GlobalKey(name)
+			// 若用户传入的变量和全局变量同名，优先使用用户传入的变量
+			if _, exists := base.Params[key]; !exists {
+				base.Params[key] = value
+			}
+		}
+		if len(masked) > 0 {
+			base.Params[inputs.GlobalMaskKey] = strings.Join(masked, ",")
+		}
+		if len(globals) > 0 {
+			log.Infof("[trigger]: injected %d global params, masked=%v", len(globals), masked)
+		} else if refs := inputs.GlobalRefs(file.Data); len(refs) > 0 {
+			// 流水线引用了全局参数但一条都没命中
+			log.Warnf("[trigger]: global params referenced but not found in table: %v", refs)
+		}
+	}
+
+	trigger := string(base.Action)
+	createdBy := base.Trigger
+	if trigger == "" {
+		trigger = "manual"
+	}
+	if trigger == "auto" {
+		createdBy = "system"
 	}
 	execution := &executionModel.Execution{
 		Commit:       base.Commit,
 		CommitBefore: base.CommitBefore,
 		PipelineID:   pipelineID,
-		Trigger:      tigger, // 使用 action 取代原先的 event
-		CreatedBy:    base.Trigger,
+		Trigger:      trigger, // 使用 action 取代原先的 event
+		CreatedBy:    createdBy,
 		Parent:       uint(base.Parent),
 		Status:       constant.CIStatusPending,
 		Ref:          base.Ref,
