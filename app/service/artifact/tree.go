@@ -58,6 +58,12 @@ func (s *Service) refreshTree(ctx context.Context, format string, artStore artif
 			return nil
 		}
 
+		// file 格式的目录树完全由 group 表达，package/version 只是历史兼容记录。
+		// 若继续同步，会把前面已经纠正为 group 的同路径节点重新覆盖成 package/version，导致 group 直挂资产在页面树中不可见。
+		if pkg.Format == model.ArtifactFileFormat {
+			return nil
+		}
+
 		// 2a. raw 格式 namespace 补建 group（namespace != "" 且 groupID==0 时）
 		if pkg.Namespace != "" && pkg.GroupID == 0 {
 			if sErr := syncer.SyncRawGroup(ctx, pkg); sErr != nil {
