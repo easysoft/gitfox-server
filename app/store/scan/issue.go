@@ -72,12 +72,6 @@ func (s *ScanIssueStore) BatchCreate(ctx context.Context, issues []*ScanIssue) e
 	return nil
 }
 
-// canAcceptExpr 计算 canAccept（不入库）：仅 AI 扫描问题可能可采纳；同一 ppm 同一文件内
-// 只要有一个 issue 已 solved（解决即代表采纳），该文件全部 issue 都不再可采纳。
-const canAcceptExpr = "(i.scanMethod = ? AND NOT EXISTS (" +
-	"SELECT 1 FROM ops_scan_issues AS s WHERE s.ppmID = i.ppmID AND s.path = i.path " +
-	"AND s.deleted = 0 AND s.status = ?)) AS canAccept"
-
 // Get 查询单个扫描问题详情（含规则信息）
 func (s *ScanIssueStore) Get(ctx context.Context, id uint) (*scanModel.ScanIssueInfo, error) {
 	var item issueJoin
@@ -90,9 +84,7 @@ func (s *ScanIssueStore) Get(ctx context.Context, id uint) (*scanModel.ScanIssue
 			"i.status, i.scanMethod, i.resolution, i.payload, i.createdByTaskID, i.updatedByTaskID, "+
 			"i.createdBy, i.editedBy, pp.title AS ppmTitle, "+
 			"t.planID, p.name AS planName, i.createdDate, i.resolvedDate, i.closedDate, i.ignoredDate, "+
-			"t.triggerID, t.triggerType, "+
-			canAcceptExpr,
-			constant.ScanMethodAI, constant.ScanIssueStatusSolved).
+			"t.triggerID, t.triggerType").
 		Joins("LEFT JOIN ops_scan_rules AS r ON i.ruleID = r.id").
 		Joins("LEFT JOIN ops_scan_tasks AS t ON i.updatedByTaskID = t.id").
 		Joins("LEFT JOIN ops_scan_plans AS p ON t.planID = p.id").
@@ -116,9 +108,7 @@ func (s *ScanIssueStore) List(ctx context.Context, filter scanModel.ScanIssueReq
 			"i.status, i.scanMethod, i.resolution, i.payload, i.createdByTaskID, i.updatedByTaskID, "+
 			"i.createdBy, i.editedBy, pp.title AS ppmTitle, "+
 			"t.planID, p.name AS planName, i.createdDate, i.resolvedDate, i.closedDate, i.ignoredDate, "+
-			"t.triggerID, t.triggerType, "+
-			canAcceptExpr,
-			constant.ScanMethodAI, constant.ScanIssueStatusSolved).
+			"t.triggerID, t.triggerType").
 		Joins("LEFT JOIN ops_scan_rules AS r ON i.ruleID = r.id").
 		Joins("LEFT JOIN ops_scan_tasks AS t ON i.updatedByTaskID = t.id").
 		Joins("LEFT JOIN ops_scan_plans AS p ON t.planID = p.id").
