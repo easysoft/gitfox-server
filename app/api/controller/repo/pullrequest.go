@@ -173,7 +173,10 @@ func (ctl *Controller) AcceptAIIssue(ctx *gin.Context) {
 
 	data, err := ctl.pullrequestSvc.AcceptAIIssue(ctx.Request.Context(), session, repoID, pullreqID, &in)
 	if err != nil {
-		resp.InternalError(ctx, errors.WithI18nKey(err, i18n.CodeReviewApplyError))
+		if key := errors.GetI18nKey(err); key == "" || key == i18n.ErrorDefault {
+			err = errors.WithI18nKey(err, i18n.CodeReviewApplyError)
+		}
+		resp.InternalError(ctx, err)
 		return
 	}
 

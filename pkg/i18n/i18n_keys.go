@@ -1,7 +1,3 @@
-// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
-// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
-// @author      lidaogang <lidaogang@chandao.com>
-
 package i18n
 
 // 此文件由 i18n-keygen 工具自动生成，请勿手动修改
@@ -543,14 +539,34 @@ const (
 	CliVersionWelcome                    I18nKey = "cli.version_welcome"                       // gitfox版本信息
 
 	// CodeReview 相关常量
-	CodeReviewBodyParamError      I18nKey = "codeReview.body_param_error"      // 请求体参数解析失败.
-	CodeReviewConfigSuccess       I18nKey = "codeReview.config_success"        // AI 评审配置查询成功.
-	CodeReviewPathParamError      I18nKey = "codeReview.path_param_error"      // 路径参数解析失败.
-	CodeReviewReportUploadError   I18nKey = "codeReview.report_upload_error"   // 代码评审报告上传失败.
-	CodeReviewReportUploadSuccess I18nKey = "codeReview.report_upload_success" // 代码评审报告上传成功.
-	CodeReviewRuleListSuccess     I18nKey = "codeReview.rule_list_success"     // AI代码评审规则列表查询成功.
-	CodeReviewApplySuccess        I18nKey = "codeReview.apply_success"         // 应用 AI 代码评审建议成功.
-	CodeReviewApplyError          I18nKey = "codeReview.apply_error"           // 应用 AI 代码评审建议失败.
+	CodeReviewAcceptCommitError             I18nKey = "codeReview.accept_commit_error"               // 提交源分支上的文件失败,请稍后重试.
+	CodeReviewAcceptEndLineOutOfBounds      I18nKey = "codeReview.accept_end_line_out_of_bounds"     // 建议的结束行超出文件范围.
+	CodeReviewAcceptInvalidLineRange        I18nKey = "codeReview.accept_invalid_line_range"         // 建议的行范围无效.
+	CodeReviewAcceptIssueQueryError         I18nKey = "codeReview.accept_issue_query_error"          // 查询审查问题失败.
+	CodeReviewAcceptIssuesNotFound          I18nKey = "codeReview.accept_issues_not_found"           // 未找到指定的审查问题.
+	CodeReviewAcceptMarkSolvedError         I18nKey = "codeReview.accept_mark_solved_error"          // 代码已应用,但标记审查问题为已解决失败.
+	CodeReviewAcceptOldCodeMismatch         I18nKey = "codeReview.accept_old_code_mismatch"          // 源文件中的建议行代码已变化,无法应用该建议.
+	CodeReviewAcceptPullRequestQueryError   I18nKey = "codeReview.accept_pull_request_query_error"   // 查询 Pull Request 失败.
+	CodeReviewAcceptReadBlobError           I18nKey = "codeReview.accept_read_blob_error"            // 读取文件内容失败.
+	CodeReviewAcceptReadContentError        I18nKey = "codeReview.accept_read_content_error"         // 读取文件内容失败.
+	CodeReviewAcceptReadFileError           I18nKey = "codeReview.accept_read_file_error"            // 读取源分支上的文件失败.
+	CodeReviewAcceptSkipFileAlreadyResolved I18nKey = "codeReview.accept_skip_file_already_resolved" // 该文件已有已解决的 AI 审查问题,本次建议未重复应用.
+	CodeReviewAcceptSkipNoOldCode           I18nKey = "codeReview.accept_skip_no_old_code"           // 该问题缺少原代码,无法定位替换位置.
+	CodeReviewAcceptSkipNotAiIssue          I18nKey = "codeReview.accept_skip_not_ai_issue"          // 该问题不是 AI 审查问题.
+	CodeReviewAcceptSkipNotInPullRequest    I18nKey = "codeReview.accept_skip_not_in_pull_request"   // 该问题不属于当前 Pull Request.
+	CodeReviewAcceptSkipNotWaiting          I18nKey = "codeReview.accept_skip_not_waiting"           // 该问题当前不在待采纳状态.
+	CodeReviewAcceptSolvedCheckError        I18nKey = "codeReview.accept_solved_check_error"         // 检查文件 %s 的已解决问题失败,请稍后重试.
+	CodeReviewAcceptSourceRepoQueryError    I18nKey = "codeReview.accept_source_repo_query_error"    // 查询源仓库失败.
+	CodeReviewAcceptStartLineOutOfBounds    I18nKey = "codeReview.accept_start_line_out_of_bounds"   // 建议的起始行超出文件范围.
+	CodeReviewAcceptWriteParamsError        I18nKey = "codeReview.accept_write_params_error"         // 准备源分支写入参数失败.
+	CodeReviewApplyError                    I18nKey = "codeReview.apply_error"                       // 应用 AI 代码评审建议失败.
+	CodeReviewApplySuccess                  I18nKey = "codeReview.apply_success"                     // 应用 AI 代码评审建议成功.
+	CodeReviewBodyParamError                I18nKey = "codeReview.body_param_error"                  // 请求体参数解析失败.
+	CodeReviewConfigSuccess                 I18nKey = "codeReview.config_success"                    // AI 评审配置查询成功.
+	CodeReviewPathParamError                I18nKey = "codeReview.path_param_error"                  // 路径参数解析失败.
+	CodeReviewReportUploadError             I18nKey = "codeReview.report_upload_error"               // 代码评审报告上传失败.
+	CodeReviewReportUploadSuccess           I18nKey = "codeReview.report_upload_success"             // 代码评审报告上传成功.
+	CodeReviewRuleListSuccess               I18nKey = "codeReview.rule_list_success"                 // AI代码评审规则列表查询成功.
 
 	// Commit 相关常量
 	CommitActionDecodeError    I18nKey = "commit.action_decode_error"    // 解码提交文件内容时失败.
