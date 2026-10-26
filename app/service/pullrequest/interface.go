@@ -25,4 +25,5 @@ type Interface interface {
 	Commits(ctx context.Context, session *auth.Session, repoID uint, pullreqID uint, page, pageSize uint) ([]commit.Commit, int, error)
 	Merge(ctx context.Context, session *auth.Session, repoID uint, pullreqID uint, params repoModel.Merge) (*repoModel.MergeResponse, error)
 	TriggerEvent(ctx context.Context, session *auth.Session, repoID uint, pullreqID uint, params repoModel.EventTrigger) error
+	AcceptAIIssue(ctx context.Context, session *auth.Session, repoID, pullreqID uint, req *repoModel.AIReviewAcceptReq) (*repoModel.AIReviewAcceptResponse, error)
 }

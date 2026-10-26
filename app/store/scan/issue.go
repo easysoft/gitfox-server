@@ -98,6 +98,7 @@ func (s *ScanIssueStore) Get(ctx context.Context, id uint) (*scanModel.ScanIssue
 
 // List 查询扫描问题列表（含规则信息，支持分页）
 func (s *ScanIssueStore) List(ctx context.Context, filter scanModel.ScanIssueReqFilter) (*database.PageResult[*scanModel.ScanIssueInfo], error) {
+
 	stmt := s.db.WithContext(ctx).
 		Table("ops_scan_issues AS i").
 		Select("i.id, i.issueKey, i.ruleID, r.name AS ruleName, r.ruleKey AS ruleKey, "+

@@ -195,3 +195,5 @@ codeReview:
   report_upload_error: "代码评审报告上传失败。"
   rule_list_success: "AI代码评审规则列表查询成功。"
   config_success: "AI 评审配置查询成功。"
+  apply_success: "应用 AI 代码评审建议成功。"
+  apply_error: "应用 AI 代码评审建议失败。"

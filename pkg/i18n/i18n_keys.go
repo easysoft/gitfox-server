@@ -553,6 +553,8 @@ const (
 	CodeReviewReportUploadError   I18nKey = "codeReview.report_upload_error"   // 代码评审报告上传失败.
 	CodeReviewReportUploadSuccess I18nKey = "codeReview.report_upload_success" // 代码评审报告上传成功.
 	CodeReviewRuleListSuccess     I18nKey = "codeReview.rule_list_success"     // AI代码评审规则列表查询成功.
+	CodeReviewApplySuccess        I18nKey = "codeReview.apply_success"         // 应用 AI 代码评审建议成功.
+	CodeReviewApplyError          I18nKey = "codeReview.apply_error"           // 应用 AI 代码评审建议失败.
 
 	// Commit 相关常量
 	CommitActionDecodeError    I18nKey = "commit.action_decode_error"    // 解码提交文件内容时失败.

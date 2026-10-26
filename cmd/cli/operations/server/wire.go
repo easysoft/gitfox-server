@@ -27,6 +27,7 @@ func NewApp(mode string) (*App, func(), error) {
 		provider.SpaceWireSet,
 		provider.RepoWireSet,
 		provider.CommunityPushRequestCleanerWireSet,
+		provider.CommunityAIIssueApplierWireSet,
 		provider.ProviderWireSet,
 		provider.BranchWireSet,
 		provider.CommunityArchiveWireSet,
