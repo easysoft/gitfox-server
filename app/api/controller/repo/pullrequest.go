@@ -10,6 +10,7 @@ import (
 
 	"github.com/easysoft/gitfox-community/app/api/utils/req"
 	"github.com/easysoft/gitfox-community/app/api/utils/resp"
+	"github.com/easysoft/gitfox-community/app/constant"
 	commitModel "github.com/easysoft/gitfox-community/app/model/commit"
 	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
 	"github.com/easysoft/gitfox-community/pkg/errors"
@@ -168,6 +169,19 @@ func (ctl *Controller) AcceptAIIssue(ctx *gin.Context) {
 	var in repoModel.AIReviewAcceptReq
 	if err := ctx.ShouldBindJSON(&in); err != nil {
 		resp.BadRequest(ctx, errors.WithI18nKey(err, i18n.CodeReviewBodyParamError))
+		return
+	}
+
+	if _, err := ctl.repoSvc.GetRepoCheckAccessByID(
+		ctx.Request.Context(),
+		session,
+		repoID,
+		[]constant.Permission{constant.PermissionRepoPush},
+	); err != nil {
+		if key := errors.GetI18nKey(err); key == "" || key == i18n.ErrorDefault {
+			err = errors.WithI18nKey(err, i18n.CodeReviewApplyError)
+		}
+		resp.InternalError(ctx, err)
 		return
 	}
 
