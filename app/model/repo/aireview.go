@@ -2,7 +2,7 @@ package repo
 
 // AIReviewAcceptReq 一键应用 AI 审查建议请求体。
 type AIReviewAcceptReq struct {
-	IssueIDs []int64 `json:"issueIDs" binding:"required,min=1"`
+	IssueIDs []int64 `json:"issueIDs" binding:"required,min=1,max=200,dive,gt=0"`
 }
 
 // AIReviewAcceptItemStatus 单条 issue 应用结果状态。
