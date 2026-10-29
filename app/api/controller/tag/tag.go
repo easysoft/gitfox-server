@@ -185,6 +185,10 @@ func (c *Controller) Delete(ctx *gin.Context) {
 		resp.BadRequest(ctx, err)
 		return
 	}
+	if session.User.Email == "" {
+		resp.BadRequest(ctx, errors.WithI18nKey(nil, i18n.RepoEmailRequired))
+		return
+	}
 
 	// 通过仓库 ID 获取仓库
 	repoOut, err := c.repoSvc.GetByID(ctx.Request.Context(), session, repoID)
