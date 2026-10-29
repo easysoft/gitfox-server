@@ -12,9 +12,9 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	clii18n "github.com/easysoft/gitfox-community/pkg/i18n/cli"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/joho/godotenv"
 	"github.com/quicklyon/kingpin/v2"
 )
@@ -82,6 +82,13 @@ func runInstall(ctx *kingpin.ParseContext) error {
 	errStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF4500"))
 	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF8C00"))
 	headerStyle := lipgloss.NewStyle().Bold(true)
+
+	// 已有安装目录上重新 install 时，让依赖预检读取 prod.env 里的
+	// DOCKER_HOST / DOCKER_TLS_*；首次安装时文件不存在，Load 无副作用。
+	// godotenv.Load 不覆盖进程已有环境变量，显式 export 的配置优先。
+	if workDir, err := WorkDir(); err == nil {
+		_ = godotenv.Load(filepath.Join(workDir, ProdEnvFileName))
+	}
 
 	// ========== 阶段 0：环境依赖检查 ==========
 	missing := Check(headerStyle, okStyle, errStyle, warnStyle)

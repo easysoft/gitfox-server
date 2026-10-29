@@ -44,19 +44,6 @@ var Privileged = []string{
 	"plugins/heroku",
 }
 
-// // dockerOpts returns back the options to be overridden from docker options set
-// // in the environment. If values are specified in gitness, they get preference.
-// func dockerOpts(config *types.Config) []dockerclient.Opt {
-// 	var overrides []dockerclient.Opt
-// 	if config.Docker.Host != "" {
-// 		overrides = append(overrides, dockerclient.WithHost(config.Docker.Host))
-// 	}
-// 	if config.Docker.APIVersion != "" {
-// 		overrides = append(overrides, dockerclient.WithVersion(config.Docker.APIVersion))
-// 	}
-// 	return overrides
-// }
-
 func newDockerRunner(
 	config *config.Config,
 	client runnerclient.Client,
@@ -109,15 +96,13 @@ func newDockerRunner(
 	exec2 := runtime2.NewExecer(tracer, remote, upload, engine2, int64(config.Ci.ParallelWorkers))
 
 	compiler2 := &compiler2.CompilerImpl{
-		Environ:          provider.Combine(provider.Static(map[string]string{}), stageEnvProvider),
-		PipelineSvc:      pipelineSvc,
-		Secret:           secret.Encrypted(),
-		ExtraHosts:       extraHosts,
-		Privileged:       Privileged,
-		Networks:         config.Ci.ContainerNetworks,
-		Mount:            config.Ci.ContainerVolume,
-		DockerSocket:     []string{"build_docker"},
-		DockerSocketPath: config.Docker.SocketPath(),
+		Environ:     provider.Combine(provider.Static(map[string]string{}), stageEnvProvider),
+		PipelineSvc: pipelineSvc,
+		Secret:      secret.Encrypted(),
+		ExtraHosts:  extraHosts,
+		Privileged:  Privileged,
+		Networks:    config.Ci.ContainerNetworks,
+		Mount:       config.Ci.ContainerVolume,
 	}
 
 	runner := &runtime2.Runner{

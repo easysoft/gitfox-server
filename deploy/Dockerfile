@@ -53,7 +53,9 @@ ENV GITFOX_SSH_PORT=3322
 
 # 日志输出的最低级别  -1~5：debug,info,warn,error,dpanic,panic,fatal
 ENV GITFOX_LOG_LEVEL=0
-ENV GITFOX_DOCKER_HOST=unix:///var/run/docker.sock
+# Docker daemon 连接配置：默认连接容器内 /var/run/docker.sock；
+# 远端 daemon 可用 docker run -e DOCKER_HOST=... -e DOCKER_TLS_VERIFY=1 -e DOCKER_CERT_PATH=... 覆盖。
+ENV DOCKER_HOST=unix:///var/run/docker.sock
 
 ENV GITFOX_CI_PLUGINS_ZIP_URL=/app/ciPlugins/plugins.tar.gz
 

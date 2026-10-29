@@ -5,7 +5,6 @@
 package config
 
 import (
-	"strings"
 	"time"
 )
 
@@ -90,18 +89,11 @@ type SQLiteConfig struct {
 	Path string `envconfig:"GITFOX_SQLITE_FILE" default:"/data/gitfox/sqlite/sqlite.db"`
 }
 
-// DockerConfig Docker配置
+// DockerConfig Docker配置。
+// daemon 连接信息不在此建模，统一使用标准 DOCKER_HOST / DOCKER_TLS_VERIFY /
+// DOCKER_CERT_PATH 进程环境变量（prod.env 由 godotenv.Load 注入进程环境）。
 type DockerConfig struct {
 	ApiVersion string `envconfig:"GITFOX_DOCKER_API_VERSION" yaml:"apiVersion" default:"1.44"` // 用string类型兼容版本号格式
-	Host       string `envconfig:"DOCKER_HOST" yaml:"host"`                                    // daemon 地址，如 unix:///var/run/docker.sock
-}
-
-// SocketPath 从 unix host 解析宿主机 socket 路径，非 unix host 返回空。
-func (c DockerConfig) SocketPath() string {
-	if !strings.HasPrefix(c.Host, "unix://") {
-		return ""
-	}
-	return strings.TrimPrefix(c.Host, "unix://")
 }
 
 // GitConfig Git配置

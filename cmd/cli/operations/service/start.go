@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	clii18n "github.com/easysoft/gitfox-community/pkg/i18n/cli"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/joho/godotenv"
 	"github.com/quicklyon/kingpin/v2"
 )
@@ -53,6 +53,13 @@ func runStart(_ *kingpin.ParseContext) error {
 		return nil
 	}
 
+	// prod.env 里的 DOCKER_HOST / DOCKER_TLS_* 需要参与后续依赖预检。
+	// godotenv.Load 不覆盖进程已有环境变量：显式 export / systemd / 容器环境优先。
+	envPath := filepath.Join(workDir, ProdEnvFileName)
+	if _, err := os.Stat(envPath); err == nil {
+		_ = godotenv.Load(envPath)
+	}
+
 	// =========================================================
 	// 阶段 1. 启动前置依赖拦截 (依赖是否齐全)
 	// =========================================================
@@ -84,7 +91,6 @@ func runStart(_ *kingpin.ParseContext) error {
 	// 阶段 2. 读取环境配制检查 (识别是否允许提供服务)
 	// =========================================================
 	// 查找并校验工作目录下是否存在必要的 prod.env
-	envPath := filepath.Join(workDir, ProdEnvFileName)
 	if _, err := os.Stat(envPath); os.IsNotExist(err) {
 		fmt.Println(errStyle.Render(t(i18n.CliStartErrEnvNotFound)))
 		return nil
