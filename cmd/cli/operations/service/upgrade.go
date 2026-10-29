@@ -15,11 +15,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	clii18n "github.com/easysoft/gitfox-community/pkg/i18n/cli"
 	"github.com/easysoft/gitfox-community/pkg/utils/common"
 	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/hashicorp/go-version"
 	"github.com/minio/selfupdate"
 	"github.com/quicklyon/kingpin/v2"
@@ -119,13 +119,12 @@ func runUpgrade(_ *kingpin.ParseContext) error {
 		}
 		skipCompare = true
 	}
-
 	fmt.Println(fmt.Sprintf(t(i18n.CliUpgradeInfoOld), oldInfo.Version, oldInfo.BuildDate))
 	fmt.Println(fmt.Sprintf(t(i18n.CliUpgradeInfoNew), newInfo.Version, newInfo.BuildDate))
 	fmt.Println()
 
 	if !skipCompare {
-		cmp := compareVersionAndDate(oldInfo.Version, oldInfo.BuildDate, newInfo.Version, newInfo.BuildDate)
+		cmp := compareVersionAndDate(oldInfo, newInfo)
 		switch cmp {
 		case 0:
 			fmt.Println(doneStyle.Render(fmt.Sprintf(t(i18n.CliUpgradeSameVersion), oldInfo.Version, oldInfo.BuildDate)))
@@ -148,6 +147,13 @@ func runUpgrade(_ *kingpin.ParseContext) error {
 	}
 	fmt.Println(doneStyle.Render("✓ " + fmt.Sprintf(t(i18n.CliUpgradeBackupSuccess), backupDir)))
 	fmt.Println()
+
+	// 在停止服务前完成配置预检和变更内容生成；真正的写回在打开新二进制之后执行，避免读取文件失败时提前改变运行配置。
+	pluginsURLChange, err := preparePluginsZipURLDefault(oldWorkDir)
+	if err != nil {
+		fmt.Println(errStyle.Render(fmt.Sprintf(t(i18n.CliUpgradeErrPrepareEnv), err)))
+		return nil
+	}
 
 	// ========== 阶段 5：若服务正在运行则停止 ==========
 	// prod.env 是端口下线确认与启动后健康探针的必需输入：
@@ -186,6 +192,18 @@ func runUpgrade(_ *kingpin.ParseContext) error {
 	}
 	defer src.Close()
 
+	if pluginsURLChange != nil {
+		if err := pluginsURLChange.apply(); err != nil {
+			fmt.Println(errStyle.Render(fmt.Sprintf(t(i18n.CliUpgradeErrApplyEnv), err)))
+			if wasRunning {
+				if serr := startServiceForUpgrade(); serr != nil {
+					fmt.Println(warnStyle.Render(fmt.Sprintf(t(i18n.CliUpgradeErrStart), serr)))
+				}
+			}
+			return nil
+		}
+	}
+
 	// OldSavePath 让 selfupdate 把旧二进制保留到 <oldExe>.old，作为兜底
 	oldSavePath := oldExePath + ".old"
 	applyOpts := selfupdate.Options{
@@ -194,12 +212,18 @@ func runUpgrade(_ *kingpin.ParseContext) error {
 		OldSavePath: oldSavePath,
 	}
 	if err := selfupdate.Apply(src, applyOpts); err != nil {
+		if rerr := pluginsURLChange.restore(); rerr != nil {
+			fmt.Println(errStyle.Render(fmt.Sprintf(t(i18n.CliUpgradeErrRestoreEnv), rerr)))
+		}
 		if rerr := selfupdate.RollbackError(err); rerr != nil {
 			fmt.Println(errStyle.Render(fmt.Sprintf(t(i18n.CliUpgradeErrApplyRollback), err, rerr)))
 			return nil
 		}
 		fmt.Println(errStyle.Render(fmt.Sprintf(t(i18n.CliUpgradeErrApply), err)))
 		return nil
+	}
+	if pluginsURLChange != nil {
+		fmt.Println(doneStyle.Render("✓ " + fmt.Sprintf(t(i18n.CliUpgradeInfoPluginsURLDefaulted), pluginsURLChange.backupPath)))
 	}
 
 	// 双保险：显式 chmod +x，防御异常 umask
@@ -294,13 +318,26 @@ func readBinaryVersion(binPath string) (common.VersionInfo, error) {
 	return info, nil
 }
 
-// compareVersionAndDate 先按 SemVer 比较 version，再按 BuildDate 时间比较。
+// compareVersionAndDate 先比较语义版本；版本相同时优先处理发行版迁移，最后比较 BuildDate。
+// edition 为空表示未知，不参与发行版比较，退回 BuildDate，避免把旧 Pro 误判为 Community。
 // 返回值：-1 表示 a < b（应升级）；0 完全相同；1 表示 a > b（降级）。
-func compareVersionAndDate(aVer, aDate, bVer, bDate string) int {
-	if c := compareSemver(aVer, bVer); c != 0 {
+func compareVersionAndDate(a, b common.VersionInfo) int {
+	if c := compareSemver(a.Version, b.Version); c != 0 {
 		return c
 	}
-	return compareBuildDate(aDate, bDate)
+
+	aEdition := strings.ToLower(strings.TrimSpace(a.Edition))
+	bEdition := strings.ToLower(strings.TrimSpace(b.Edition))
+	if aEdition != "" && bEdition != "" && aEdition != bEdition {
+		if aEdition == "community" && bEdition == "pro" {
+			return -1
+		}
+		if aEdition == "pro" && bEdition == "community" {
+			return 1
+		}
+	}
+
+	return compareBuildDate(a.BuildDate, b.BuildDate)
 }
 
 // compareSemver 先剥掉项目惯用的 "cli-" 前缀，再交给 hashicorp/go-version。
