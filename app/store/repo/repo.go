@@ -143,7 +143,7 @@ func mapToModel(data Repository) *repoModel.Repo {
 		ACL:           data.ACL,
 		Mirror:        data.Mirror,
 		ProviderID:    data.ProviderID,
-		Connector:     data.Connector,
+		Connector:     []byte(data.Connector),
 		Status:        data.Status,
 		CreatedBy:     data.CreatedBy,
 		CreatedDate:   data.CreatedDate,
