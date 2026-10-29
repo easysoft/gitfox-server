@@ -291,9 +291,9 @@ func (c *Controller) Archive(ctx *gin.Context) {
 		return
 	}
 
-	session, ok := req.GetAuthSession(ctx.Request.Context())
+	session, ok := req.GetAuthSessionWithEmail(ctx.Request.Context())
 	if !ok {
-		resp.Unauthorized(ctx, errors.WithI18nKey(nil, i18n.AuthNoSession))
+		resp.Unauthorized(ctx, errors.WithI18nKey(nil, i18n.RepoEmailRequired))
 		return
 	}
 
