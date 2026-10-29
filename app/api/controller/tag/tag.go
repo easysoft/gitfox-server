@@ -179,10 +179,9 @@ func (c *Controller) Delete(ctx *gin.Context) {
 		return
 	}
 
-	session, ok := req.GetAuthSession(ctx.Request.Context())
+	session, ok := req.GetAuthSessionWithEmail(ctx.Request.Context())
 	if !ok {
-		err = errors.WithI18nKey(errors.New("session not found"), i18n.AuthNoSession)
-		resp.BadRequest(ctx, err)
+		resp.BadRequest(ctx, errors.WithI18nKey(nil, i18n.RepoEmailRequired))
 		return
 	}
 
