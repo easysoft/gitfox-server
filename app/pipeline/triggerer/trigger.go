@@ -6,18 +6,23 @@ package triggerer
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"runtime/debug"
 	"slices"
 	"strings"
+	"time"
 
 	"github.com/easysoft/gitfox-community/app/constant"
+	events "github.com/easysoft/gitfox-community/app/events/pipeline"
 	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
 	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
 	"github.com/easysoft/gitfox-community/app/pipeline/manager"
 	"github.com/easysoft/gitfox-community/app/pipeline/scheduler"
 
 	pipelineSvc "github.com/easysoft/gitfox-community/app/service/pipeline"
+	"github.com/easysoft/gitfox-community/app/service/sse"
+	stepSvc "github.com/easysoft/gitfox-community/app/service/step"
 	executionStore "github.com/easysoft/gitfox-community/app/store/execution"
 	stageStore "github.com/easysoft/gitfox-community/app/store/stage"
 	"github.com/easysoft/gitfox-community/pkg/config"
@@ -26,11 +31,11 @@ import (
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	"github.com/easysoft/gitfox-community/pkg/logger"
 	v1yaml "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
-	"github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse"
 	normalize "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/normalize"
 	specresolver "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/resolver"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/script"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 var _ Triggerer = (*triggerer)(nil)
@@ -68,23 +73,48 @@ type Triggerer interface {
 }
 
 type triggerer struct {
-	pipelineService pipelineSvc.Interface
-	executionStore  executionStore.Interface
-	stageStore      stageStore.Interface
-	scheduler       scheduler.Scheduler
-	tx              dbtx.TxRunner
-	config          *config.Config
+	pipelineService  pipelineSvc.Interface
+	executionStore   executionStore.Interface
+	stageStore       stageStore.Interface
+	stepService      stepSvc.Interface
+	scheduler        scheduler.Scheduler
+	tx               dbtx.TxRunner
+	config           *config.Config
+	sseStreamer      sse.Streamer
+	reporter         events.Reporter
+	variableResolver GlobalParamResolver
 }
 
-func New(pipelineService pipelineSvc.Interface, executionStore executionStore.Interface, stageStore stageStore.Interface, scheduler scheduler.Scheduler, tx dbtx.TxRunner, cfg *config.Config) Triggerer {
+func New(
+	pipelineService pipelineSvc.Interface,
+	executionStore executionStore.Interface,
+	stageStore stageStore.Interface,
+	stepService stepSvc.Interface,
+	scheduler scheduler.Scheduler,
+	tx dbtx.TxRunner,
+	cfg *config.Config,
+	sseStreamer sse.Streamer,
+	reporter events.Reporter,
+	variableResolver GlobalParamResolver,
+) Triggerer {
 	return &triggerer{
-		pipelineService: pipelineService,
-		executionStore:  executionStore,
-		stageStore:      stageStore,
-		scheduler:       scheduler,
-		tx:              tx,
-		config:          cfg,
+		pipelineService:  pipelineService,
+		executionStore:   executionStore,
+		stageStore:       stageStore,
+		stepService:      stepService,
+		scheduler:        scheduler,
+		tx:               tx,
+		config:           cfg,
+		sseStreamer:      sseStreamer,
+		reporter:         reporter,
+		variableResolver: variableResolver,
 	}
+}
+
+// GlobalParamResolver 按参数名查询全局参数表。
+// 返回值：命中的全局参数（name -> value）、需要日志掩码的参数名。
+type GlobalParamResolver interface {
+	ResolveByKeys(ctx context.Context, keys []string) (map[string]string, []string, error)
 }
 
 //nolint:gocognit,gocyclo,cyclop //TODO: Refactor @Vistaar
@@ -126,16 +156,62 @@ func (t *triggerer) Trigger(
 	base.Params["PLUGIN_TOKEN"] = t.config.PipelineAuth.Password
 	base.Params["GITFOX_API_ENDPOINT"] = t.config.URL.Base + "/api/v2"
 
-	tigger := string(base.Action)
-	if tigger == "" {
-		tigger = "manual"
+	if globals, masked, err := t.resolveGlobalParams(ctx, file.Data); err != nil {
+		log.Warnf("[trigger]: resolve global params failed: %v", err)
+	} else {
+		for name, value := range globals {
+			key := inputs.GlobalKey(name)
+			// 若用户传入的变量和全局变量同名，优先使用用户传入的变量
+			if _, exists := base.Params[key]; !exists {
+				base.Params[key] = value
+			}
+		}
+		if len(masked) > 0 {
+			base.Params[inputs.GlobalMaskKey] = strings.Join(masked, ",")
+		}
+		if len(globals) > 0 {
+			log.Infof("[trigger]: injected %d global params, masked=%v", len(globals), masked)
+		} else if refs := inputs.GlobalRefs(file.Data); len(refs) > 0 {
+			// 流水线引用了全局参数但一条都没命中
+			log.Warnf("[trigger]: global params referenced but not found in table: %v", refs)
+		}
+	}
+
+	if globals, masked, err := t.resolveGlobalParams(ctx, file.Data); err != nil {
+		log.Warnf("[trigger]: resolve global params failed: %v", err)
+	} else {
+		for name, value := range globals {
+			key := inputs.GlobalKey(name)
+			// 若用户传入的变量和全局变量同名，优先使用用户传入的变量
+			if _, exists := base.Params[key]; !exists {
+				base.Params[key] = value
+			}
+		}
+		if len(masked) > 0 {
+			base.Params[inputs.GlobalMaskKey] = strings.Join(masked, ",")
+		}
+		if len(globals) > 0 {
+			log.Infof("[trigger]: injected %d global params, masked=%v", len(globals), masked)
+		} else if refs := inputs.GlobalRefs(file.Data); len(refs) > 0 {
+			// 流水线引用了全局参数但一条都没命中
+			log.Warnf("[trigger]: global params referenced but not found in table: %v", refs)
+		}
+	}
+
+	trigger := string(base.Action)
+	createdBy := base.Trigger
+	if trigger == "" {
+		trigger = "manual"
+	}
+	if trigger == "auto" {
+		createdBy = "system"
 	}
 	execution := &executionModel.Execution{
 		Commit:       base.Commit,
 		CommitBefore: base.CommitBefore,
 		PipelineID:   pipelineID,
-		Trigger:      tigger, // 使用 action 取代原先的 event
-		CreatedBy:    base.Trigger,
+		Trigger:      trigger, // 使用 action 取代原先的 event
+		CreatedBy:    createdBy,
 		Parent:       uint(base.Parent),
 		Status:       constant.CIStatusPending,
 		Ref:          base.Ref,
@@ -149,11 +225,31 @@ func (t *triggerer) Trigger(
 		return nil, errors.WithI18nKey(err, i18n.PipelineTriggerV1ParseError)
 	}
 
-	if err := t.createExecutionWithStagesWithTx(ctx, execution, stages); err != nil {
+	// 被 when 条件跳过的阶段，阶段内的任务也要落库为 skipped。
+	skippedSteps, err := t.skippedStageSteps(ctx, file.Data, stages)
+	if err != nil {
+		return nil, errors.WithI18nKey(
+			fmt.Errorf("could not parse skipped steps: %w", err),
+			i18n.ExecutionTriggerError,
+		)
+	}
+
+	// 全部阶段被跳过的 execution 不会经过 setup/teardown。
+	allSkipped := allStagesSkipped(stages)
+
+	// 事务：execution + 阶段 + 被跳过阶段内的任务 + 全跳过时的收尾。
+	if err := t.createExecutionWithStagesWithTx(ctx, execution, stages, skippedSteps, allSkipped); err != nil {
 		return nil, errors.WithI18nKey(
 			fmt.Errorf("could not create execution: %w", err),
 			i18n.ExecutionTriggerError,
 		)
+	}
+
+	if allSkipped {
+		finalizer := t.finalizer()
+		finalizer.Publish(ctx, execution)
+		log.Info("[trigger]: all stages are skipped, execution finished as skipped")
+		return execution, nil
 	}
 
 	for _, stage := range stages {
@@ -169,6 +265,45 @@ func (t *triggerer) Trigger(
 	}
 
 	return execution, nil
+}
+
+// allStagesSkipped 判断是否所有阶段都被 when 条件跳过。
+func allStagesSkipped(stages []*stageModel.Stage) bool {
+	for _, stage := range stages {
+		if stage.Status != constant.CIStatusSkipped {
+			return false
+		}
+	}
+	return len(stages) > 0
+}
+
+// skippedStageSteps 预解析流水线 YAML，取出各阶段的任务定义（键为阶段 code）。
+func (t *triggerer) skippedStageSteps(ctx context.Context, data []byte, stages []*stageModel.Stage) (map[string][]*v1yaml.Step, error) {
+	hasSkipped := false
+	for _, stage := range stages {
+		if stage.Status == constant.CIStatusSkipped {
+			hasSkipped = true
+			break
+		}
+	}
+	if !hasSkipped {
+		return nil, nil
+	}
+	return manager.StageStepsFromYAML(data, manager.PipelineLookupFunc(ctx, t.pipelineService))
+}
+
+// createSkippedStageSteps 把被 when 条件跳过的阶段内的任务也标记为 skipped。
+func (t *triggerer) createSkippedStageSteps(ctx context.Context, stepsByStage map[string][]*v1yaml.Step, execution *executionModel.Execution, stages []*stageModel.Stage) error {
+	for _, stage := range stages {
+		if stage.Status != constant.CIStatusSkipped {
+			continue
+		}
+		records := manager.SkippedStepRecords(stepsByStage[stage.Code], stage.ID, execution.ID)
+		if err := manager.CreateSkippedSteps(ctx, t.stepService, records); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // parseV1Stages tries to parse the yaml into a list of stages and returns an error
@@ -201,22 +336,18 @@ func parseV1Stages(
 		return nil, fmt.Errorf("cannot support non-pipeline kinds in v1 at the moment: %w", err)
 	}
 
+	// parameters 只保留普通参数，全局参数单独放进 global 命名空间。
+	plainParams, globalParams, _ := inputs.SplitGlobal(base.Params)
+
 	inputParams := map[string]interface{}{}
 	inputParams["build"] = inputs.Build(manager.ConvertToDroneBuild(execution))
-	inputParams["parameters"] = base.Params
+	inputParams["parameters"] = plainParams
+	inputParams["global"] = globalParams
 
 	var prevStage string
 
 	// expand stage level plugins
-	lookupFunc := func(name, kind, typ, version string) (*v1yaml.Config, error) {
-		// Call the pipeline service to resolve the plugin
-		yamlConfig, err := pipelineService.Resolve(ctx, kind, typ, name)
-		if err != nil {
-			return nil, err
-		}
-		// Convert pipelineModel.Yaml to v1yaml.Config via JSON
-		return parse.ToConfig(yamlConfig)
-	}
+	lookupFunc := manager.PipelineLookupFunc(ctx, pipelineService)
 
 	if err := specresolver.Resolve(config, lookupFunc); err != nil {
 		return nil, fmt.Errorf("could not resolve yaml plugins/templates: %w", err)
@@ -238,6 +369,10 @@ func parseV1Stages(
 			switch stage.Spec.(type) {
 			case *v1yaml.StageCI:
 				runPolicy := string(constant.RunPolicyOnSuccess)
+				// when 条件在成功、失败状态下都不成立时，该阶段被跳过。
+				skipStage := false
+				// 条件不成立时把原因写入 errorLog，随阶段详情返回给前端。
+				whenErrorLog := ""
 				if stage.When != nil {
 					if when := stage.When.Eval; when != "" {
 						trimmedWhen := strings.TrimSpace(when)
@@ -246,7 +381,7 @@ func parseV1Stages(
 							runPolicy = trimmedWhen
 						} else {
 							// Evaluate as expression
-							onSuccess, onFailure, err := script.EvalWhen(when, inputParams)
+							onSuccess, onFailure, err := script.EvalWhen(trimmedWhen, inputParams)
 							if err != nil {
 								return nil, fmt.Errorf("could not resolve when condition for stage: %w", err)
 							}
@@ -257,7 +392,15 @@ func parseV1Stages(
 								runPolicy = string(constant.RunPolicyOnSuccess)
 							case onFailure:
 								runPolicy = string(constant.RunPolicyOnFailure)
+							default:
+								// (false, false)：条件不成立，整个阶段跳过
+								skipStage = true
 							}
+						}
+
+						// when 条件不成立时把跳过原因写入 errorLog
+						if skipStage {
+							whenErrorLog = fmt.Sprintf(v1yaml.WhenSkippedStageTmpl, trimmedWhen)
 						}
 					}
 				}
@@ -271,6 +414,10 @@ func parseV1Stages(
 				if len(dependsOn) == 0 {
 					status = constant.CIStatusPending
 				}
+				if skipStage {
+					// 阶段级跳过：以 skipped 状态入库，不参与调度，也不再成为下游阶段的依赖。
+					status = constant.CIStatusSkipped
+				}
 				temp := &stageModel.Stage{
 					ExecutionID: execution.ID,
 					Code:        stage.Id,
@@ -279,6 +426,16 @@ func parseV1Stages(
 					Depends:     dependsOn,
 					Status:      status,
 					RunPolicy:   runPolicy,
+					ErrorLog:    whenErrorLog,
+				}
+
+				if stage.Approval != nil {
+					temp.ApprovalConfig = &stageModel.StageApproval{
+						Approvers: []string(stage.Approval.Approvers),
+						Mode:      stage.Approval.Mode,
+						Timeout:   stage.Approval.Timeout,
+						Percent:   stageApprovalPercent(stage.Approval.Percent),
+					}
 				}
 
 				// Inline fixStageDetail logic
@@ -303,7 +460,13 @@ func parseV1Stages(
 					}
 				}
 
-				prevStage = temp.Code
+				if skipStage {
+					now := datetime.NowLocalTime()
+					temp.Started = now
+					temp.Finished = now
+				} else {
+					prevStage = temp.Code
+				}
 				stages = append(stages, temp)
 			default:
 				return nil, fmt.Errorf("only CI and template stages are supported in v1 at the moment")
@@ -331,6 +494,10 @@ func validateV1PipelineSpec(pipeline *v1yaml.Pipeline) error {
 
 // validateV1Stage 校验 stage 的 spec 与 steps 存在
 func validateV1Stage(stage *v1yaml.Stage) error {
+	if err := validateV1StageApproval(stage); err != nil {
+		return err
+	}
+
 	stageCI, ok := stage.Spec.(*v1yaml.StageCI)
 	if !ok {
 		// 非 CI 类型 stage 会在后续解析时报错，这里不重复校验
@@ -345,6 +512,62 @@ func validateV1Stage(stage *v1yaml.Stage) error {
 		}
 	}
 	return nil
+}
+
+// validateV1StageApproval 校验 stage 的 approval 配置（整体省略时不校验）。
+func validateV1StageApproval(stage *v1yaml.Stage) error {
+	a := stage.Approval
+	if a == nil {
+		return nil
+	}
+
+	if len(a.Approvers) == 0 {
+		return fmt.Errorf("check 'approvers' key in approval of stage %q", stage.Id)
+	}
+	if len(a.Approvers) > constant.MaxStageApprovalApprovers {
+		return fmt.Errorf("too many approvers (%d > %d) in approval of stage %q",
+			len(a.Approvers), constant.MaxStageApprovalApprovers, stage.Id)
+	}
+	switch a.Mode {
+	case "", string(constant.StageApprovalModeAnd), string(constant.StageApprovalModeOr):
+	default:
+		return fmt.Errorf("invalid approval mode %q in stage %q", a.Mode, stage.Id)
+	}
+	if a.Percent != 0 && (a.Percent < constant.MinStageApprovalPercent || a.Percent > constant.MaxStageApprovalPercent) {
+		return fmt.Errorf("invalid approval percent %d in stage %q: must be between %d and %d",
+			a.Percent, stage.Id, constant.MinStageApprovalPercent, constant.MaxStageApprovalPercent)
+	}
+	if a.Timeout != "" {
+		if d, err := time.ParseDuration(a.Timeout); err != nil || d <= 0 {
+			return fmt.Errorf("invalid approval timeout %q in stage %q", a.Timeout, stage.Id)
+		}
+	}
+
+	// approvalConfig 列宽为 constant.MaxApprovalConfigLen，超长会被 DB 拒绝或静默截断，
+	// 这里前置校验，保证用户看到明确错误。
+	raw, err := json.Marshal(&stageModel.StageApproval{
+		Approvers: []string(a.Approvers),
+		Mode:      a.Mode,
+		Timeout:   a.Timeout,
+		Percent:   stageApprovalPercent(a.Percent),
+	})
+	if err != nil {
+		return fmt.Errorf("marshal approval config of stage %q: %w", stage.Id, err)
+	}
+	if len(raw) > constant.MaxApprovalConfigLen {
+		return fmt.Errorf("approval config of stage %q is too long (%d > %d), reduce approvers",
+			stage.Id, len(raw), constant.MaxApprovalConfigLen)
+	}
+	return nil
+}
+
+// stageApprovalPercent 归一化 approval 的 percent：0（省略）按默认值 100 落库，
+// 让下游（付费版、前端展示）不必再区分「未配置」和「配置为全票」。
+func stageApprovalPercent(percent int) int {
+	if percent == 0 {
+		return constant.DefaultStageApprovalPercent
+	}
+	return percent
 }
 
 // validateV1Step 校验 step 的 spec 完整性
@@ -393,12 +616,52 @@ func (t *triggerer) createExecutionWithStages(
 	return nil
 }
 
+// createExecutionWithStagesWithTx 在同一个事务里创建 execution、阶段、被跳过阶段内的任务，
+// 并在全跳过时一并完成收尾（状态/时间/流水线汇总），保证不会留下中间态。
 func (t *triggerer) createExecutionWithStagesWithTx(
 	ctx context.Context,
 	execution *executionModel.Execution,
 	stages []*stageModel.Stage,
+	skippedSteps map[string][]*v1yaml.Step,
+	finalizeSkipped bool,
 ) error {
-	return t.tx.WithTx(ctx, func(ctx context.Context) error {
-		return t.createExecutionWithStages(ctx, execution, stages)
+	return t.tx.WithTx(ctx, func(txCtx context.Context) error {
+		if err := t.createExecutionWithStages(txCtx, execution, stages); err != nil {
+			return fmt.Errorf("cannot create execution: %w", err)
+		}
+		if err := t.createSkippedStageSteps(txCtx, skippedSteps, execution, stages); err != nil {
+			return fmt.Errorf("cannot create skipped steps: %w", err)
+		}
+		if finalizeSkipped {
+			finalizer := t.finalizer()
+			if err := finalizer.Finalize(txCtx, execution, constant.CIStatusSkipped); err != nil {
+				return fmt.Errorf("cannot finish skipped execution: %w", err)
+			}
+		}
+		return nil
 	})
+}
+
+// finalizer 组装统一的执行收尾器（与 teardown 共用）。
+func (t *triggerer) finalizer() manager.ExecutionFinalizer {
+	return manager.ExecutionFinalizer{
+		ExecutionUpdater: t.executionStore,
+		StageLister:      t.stageStore,
+		PipelineSvc:      t.pipelineService,
+		SSEStreamer:      t.sseStreamer,
+		Reporter:         &t.reporter,
+	}
+}
+
+// resolveGlobalParams 扫描流水线 YAML 中引用的全局参数名（${{global.<name>}}），
+// 按名字去全局参数表取值。未接入全局参数表或没有引用时返回空结果。
+func (t *triggerer) resolveGlobalParams(ctx context.Context, config []byte) (map[string]string, []string, error) {
+	if t.variableResolver == nil {
+		return nil, nil, nil
+	}
+	names := inputs.GlobalRefs(config)
+	if len(names) == 0 {
+		return nil, nil, nil
+	}
+	return t.variableResolver.ResolveByKeys(ctx, names)
 }

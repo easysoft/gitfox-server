@@ -65,6 +65,7 @@ func ProvidePullRequestSvc(
 	bus pubsub.PubSub,
 	urlProvider url.Provider,
 	pushReqCleaner pullrequestSvc.PushRequestCleaner,
+	aiIssueApplier pullrequestSvc.AIIssueApplier,
 ) (*pullrequestSvc.Service, error) {
 	return pullrequestSvc.NewPullRequestSvc(
 		eventCtx.Ctx,
@@ -81,6 +82,7 @@ func ProvidePullRequestSvc(
 		bus,
 		urlProvider,
 		pushReqCleaner,
+		aiIssueApplier,
 	)
 }
 
@@ -89,4 +91,11 @@ func ProvidePullRequestSvc(
 var CommunityPushRequestCleanerWireSet = wire.NewSet(
 	wire.Bind(new(pullrequestSvc.PushRequestCleaner), new(*pullrequestSvc.NoopPushRequestCleaner)),
 	pullrequestSvc.NewNoopPushRequestCleaner,
+)
+
+// CommunityAIIssueApplierWireSet binds the community-edition no-op AI issue
+// applier. The paid edition replaces this with its own wire set.
+var CommunityAIIssueApplierWireSet = wire.NewSet(
+	wire.Bind(new(pullrequestSvc.AIIssueApplier), new(*pullrequestSvc.NoopAIIssueApplier)),
+	pullrequestSvc.NewNoopAIIssueApplier,
 )

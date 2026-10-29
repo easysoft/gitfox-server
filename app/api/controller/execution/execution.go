@@ -17,6 +17,7 @@ import (
 
 	"github.com/easysoft/gitfox-community/app/api/utils/req"
 	"github.com/easysoft/gitfox-community/app/api/utils/resp"
+	"github.com/easysoft/gitfox-community/app/constant"
 	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
 	pipelineModel "github.com/easysoft/gitfox-community/app/model/pipeline"
 	"github.com/easysoft/gitfox-community/app/pipeline/canceler"
@@ -207,15 +208,6 @@ func (c *Controller) Create(ctx *gin.Context) {
 		resp.BadRequest(ctx, err)
 		return
 	}
-	ref, ok := reqBody.Params["gitRef"]
-	if !ok {
-		ref = ""
-	}
-	cloneURL, ok := reqBody.Params["gitURL"]
-	if !ok {
-		cloneURL = ""
-	}
-
 	session, ok := req.GetAuthSession(ctx.Request.Context())
 	if !ok {
 		resp.Unauthorized(ctx, errors.WithI18nKey(nil, i18n.AuthNoSession))
@@ -228,6 +220,21 @@ func (c *Controller) Create(ctx *gin.Context) {
 		resp.InternalError(ctx, err)
 		return
 	}
+
+	// 流水线变量整体作为本次运行参数注入，请求体中的同名参数优先（与定时、事件触发保持一致）
+	params, err := c.pipelineService.GetPipelineVariables(ctx, int64(reqBody.PipelineID))
+	if err != nil {
+		resp.InternalError(ctx, err)
+		return
+	}
+	for k, v := range reqBody.Params {
+		params[k] = v
+	}
+
+	// gitRef 未配置时为空串，不报错（与定时触发保持一致）
+	ref := params["gitRef"]
+	// gitURL 只取请求体，缺省时回落到仓库地址，避免被流水线变量覆盖
+	cloneURL := reqBody.Params["gitURL"]
 
 	// 获取分支信息以取得 SHA
 	var commitSHA string
@@ -254,7 +261,10 @@ func (c *Controller) Create(ctx *gin.Context) {
 	}
 
 	// Create manual hook for execution.
-	reqBody.Params["gitURL"] = cloneURL
+	params["gitURL"] = cloneURL
+	params["gitRef"] = ref
+	// 触发者取登录态，请求体与流水线变量中的同名参数不能覆盖
+	params["GITFOX_PIPELINE_TRIGGER"] = session.User.Account
 	hook := &triggerer.Hook{
 		Trigger:     session.User.Account, // who/what triggered the build, different from commit author
 		TriggeredBy: session.User.ID,
@@ -262,7 +272,11 @@ func (c *Controller) Create(ctx *gin.Context) {
 		Ref:         ref,
 		Commit:      commitSHA,
 		Sender:      session.User.Account,
-		Params:      reqBody.Params,
+		Params:      params,
+	}
+	// auto 是本接口的控制标志，不是流水线运行参数，只认请求体
+	if reqBody.Params["auto"] == "true" {
+		hook.Action = constant.TriggerActionPipelineAuto
 	}
 
 	executionOutput, err := c.triggerer.Trigger(ctx, reqBody.PipelineID, hook)

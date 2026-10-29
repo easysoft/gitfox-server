@@ -58,6 +58,7 @@ type Service struct {
 	cancelMergeability map[string]context.CancelFunc
 	pubsub             pubsub.PubSub
 	pushReqCleaner     PushRequestCleaner
+	aiIssueApplier     AIIssueApplier
 }
 
 const (
@@ -85,6 +86,7 @@ func NewPullRequestSvc(
 	bus pubsub.PubSub,
 	urlProvider url.Provider,
 	pushReqCleaner PushRequestCleaner,
+	aiIssueApplier AIIssueApplier,
 ) (*Service, error) {
 	service := Service{
 		pullreqEvReporter:  pullReqEvReporter,
@@ -98,6 +100,7 @@ func NewPullRequestSvc(
 		pubsub:             bus,
 		urlProvider:        urlProvider,
 		pushReqCleaner:     pushReqCleaner,
+		aiIssueApplier:     aiIssueApplier,
 	}
 
 	var err error

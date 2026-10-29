@@ -47,8 +47,9 @@ type scheduler struct {
 }
 
 // New provides an instance of a scheduler with cancel abilities.
-func New(stageStore stageStore.Interface, runnerStore runnerStore.Interface, lock lock.MutexManager) (Scheduler, error) {
-	q, err := newQueue(stageStore, runnerStore, lock)
+func New(stageStore stageStore.Interface, runnerStore runnerStore.Interface, lock lock.MutexManager,
+	approvalSvc IStageApproval) (Scheduler, error) {
+	q, err := newQueue(stageStore, runnerStore, lock, approvalSvc)
 	if err != nil {
 		return nil, err
 	}

@@ -10,6 +10,7 @@ import (
 
 	"github.com/easysoft/gitfox-community/app/api/utils/req"
 	"github.com/easysoft/gitfox-community/app/api/utils/resp"
+	"github.com/easysoft/gitfox-community/app/constant"
 	commitModel "github.com/easysoft/gitfox-community/app/model/commit"
 	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
 	"github.com/easysoft/gitfox-community/pkg/errors"
@@ -130,6 +131,70 @@ func (ctl *Controller) MergeCheck(ctx *gin.Context) {
 	}
 
 	resp.OK(ctx, i18n.PullrequestMergeCheckSuccess, data)
+}
+
+// AcceptAIIssue 一键应用 AI 代码评审建议到 PR 源分支
+// @Summary 应用 AI 评审建议
+// @Description 根据传入的扫描问题 ID（须归属该 PR），将建议代码按行区间应用到源分支并提交
+// @Tags pureq
+// @Accept application/json
+// @Produce application/json
+// @Param id path uint true "仓库 ID"
+// @Param pullrequestID path uint true "Pull Request ID (ppmID)"
+// @Param body body repoModel.AIReviewAcceptReq true "待应用的问题 ID 列表"
+// @Success 200 {object} resp.ObjectResponse{data=repoModel.AIReviewAcceptResponse} "应用完成（逐条结果见 items）"
+// @Error 400 {object} resp.ObjectResponse "参数错误"
+// @Error 401 {object} resp.ObjectResponse "未授权（会话不存在或已过期）"
+// @Error 500 {object} resp.ObjectResponse "服务器内部错误"
+// @Router /repos/{id}/pullreq/{pullrequestID}/accept [post]
+func (ctl *Controller) AcceptAIIssue(ctx *gin.Context) {
+	session, ok := req.GetAuthSessionWithEmail(ctx.Request.Context())
+	if !ok {
+		resp.Unauthorized(ctx, errors.WithI18nKey(nil, i18n.RepoEmailRequired))
+		return
+	}
+
+	repoID, err := req.PathParamAsPositiveUint(ctx, "id")
+	if err != nil {
+		resp.BadRequest(ctx, errors.WithI18nKey(err, i18n.CodeReviewPathParamError))
+		return
+	}
+
+	pullreqID, err := req.PathParamAsPositiveUint(ctx, req.PullrequestID)
+	if err != nil {
+		resp.BadRequest(ctx, errors.WithI18nKey(err, i18n.CodeReviewPathParamError))
+		return
+	}
+
+	var in repoModel.AIReviewAcceptReq
+	if err := ctx.ShouldBindJSON(&in); err != nil {
+		resp.BadRequest(ctx, errors.WithI18nKey(err, i18n.CodeReviewBodyParamError))
+		return
+	}
+
+	if _, err := ctl.repoSvc.GetRepoCheckAccessByID(
+		ctx.Request.Context(),
+		session,
+		repoID,
+		[]constant.Permission{constant.PermissionRepoPush},
+	); err != nil {
+		if key := errors.GetI18nKey(err); key == "" || key == i18n.ErrorDefault {
+			err = errors.WithI18nKey(err, i18n.CodeReviewApplyError)
+		}
+		resp.InternalError(ctx, err)
+		return
+	}
+
+	data, err := ctl.pullrequestSvc.AcceptAIIssue(ctx.Request.Context(), session, repoID, pullreqID, &in)
+	if err != nil {
+		if key := errors.GetI18nKey(err); key == "" || key == i18n.ErrorDefault {
+			err = errors.WithI18nKey(err, i18n.CodeReviewApplyError)
+		}
+		resp.InternalError(ctx, err)
+		return
+	}
+
+	resp.OK(ctx, i18n.CodeReviewApplySuccess, data)
 }
 
 // DiffSimp 获取代码Pull Request 差异信息

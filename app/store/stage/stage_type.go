@@ -31,9 +31,13 @@ type Stage struct {
 	Finished     *datetime.Local `gorm:"column:finished"`
 	Duration     uint            `gorm:"column:duration"`
 	Status       string          `gorm:"column:status"`
-	ErrorType    string          `gorm:"column:errorType"`
-	ErrorCode    int             `gorm:"column:errorCode"`
-	ErrorLog     sql.NullString  `gorm:"column:errorLog"`
+	// ApprovalConfig 审批配置 JSON，创建时写入，之后不可变；由 GitFox 维护
+	ApprovalConfig string `gorm:"column:approvalConfig"`
+	// ApprovalStatus 审批状态，由禅道 DevOps 侧维护，GitFox 只读
+	ApprovalStatus string         `gorm:"column:approvalStatus"`
+	ErrorType      string         `gorm:"column:errorType"`
+	ErrorCode      int            `gorm:"column:errorCode"`
+	ErrorLog       sql.NullString `gorm:"column:errorLog"`
 }
 
 func (s *Stage) TableName() string {

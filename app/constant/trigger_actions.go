@@ -31,7 +31,8 @@ const (
 	// TriggerActionPullReqMerged gets triggered when a pull request is merged.
 	TriggerActionPullReqMerged TriggerAction = "pullreq_merged"
 
-	TriggerActionCron TriggerAction = "cron"
+	TriggerActionCron         TriggerAction = "cron"
+	TriggerActionPipelineAuto TriggerAction = "auto"
 )
 
 func (TriggerAction) Enum() []interface{}               { return toInterfaceSlice(triggerActions) }

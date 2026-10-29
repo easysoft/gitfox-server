@@ -28,12 +28,14 @@ type queue struct {
 	interval    time.Duration
 	store       stageStore.Interface
 	runnerStore runnerStore.Interface
+	approvalSvc IStageApproval
 	workers     map[*worker]struct{}
 	ctx         context.Context
 }
 
 // newQueue returns a new Queue backed by the build datastore.
-func newQueue(store stageStore.Interface, runnerStore runnerStore.Interface, lock lock.MutexManager) (*queue, error) {
+func newQueue(store stageStore.Interface, runnerStore runnerStore.Interface, lock lock.MutexManager,
+	approvalSvc IStageApproval) (*queue, error) {
 
 	const lockKey = "build_queue"
 	mx, err := lock.NewMutex(lockKey)
@@ -43,6 +45,7 @@ func newQueue(store stageStore.Interface, runnerStore runnerStore.Interface, loc
 	q := &queue{
 		store:       store,
 		runnerStore: runnerStore,
+		approvalSvc: approvalSvc,
 		globMx:      mx,
 		ready:       make(chan struct{}, 1),
 		workers:     map[*worker]struct{}{},
@@ -168,6 +171,25 @@ func (q *queue) signal(ctx context.Context) error {
 	}
 	logger.Debugf("[pipeline]: incomplete stages fetched from DB, count=%d", len(items))
 
+	// 审批闸门：在加锁前执行，避免持锁做外部 HTTP 调用（会阻塞 worker 与相邻 tick）。
+	// 阻塞中的 stage 状态仍是 pending，下个 tick 会重新评估，因此发放（approved）无需额外唤醒。
+	blockedIDs := make(map[uint]struct{})
+	for _, item := range items {
+		if item.Status == constant.CIStatusRunning || item.Host != "" {
+			continue
+		}
+		blocked, err := q.approvalSvc.BeforeStageDispatch(ctx, item)
+		if err != nil {
+			logger.Errorf("[pipeline]: stage approval failed, stage_id=%d, err=%v", item.ID, err)
+			blockedIDs[item.ID] = struct{}{} // fail-closed：出错不放行
+			continue
+		}
+		if blocked {
+			logger.Infof("[pipeline]: stage blocked by approval, stage_id=%d, approvalStatus=%s", item.ID, item.ApprovalStatus)
+			blockedIDs[item.ID] = struct{}{}
+		}
+	}
+
 	// 查找数据库 runners 表中所有未删除，未停用，在线的 agent runner
 	availableRunners, err := q.getAvailableRunners(ctx)
 	if err != nil {
@@ -196,6 +218,10 @@ func (q *queue) signal(ctx context.Context) error {
 		}
 		if item.Host != "" {
 			logger.Infof("[pipeline]: skip stage (already assigned), stage_id=%d, host=%s", item.ID, item.Host)
+			continue
+		}
+		if _, ok := blockedIDs[item.ID]; ok {
+			logger.Infof("[pipeline]: skip stage (waiting for approval), stage_id=%d", item.ID)
 			continue
 		}
 		logger.Infof("[pipeline]: trying to match stage, stage_id=%d, type=%s, os=%s, arch=%s", item.ID, item.Type, item.OS, item.Arch)
