@@ -167,6 +167,10 @@ func loadFromEnvVars(mode string, config *Config) error {
 		return errors.SystemErr.Wrapf(err, "failed to load env file")
 	}
 
+	// Docker SDK 只识别标准 DOCKER_* 变量，把 GITFOX_DOCKER_* 归一化后再继续，
+	// 保证后续引擎、CLI 预检、runner IP 读取到同一个 daemon 地址。
+	NormalizeDockerEnv()
+
 	err = envconfig.Process("", config)
 	if err != nil {
 		return err

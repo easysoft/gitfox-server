@@ -90,8 +90,9 @@ type SQLiteConfig struct {
 }
 
 // DockerConfig Docker配置。
-// daemon 连接信息不在此建模，统一使用标准 DOCKER_HOST / DOCKER_TLS_VERIFY /
-// DOCKER_CERT_PATH 进程环境变量（prod.env 由 godotenv.Load 注入进程环境）。
+// daemon 连接信息不在此建模：GITFOX_DOCKER_HOST / GITFOX_DOCKER_TLS_VERIFY /
+// GITFOX_DOCKER_CERT_PATH 会在配置加载时归一化为标准 DOCKER_* 进程环境变量，
+// Docker SDK 与 CLI 预检统一读取标准变量；DOCKER_* 仅作为兼容回退。
 type DockerConfig struct {
 	ApiVersion string `envconfig:"GITFOX_DOCKER_API_VERSION" yaml:"apiVersion" default:"1.44"` // 用string类型兼容版本号格式
 }

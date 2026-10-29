@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/easysoft/gitfox-community/pkg/config"
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	clii18n "github.com/easysoft/gitfox-community/pkg/i18n/cli"
 	"github.com/joho/godotenv"
@@ -39,6 +40,8 @@ func runStatus(_ *kingpin.ParseContext) error {
 	if workDir, err := WorkDir(); err == nil {
 		_ = godotenv.Load(filepath.Join(workDir, ProdEnvFileName))
 	}
+	// 预检与服务进程使用同一套归一化规则：GITFOX_DOCKER_* 优先于标准 DOCKER_*。
+	config.NormalizeDockerEnv()
 
 	// ========== 阶段 0：环境依赖检查 ==========
 	missing := Check(headerStyle, okStyle, errStyle, warnStyle)

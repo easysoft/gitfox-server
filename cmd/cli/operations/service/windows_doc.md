@@ -328,7 +328,7 @@ GitFox 通过挂载 docker.sock（Linux）或命名管道（Windows）让容器�
 ```
 CheckDocker
   ├─ dockerHost()                        选 host 字符串
-  │     ├─ DOCKER_HOST 非空 → 用环境变量
+  │     ├─ DOCKER_HOST 非空 → 用环境变量（GITFOX_DOCKER_HOST 加载时已归一化到该变量）
   │     ├─ Windows 命中管道 → "npipe://" + path
   │     ├─ Windows 无管道   → ""（未安装）
   │     ├─ Linux           → "unix://" + defaultDockerSocket

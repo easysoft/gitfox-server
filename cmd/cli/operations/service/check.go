@@ -252,7 +252,8 @@ func CheckDocker() (bool, error) {
 	return true, nil
 }
 
-// dockerHost 解析 daemon 地址：优先 DOCKER_HOST，否则仅使用 Windows / Linux 平台默认值。
+// dockerHost 解析 daemon 地址：优先 DOCKER_HOST（GITFOX_DOCKER_HOST 已在配置加载时
+// 归一化到该变量），否则仅使用 Windows / Linux 平台默认值。
 func dockerHost() string {
 	if h := strings.TrimSpace(os.Getenv("DOCKER_HOST")); h != "" {
 		return h

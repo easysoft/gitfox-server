@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/easysoft/gitfox-community/pkg/config"
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	clii18n "github.com/easysoft/gitfox-community/pkg/i18n/cli"
 	"github.com/joho/godotenv"
@@ -53,12 +54,14 @@ func runStart(_ *kingpin.ParseContext) error {
 		return nil
 	}
 
-	// prod.env 里的 DOCKER_HOST / DOCKER_TLS_* 需要参与后续依赖预检。
+	// prod.env 里的 GITFOX_DOCKER_* / DOCKER_* 需要参与后续依赖预检。
 	// godotenv.Load 不覆盖进程已有环境变量：显式 export / systemd / 容器环境优先。
 	envPath := filepath.Join(workDir, ProdEnvFileName)
 	if _, err := os.Stat(envPath); err == nil {
 		_ = godotenv.Load(envPath)
 	}
+	// 预检与服务进程使用同一套归一化规则：GITFOX_DOCKER_* 优先于标准 DOCKER_*。
+	config.NormalizeDockerEnv()
 
 	// =========================================================
 	// 阶段 1. 启动前置依赖拦截 (依赖是否齐全)
