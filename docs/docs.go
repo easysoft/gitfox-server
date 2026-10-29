@@ -12,8 +12,8 @@ const docTemplate = `{
         "termsOfService": "http://swagger.io/terms/",
         "contact": {},
         "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+            "name": "ZPL 1.2 / AGPL 3.0",
+            "url": "http://zpl.pub/page/zplv12.html"
         },
         "version": "{{.Version}}"
     },
@@ -49,13 +49,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -81,7 +81,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.CreateArtifactLibReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_artifact.CreateArtifactLibReq"
                         }
                     }
                 ],
@@ -89,19 +89,19 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -127,7 +127,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.ListAssetReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_artifact.ListAssetReq"
                         }
                     }
                 ],
@@ -135,19 +135,19 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -179,19 +179,19 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -226,13 +226,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -258,7 +258,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.SoftRemoveEntitiesReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_artifact.SoftRemoveEntitiesReq"
                         }
                     }
                 ],
@@ -266,19 +266,19 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -304,7 +304,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.RelocateEntityReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_artifact.RelocateEntityReq"
                         }
                     }
                 ],
@@ -312,13 +312,13 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误或业务校验失败",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -344,7 +344,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.CreateGroupReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_artifact.CreateGroupReq"
                         }
                     }
                 ],
@@ -352,19 +352,19 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -390,7 +390,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.ArtifactTreeListReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_artifact.ArtifactTreeListReq"
                         }
                     }
                 ],
@@ -398,19 +398,19 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -450,19 +450,19 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -488,7 +488,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.ArtifactEntitieReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_artifact.ArtifactEntitieReq"
                         }
                     }
                 ],
@@ -496,19 +496,19 @@ const docTemplate = `{
                     "200": {
                         "description": "成功（部分恢复时 status 字段标识失败条目）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -534,7 +534,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.RefreshTreeReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_artifact.RefreshTreeReq"
                         }
                     }
                 ],
@@ -542,19 +542,19 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -608,6 +608,18 @@ const docTemplate = `{
                         "in": "formData"
                     },
                     {
+                        "type": "boolean",
+                        "description": "同名文件是否直接覆盖（true/1 开启；缺省 false 走原逻辑：同内容跳过、异内容追加 (n) 后缀）",
+                        "name": "overwrite",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "同名文件是否自动追加 (n) 后缀保留两份（true/1 开启；缺省 false 重名报已存在）",
+                        "name": "rename",
+                        "in": "formData"
+                    },
+                    {
                         "type": "file",
                         "description": "制品文件",
                         "name": "file",
@@ -619,19 +631,19 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -657,7 +669,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_jobs.CreateJobRequest"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_jobs.CreateJobRequest"
                         }
                     }
                 ],
@@ -665,19 +677,19 @@ const docTemplate = `{
                     "200": {
                         "description": "操作成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -701,7 +713,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_jobs.DeleteJobRequest"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_jobs.DeleteJobRequest"
                         }
                     }
                 ],
@@ -709,19 +721,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -762,13 +774,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_service_utils.BranchPermissionResult"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_service_utils.BranchPermissionResult"
                                         }
                                     }
                                 }
@@ -778,13 +790,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -825,13 +837,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Repo"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.Repo"
                                         }
                                     }
                                 }
@@ -841,25 +853,25 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "空间或仓库不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -884,13 +896,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_auth.Session"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_auth.Session"
                                         }
                                     }
                                 }
@@ -900,19 +912,19 @@ const docTemplate = `{
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "用户不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -969,19 +981,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误或权限不足",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "仓库不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1038,19 +1050,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误或权限不足",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "仓库不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1113,19 +1125,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误或权限不足",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "仓库不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1151,7 +1163,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_execution.ReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_execution.ReqForCreate"
                         }
                     }
                 ],
@@ -1161,13 +1173,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_execution.Execution"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_execution.Execution"
                                         }
                                     }
                                 }
@@ -1177,13 +1189,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误（如名称重复）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1209,7 +1221,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_execution.ExecutionInfoReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_execution.ExecutionInfoReqFilter"
                         }
                     }
                 ],
@@ -1219,13 +1231,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_execution.ExecutionByPr"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_execution.ExecutionByPr"
                                         }
                                     }
                                 }
@@ -1235,13 +1247,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1275,13 +1287,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_execution.ExecutionWithStages"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_execution.ExecutionWithStages"
                                         }
                                     }
                                 }
@@ -1291,13 +1303,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1329,19 +1341,19 @@ const docTemplate = `{
                     "200": {
                         "description": "取消成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1366,7 +1378,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -1374,11 +1386,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.GroupedPlugins"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_pipeline.GroupedPlugins"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListNoTotalArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListNoTotalArgs"
                                         }
                                     }
                                 }
@@ -1388,13 +1400,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -1426,19 +1438,19 @@ const docTemplate = `{
                     "200": {
                         "description": "查询成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1494,13 +1506,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1551,19 +1563,19 @@ const docTemplate = `{
                     "200": {
                         "description": "创建成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1619,13 +1631,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1684,13 +1696,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1741,19 +1753,19 @@ const docTemplate = `{
                     "200": {
                         "description": "创建成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1793,7 +1805,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -1801,11 +1813,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.Trigger"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_pipeline.Trigger"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -1815,13 +1827,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -1852,7 +1864,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.Trigger"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_pipeline.Trigger"
                         }
                     }
                 ],
@@ -1862,13 +1874,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.Trigger"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_pipeline.Trigger"
                                         }
                                     }
                                 }
@@ -1878,13 +1890,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1925,13 +1937,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.Trigger"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_pipeline.Trigger"
                                         }
                                     }
                                 }
@@ -1941,13 +1953,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -1985,7 +1997,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.Trigger"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_pipeline.Trigger"
                         }
                     }
                 ],
@@ -1995,13 +2007,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.Trigger"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_pipeline.Trigger"
                                         }
                                     }
                                 }
@@ -2011,13 +2023,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -2054,19 +2066,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -2092,7 +2104,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.CreateRepoReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.CreateRepoReq"
                         }
                     }
                 ],
@@ -2102,13 +2114,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Repo"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.Repo"
                                         }
                                     }
                                 }
@@ -2138,7 +2150,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.ImportInput"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.ImportInput"
                         }
                     }
                 ],
@@ -2148,13 +2160,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.RepositoryOutput"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.RepositoryOutput"
                                         }
                                     }
                                 }
@@ -2192,13 +2204,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Progress"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.Progress"
                                         }
                                     }
                                 }
@@ -2228,7 +2240,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.ReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.ReqFilter"
                         }
                     }
                 ],
@@ -2238,7 +2250,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -2246,11 +2258,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Repo"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.Repo"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListNoTotalArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListNoTotalArgs"
                                         }
                                     }
                                 }
@@ -2260,13 +2272,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -2299,7 +2311,7 @@ const docTemplate = `{
                     "200": {
                         "description": "同步任务已触发",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -2334,13 +2346,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Progress"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.Progress"
                                         }
                                     }
                                 }
@@ -2378,13 +2390,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Repo"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.Repo"
                                         }
                                     }
                                 }
@@ -2419,7 +2431,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.ReqForUpdate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.ReqForUpdate"
                         }
                     }
                 ],
@@ -2429,13 +2441,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Repo"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.Repo"
                                         }
                                     }
                                 }
@@ -2469,7 +2481,7 @@ const docTemplate = `{
                     "200": {
                         "description": "删除仓库成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -2550,25 +2562,25 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误(如格式不支持、Git引用无效等)",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权或无会话",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "代码库不存在或 Git 引用不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误(如 Git 服务调用失败、数据库异常等)",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -2601,7 +2613,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForCreateBranchType"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.ReqForCreateBranchType"
                         }
                     }
                 ],
@@ -2611,13 +2623,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.BranchType"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.BranchType"
                                         }
                                     }
                                 }
@@ -2627,19 +2639,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "409": {
                         "description": "分支类型 Key 已存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -2672,7 +2684,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqFilterBranchType"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.ReqFilterBranchType"
                         }
                     }
                 ],
@@ -2682,7 +2694,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -2690,11 +2702,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.BranchType"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.BranchType"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -2704,13 +2716,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -2751,13 +2763,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.BranchType"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.BranchType"
                                         }
                                     }
                                 }
@@ -2767,19 +2779,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "分支类型不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -2817,7 +2829,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForUpdateBranchType"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.ReqForUpdateBranchType"
                         }
                     }
                 ],
@@ -2827,13 +2839,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.BranchType"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.BranchType"
                                         }
                                     }
                                 }
@@ -2843,19 +2855,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "分支类型不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -2892,25 +2904,25 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "分支类型不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -2943,7 +2955,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.ReqForCreate"
                         }
                     }
                 ],
@@ -2953,13 +2965,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.Branch"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.Branch"
                                         }
                                     }
                                 }
@@ -2969,13 +2981,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误（如名称重复）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -3006,7 +3018,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForDelete"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.ReqForDelete"
                         }
                     }
                 ],
@@ -3014,19 +3026,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -3059,7 +3071,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForArchive"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.ReqForArchive"
                         }
                     }
                 ],
@@ -3069,7 +3081,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
@@ -3077,7 +3089,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ActivateResult"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.ActivateResult"
                                             }
                                         }
                                     }
@@ -3088,13 +3100,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -3127,7 +3139,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForArchive"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.ReqForArchive"
                         }
                     }
                 ],
@@ -3137,7 +3149,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
@@ -3145,7 +3157,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ArchiveResult"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.ArchiveResult"
                                             }
                                         }
                                     }
@@ -3156,13 +3168,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -3195,7 +3207,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.ReqFilter"
                         }
                     }
                 ],
@@ -3205,7 +3217,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -3213,11 +3225,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.Branch"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.Branch"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListNoTotalArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListNoTotalArgs"
                                         }
                                     }
                                 }
@@ -3227,13 +3239,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -3267,7 +3279,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -3275,7 +3287,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.Prefix"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_branch.Prefix"
                                             }
                                         }
                                     }
@@ -3286,13 +3298,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -3333,13 +3345,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Commit"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Commit"
                                         }
                                     }
                                 }
@@ -3349,19 +3361,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "提交未找到",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -3392,7 +3404,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.ReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.ReqForCreate"
                         }
                     }
                 ],
@@ -3402,13 +3414,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.RespForCreate"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.RespForCreate"
                                         }
                                     }
                                 }
@@ -3418,13 +3430,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -3457,7 +3469,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.ReqForGet"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.ReqForGet"
                         }
                     }
                 ],
@@ -3471,19 +3483,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "提交未找到",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -3516,7 +3528,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.ReqForDivergence"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.ReqForDivergence"
                         }
                     }
                 ],
@@ -3526,7 +3538,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
@@ -3534,7 +3546,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.CommitDivergence"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.CommitDivergence"
                                             }
                                         }
                                     }
@@ -3545,13 +3557,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -3584,7 +3596,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.ReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.ReqFilter"
                         }
                     }
                 ],
@@ -3594,16 +3606,16 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.RespForList"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.RespForList"
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListNoTotalArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListNoTotalArgs"
                                         }
                                     }
                                 }
@@ -3613,13 +3625,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -3671,13 +3683,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.GetContentOutput"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.GetContentOutput"
                                         }
                                     }
                                 }
@@ -3687,19 +3699,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误或权限不足",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "仓库或文件不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -3757,13 +3769,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.GetContentOutput"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.GetContentOutput"
                                         }
                                     }
                                 }
@@ -3773,19 +3785,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误或权限不足",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "仓库或文件不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -3818,7 +3830,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.ReqForDiff"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.ReqForDiff"
                         }
                     }
                 ],
@@ -3859,7 +3871,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.BranchCompareRequest"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.BranchCompareRequest"
                         }
                     }
                 ],
@@ -3869,13 +3881,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.DiffStats"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.DiffStats"
                                         }
                                     }
                                 }
@@ -3912,7 +3924,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.BranchCompareRequest"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.BranchCompareRequest"
                         }
                     }
                 ],
@@ -3922,13 +3934,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeCheck"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.MergeCheck"
                                         }
                                     }
                                 }
@@ -3978,13 +3990,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.PathsOutput"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.PathsOutput"
                                         }
                                     }
                                 }
@@ -4021,7 +4033,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.PathsDetailsInput"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.PathsDetailsInput"
                         }
                     }
                 ],
@@ -4031,13 +4043,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.PathsDetailsOutput"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.PathsDetailsOutput"
                                         }
                                     }
                                 }
@@ -4082,13 +4094,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.DiffStats"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.DiffStats"
                                         }
                                     }
                                 }
@@ -4145,7 +4157,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -4153,11 +4165,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Commit"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Commit"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -4234,13 +4246,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.DiffStats"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.DiffStats"
                                         }
                                     }
                                 }
@@ -4290,7 +4302,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.FileDiff"
+                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.FileDiff"
                             }
                         }
                     }
@@ -4301,13 +4313,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeCheck"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.MergeCheck"
                                         }
                                     }
                                 }
@@ -4351,7 +4363,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.EventTrigger"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.EventTrigger"
                         }
                     }
                 ],
@@ -4361,13 +4373,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeViolations"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.MergeViolations"
                                         }
                                     }
                                 }
@@ -4411,7 +4423,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Merge"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.Merge"
                         }
                     }
                 ],
@@ -4421,13 +4433,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeViolations"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.MergeViolations"
                                         }
                                     }
                                 }
@@ -4464,7 +4476,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_svn.ReqForExec"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_svn.ReqForExec"
                         }
                     }
                 ],
@@ -4478,19 +4490,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "代码库不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -4531,25 +4543,25 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权或无会话",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "代码库不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -4582,7 +4594,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_tag.ReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_tag.ReqForCreate"
                         }
                     }
                 ],
@@ -4592,13 +4604,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_tag.Tag"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_tag.Tag"
                                         }
                                     }
                                 }
@@ -4608,13 +4620,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误（如名称重复）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -4647,7 +4659,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_tag.ReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_tag.ReqFilter"
                         }
                     }
                 ],
@@ -4657,7 +4669,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -4665,11 +4677,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_tag.Tag"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_tag.Tag"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListNoTotalArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListNoTotalArgs"
                                         }
                                     }
                                 }
@@ -4679,13 +4691,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -4724,19 +4736,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -4792,7 +4804,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -4800,7 +4812,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.Webhook"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_webhook.Webhook"
                                             }
                                         }
                                     }
@@ -4811,13 +4823,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -4848,7 +4860,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.ReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_webhook.ReqForCreate"
                         }
                     }
                 ],
@@ -4858,13 +4870,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.Webhook"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_webhook.Webhook"
                                         }
                                     }
                                 }
@@ -4874,13 +4886,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误（如名称重复）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -4918,13 +4930,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.Webhook"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_webhook.Webhook"
                                         }
                                     }
                                 }
@@ -4934,13 +4946,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -4978,7 +4990,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.ReqForUpdate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_webhook.ReqForUpdate"
                         }
                     }
                 ],
@@ -4988,13 +5000,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.Webhook"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_webhook.Webhook"
                                         }
                                     }
                                 }
@@ -5004,13 +5016,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5044,19 +5056,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5119,7 +5131,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -5127,7 +5139,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.Execution"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_webhook.Execution"
                                             }
                                         }
                                     }
@@ -5138,13 +5150,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -5192,13 +5204,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.Execution"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_webhook.Execution"
                                         }
                                     }
                                 }
@@ -5208,13 +5220,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5262,13 +5274,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.Execution"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_webhook.Execution"
                                         }
                                     }
                                 }
@@ -5278,13 +5290,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5366,13 +5378,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.Runner"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.Runner"
                                         }
                                     }
                                 }
@@ -5382,19 +5394,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "Runner不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5420,7 +5432,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.RegisterRunnerReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.RegisterRunnerReq"
                         }
                     }
                 ],
@@ -5430,13 +5442,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.Runner"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.Runner"
                                         }
                                     }
                                 }
@@ -5446,19 +5458,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "Token无效或已过期",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5484,7 +5496,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.ReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.ReqFilter"
                         }
                     }
                 ],
@@ -5494,7 +5506,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -5502,7 +5514,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.Runner"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.Runner"
                                             }
                                         }
                                     }
@@ -5513,13 +5525,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -5544,13 +5556,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.GenerateTokenResponse"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.GenerateTokenResponse"
                                         }
                                     }
                                 }
@@ -5560,13 +5572,13 @@ const docTemplate = `{
                     "401": {
                         "description": "未认证",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5601,13 +5613,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.Runner"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.Runner"
                                         }
                                     }
                                 }
@@ -5617,19 +5629,19 @@ const docTemplate = `{
                     "400": {
                         "description": "ID格式错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "Runner不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5661,7 +5673,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.ReqForUpdateBasicInfo"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.ReqForUpdateBasicInfo"
                         }
                     }
                 ],
@@ -5671,13 +5683,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.Runner"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.Runner"
                                         }
                                     }
                                 }
@@ -5687,19 +5699,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "Runner不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5730,25 +5742,25 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "ID格式错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "Runner不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5782,7 +5794,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.ReqForUpdateStatus"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.ReqForUpdateStatus"
                         }
                     }
                 ],
@@ -5792,13 +5804,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.Runner"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_runner.Runner"
                                         }
                                     }
                                 }
@@ -5808,19 +5820,57 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "Runner不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/scan/aicodereview/ai-config": {
+            "get": {
+                "description": "aireview 插件在非内嵌流水线（INNER_PIPELINE 非 \"true\"）中拉取 AI 评审所需的 LLM 配置（供应商/地址/协议/密钥/模型/语言）",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "scan"
+                ],
+                "summary": "获取 AI 评审配置",
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.AIReviewConfig"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5828,7 +5878,7 @@ const docTemplate = `{
         },
         "/scan/aicodereview/{repoID}/{ppmID}/report": {
             "post": {
-                "description": "上传评审任务的报告文件，解析 issues",
+                "description": "上传评审任务的报告文件，解析 issues。ppmID 可为 0（无 MR，推送/内嵌流水线触发），此时报告按表单 executionID 归属到对应执行",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -5842,7 +5892,14 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "合并请求 ID",
+                        "description": "仓库 ID",
+                        "name": "repoID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "合并请求 ID，可为 0（无 MR）",
                         "name": "ppmID",
                         "in": "path",
                         "required": true
@@ -5853,6 +5910,20 @@ const docTemplate = `{
                         "name": "file",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "扫描方法（ai）",
+                        "name": "method",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "流水线执行 ID（ppmID 为 0 时必填）",
+                        "name": "executionID",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -5861,13 +5932,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueReport"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanIssueReport"
                                         }
                                     }
                                 }
@@ -5877,13 +5948,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5909,7 +5980,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueIDsReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanIssueIDsReqFilter"
                         }
                     }
                 ],
@@ -5919,7 +5990,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
@@ -5927,7 +5998,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueInfo"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanIssueInfo"
                                             }
                                         }
                                     }
@@ -5938,13 +6009,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -5995,13 +6066,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.TreeNode"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.TreeNode"
                                         }
                                     }
                                 }
@@ -6011,13 +6082,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6043,7 +6114,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanIssueReqFilter"
                         }
                     }
                 ],
@@ -6053,7 +6124,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -6061,11 +6132,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueInfo"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanIssueInfo"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -6075,13 +6146,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6122,13 +6193,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.TreeNode"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.TreeNode"
                                         }
                                     }
                                 }
@@ -6138,13 +6209,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6170,7 +6241,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueUpdateStatusReq"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanIssueUpdateStatusReq"
                         }
                     }
                 ],
@@ -6178,19 +6249,19 @@ const docTemplate = `{
                     "200": {
                         "description": "更新成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6224,13 +6295,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueInfo"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanIssueInfo"
                                         }
                                     }
                                 }
@@ -6240,13 +6311,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6271,7 +6342,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
@@ -6279,7 +6350,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanBaseResp"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanBaseResp"
                                             }
                                         }
                                     }
@@ -6309,7 +6380,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
@@ -6317,7 +6388,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanBaseResp"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanBaseResp"
                                             }
                                         }
                                     }
@@ -6355,7 +6426,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlanReqForCreate"
                         }
                     }
                 ],
@@ -6365,13 +6436,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlan"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlan"
                                         }
                                     }
                                 }
@@ -6381,19 +6452,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6426,7 +6497,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlanReqFilter"
                         }
                     }
                 ],
@@ -6436,7 +6507,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -6444,11 +6515,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlan"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlan"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -6458,13 +6529,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6505,13 +6576,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlan"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlan"
                                         }
                                     }
                                 }
@@ -6521,13 +6592,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6564,19 +6635,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6614,7 +6685,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanReqForUpdate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlanReqForUpdate"
                         }
                     }
                 ],
@@ -6624,13 +6695,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlan"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlan"
                                         }
                                     }
                                 }
@@ -6640,19 +6711,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6692,7 +6763,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanReqForBind"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlanReqForBind"
                         }
                     }
                 ],
@@ -6700,19 +6771,19 @@ const docTemplate = `{
                     "200": {
                         "description": "绑定成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6753,7 +6824,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -6761,11 +6832,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanCondition"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanCondition"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -6775,13 +6846,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6819,7 +6890,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanConditionReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlanConditionReqForCreate"
                         }
                     }
                 ],
@@ -6829,13 +6900,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanCondition"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanCondition"
                                         }
                                     }
                                 }
@@ -6845,19 +6916,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6897,7 +6968,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanConditionReqForBatchDelete"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlanConditionReqForBatchDelete"
                         }
                     }
                 ],
@@ -6905,19 +6976,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -6957,7 +7028,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanConditionReqForBatchCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlanConditionReqForBatchCreate"
                         }
                     }
                 ],
@@ -6965,25 +7036,25 @@ const docTemplate = `{
                     "200": {
                         "description": "创建成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7031,13 +7102,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanCondition"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanCondition"
                                         }
                                     }
                                 }
@@ -7047,13 +7118,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7097,19 +7168,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7154,7 +7225,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanConditionReqForUpdate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlanConditionReqForUpdate"
                         }
                     }
                 ],
@@ -7164,13 +7235,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanCondition"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanCondition"
                                         }
                                     }
                                 }
@@ -7180,19 +7251,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7239,7 +7310,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
@@ -7253,12 +7324,12 @@ const docTemplate = `{
                                                     "type": "object",
                                                     "properties": {
                                                         "plan": {
-                                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlan"
+                                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlan"
                                                         },
                                                         "rules": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Rule"
+                                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Rule"
                                                             }
                                                         }
                                                     }
@@ -7273,13 +7344,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7326,7 +7397,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -7334,11 +7405,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Rule"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Rule"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -7348,13 +7419,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7420,7 +7491,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -7428,11 +7499,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTrigger"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTrigger"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -7442,13 +7513,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7486,7 +7557,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTriggerReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTriggerReqForCreate"
                         }
                     }
                 ],
@@ -7496,13 +7567,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTrigger"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTrigger"
                                         }
                                     }
                                 }
@@ -7512,19 +7583,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7572,13 +7643,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTrigger"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTrigger"
                                         }
                                     }
                                 }
@@ -7588,13 +7659,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7638,19 +7709,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7695,7 +7766,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTriggerReqForUpdate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTriggerReqForUpdate"
                         }
                     }
                 ],
@@ -7705,13 +7776,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTrigger"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTrigger"
                                         }
                                     }
                                 }
@@ -7721,19 +7792,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7781,7 +7852,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -7789,11 +7860,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanCondition"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanCondition"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -7803,13 +7874,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7856,7 +7927,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanConditionReqForBatchDelete"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanConditionReqForBatchDelete"
                         }
                     }
                 ],
@@ -7864,19 +7935,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7923,7 +7994,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanConditionReqForBatchCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanConditionReqForBatchCreate"
                         }
                     }
                 ],
@@ -7931,25 +8002,25 @@ const docTemplate = `{
                     "200": {
                         "description": "创建成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -7990,7 +8061,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -7998,11 +8069,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Solution"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Solution"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -8012,13 +8083,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8056,7 +8127,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanReqForBind"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlanReqForBind"
                         }
                     }
                 ],
@@ -8064,19 +8135,19 @@ const docTemplate = `{
                     "200": {
                         "description": "解绑成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8102,7 +8173,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleListReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleListReqFilter"
                         }
                     }
                 ],
@@ -8112,7 +8183,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -8120,11 +8191,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Rule"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Rule"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -8134,19 +8205,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8171,7 +8242,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
@@ -8187,13 +8258,13 @@ const docTemplate = `{
                     "401": {
                         "description": "未授权",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8227,13 +8298,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Rule"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Rule"
                                         }
                                     }
                                 }
@@ -8243,25 +8314,25 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "规则不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8293,31 +8364,31 @@ const docTemplate = `{
                     "200": {
                         "description": "更新成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "规则不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8343,7 +8414,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSetReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSetReqForCreate"
                         }
                     }
                 ],
@@ -8353,13 +8424,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSet"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSet"
                                         }
                                     }
                                 }
@@ -8389,7 +8460,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSetReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSetReqFilter"
                         }
                     }
                 ],
@@ -8399,7 +8470,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -8407,11 +8478,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSet"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSet"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -8449,13 +8520,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSet"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSet"
                                         }
                                     }
                                 }
@@ -8490,7 +8561,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSetReqForUpdate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSetReqForUpdate"
                         }
                     }
                 ],
@@ -8500,13 +8571,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSet"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSet"
                                         }
                                     }
                                 }
@@ -8540,7 +8611,7 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8573,7 +8644,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSetReqForBind"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSetReqForBind"
                         }
                     }
                 ],
@@ -8581,7 +8652,7 @@ const docTemplate = `{
                     "200": {
                         "description": "绑定成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8629,7 +8700,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -8637,7 +8708,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Rule"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Rule"
                                             }
                                         }
                                     }
@@ -8675,7 +8746,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSetReqForBind"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSetReqForBind"
                         }
                     }
                 ],
@@ -8683,7 +8754,7 @@ const docTemplate = `{
                     "200": {
                         "description": "解绑成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8731,7 +8802,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -8739,7 +8810,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Rule"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Rule"
                                             }
                                         }
                                     }
@@ -8770,7 +8841,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.SolutionReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.SolutionReqForCreate"
                         }
                     }
                 ],
@@ -8780,13 +8851,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Solution"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Solution"
                                         }
                                     }
                                 }
@@ -8796,19 +8867,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8834,7 +8905,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.SolutionReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.SolutionReqFilter"
                         }
                     }
                 ],
@@ -8844,7 +8915,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -8852,11 +8923,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Solution"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Solution"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -8866,13 +8937,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8906,13 +8977,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Solution"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Solution"
                                         }
                                     }
                                 }
@@ -8922,19 +8993,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "扫描方案不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -8965,7 +9036,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.SolutionReqForUpdate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.SolutionReqForUpdate"
                         }
                     }
                 ],
@@ -8975,13 +9046,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Solution"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Solution"
                                         }
                                     }
                                 }
@@ -8991,25 +9062,25 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "扫描方案不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9039,19 +9110,19 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9085,7 +9156,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -9093,11 +9164,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSet"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSet"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -9107,13 +9178,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9146,7 +9217,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.SolutionReqForBind"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.SolutionReqForBind"
                         }
                     }
                 ],
@@ -9154,19 +9225,19 @@ const docTemplate = `{
                     "200": {
                         "description": "绑定成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9200,7 +9271,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -9208,11 +9279,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSet"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSet"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -9222,13 +9293,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9259,7 +9330,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.SolutionReqForBind"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.SolutionReqForBind"
                         }
                     }
                 ],
@@ -9267,19 +9338,19 @@ const docTemplate = `{
                     "200": {
                         "description": "解绑成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9311,25 +9382,25 @@ const docTemplate = `{
                     "200": {
                         "description": "切换成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9354,7 +9425,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
@@ -9362,7 +9433,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanBaseResp"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanBaseResp"
                                             }
                                         }
                                     }
@@ -9393,7 +9464,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskReqForCreate"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTaskReqForCreate"
                         }
                     }
                 ],
@@ -9403,13 +9474,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTask"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTask"
                                         }
                                     }
                                 }
@@ -9419,19 +9490,77 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/scan/tasks/create-by-runner": {
+            "post": {
+                "description": "codescan 插件在非内嵌流水线（INNER_PIPELINE 非 \"true\"）中扫描前回调本接口，创建扫描任务记录并返回上报报告所需的 taskID（扫描范围由插件的 SCAN_METHOD + SCAN_REF_RANGE 声明，不由本接口解析）",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "scan"
+                ],
+                "summary": "创建扫描任务（流水线 runner 回调）",
+                "parameters": [
+                    {
+                        "description": "扫描任务信息",
+                        "name": "taskInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTaskRunnerCreateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTaskRunnerCreateResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9457,7 +9586,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskInfoReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTaskInfoReqFilter"
                         }
                     }
                 ],
@@ -9467,7 +9596,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -9475,11 +9604,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskInfo"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTaskInfo"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -9489,13 +9618,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9528,7 +9657,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskIssueReqFilter"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTaskIssueReqFilter"
                         }
                     }
                 ],
@@ -9538,7 +9667,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -9546,11 +9675,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueInfo"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanIssueInfo"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -9560,13 +9689,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9614,13 +9743,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueReport"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanIssueReport"
                                         }
                                     }
                                 }
@@ -9630,13 +9759,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9670,13 +9799,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTask"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTask"
                                         }
                                     }
                                 }
@@ -9686,19 +9815,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9732,13 +9861,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskInfo"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTaskInfo"
                                         }
                                     }
                                 }
@@ -9748,13 +9877,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器内部错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -9779,7 +9908,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
@@ -9787,7 +9916,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanBaseResp"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanBaseResp"
                                             }
                                         }
                                     }
@@ -9882,7 +10011,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -9890,11 +10019,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_space.SpaceResponse"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_space.SpaceResponse"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -9904,13 +10033,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                         }
                     }
                 }
@@ -9934,7 +10063,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_space.CreateSpaceRequest"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_space.CreateSpaceRequest"
                         }
                     }
                 ],
@@ -9944,13 +10073,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_space.SpaceResponse"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_space.SpaceResponse"
                                         }
                                     }
                                 }
@@ -9960,13 +10089,13 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误（如名称重复）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -10001,13 +10130,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_space.SpaceResponse"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_space.SpaceResponse"
                                         }
                                     }
                                 }
@@ -10017,19 +10146,19 @@ const docTemplate = `{
                     "400": {
                         "description": "ID格式错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "空间不存在或已删除",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -10061,7 +10190,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_space.UpdateSpaceRequest"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_space.UpdateSpaceRequest"
                         }
                     }
                 ],
@@ -10071,13 +10200,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_space.SpaceResponse"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_space.SpaceResponse"
                                         }
                                     }
                                 }
@@ -10087,19 +10216,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误（如名称重复）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "空间不存在或已删除",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -10130,25 +10259,25 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "ID格式错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "空间不存在或已删除",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "删除失败（如存在关联资源）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -10181,25 +10310,25 @@ const docTemplate = `{
                     "200": {
                         "description": "事件流",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "ID格式错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "空间不存在或已删除",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -10232,25 +10361,110 @@ const docTemplate = `{
                     "200": {
                         "description": "恢复成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "空间不存在或未删除",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "恢复失败",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/statistics/commits": {
+            "get": {
+                "description": "遍历未删除的代码库执行git命令统计提交次数，支持按时间统计，支持通过 user 参数按人筛选，支持通过 byUser 参数返回每个提交者的提交次数",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statistics"
+                ],
+                "summary": "查询代码提交统计",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "2026-09-15",
+                        "description": "统计开始日期，格式 yyyy-mm-dd",
+                        "name": "beginTime",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "2026-09-16",
+                        "description": "统计结束日期，格式 yyyy-mm-dd",
+                        "name": "endTime",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "admin",
+                        "description": "提交人账号或邮箱，为空时统计全部用户",
+                        "name": "user",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "example": false,
+                        "description": "是否返回每个提交者的提交次数",
+                        "name": "byUser",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_statistics.RespForCommitStatistics"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "未认证",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -10275,7 +10489,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse"
                                 },
                                 {
                                     "type": "object",
@@ -10283,11 +10497,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_publickey.PublicKey"
+                                                "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_publickey.PublicKey"
                                             }
                                         },
                                         "listArgs": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs"
                                         }
                                     }
                                 }
@@ -10297,19 +10511,19 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -10333,7 +10547,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_publickey.AddPublicKeyInput"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_publickey.AddPublicKeyInput"
                         }
                     }
                 ],
@@ -10341,25 +10555,25 @@ const docTemplate = `{
                     "200": {
                         "description": "添加成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误或业务校验失败",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -10393,13 +10607,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_publickey.PublicKey"
+                                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_publickey.PublicKey"
                                         }
                                     }
                                 }
@@ -10409,25 +10623,25 @@ const docTemplate = `{
                     "400": {
                         "description": "参数错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "公钥不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -10458,7 +10672,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_publickey.UpdatePublicKeyInput"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_publickey.UpdatePublicKeyInput"
                         }
                     }
                 ],
@@ -10466,31 +10680,31 @@ const docTemplate = `{
                     "200": {
                         "description": "修改成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误或业务校验失败",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "公钥不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -10520,31 +10734,31 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "400": {
                         "description": "参数错误或业务校验失败",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "401": {
                         "description": "未授权（会话不存在或已过期）",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "404": {
                         "description": "公钥不存在",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse"
                         }
                     }
                 }
@@ -11404,7 +11618,7 @@ const docTemplate = `{
             "type": "object",
             "additionalProperties": {}
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListArgs": {
+        "github_com_easysoft_gitfox-community_app_api_utils_resp.ListArgs": {
             "type": "object",
             "properties": {
                 "page": {
@@ -11418,7 +11632,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListNoTotalArgs": {
+        "github_com_easysoft_gitfox-community_app_api_utils_resp.ListNoTotalArgs": {
             "type": "object",
             "properties": {
                 "isLast": {
@@ -11432,11 +11646,11 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ListResponse": {
+        "github_com_easysoft_gitfox-community_app_api_utils_resp.ListResponse": {
             "type": "object",
             "properties": {
                 "code": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.RespCode"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.RespCode"
                 },
                 "data": {},
                 "listArgs": {},
@@ -11448,11 +11662,11 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_api_utils_resp.ObjectResponse": {
+        "github_com_easysoft_gitfox-community_app_api_utils_resp.ObjectResponse": {
             "type": "object",
             "properties": {
                 "code": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.RespCode"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.RespCode"
                 },
                 "data": {},
                 "message": {
@@ -11463,7 +11677,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.AiScanIssueCategory": {
+        "github_com_easysoft_gitfox-community_app_constant.AiScanIssueCategory": {
             "type": "string",
             "enum": [
                 "critical",
@@ -11493,7 +11707,7 @@ const docTemplate = `{
                 "AiScanIssueCategoryNone"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.AiScanIssueSeverity": {
+        "github_com_easysoft_gitfox-community_app_constant.AiScanIssueSeverity": {
             "type": "string",
             "enum": [
                 "bug",
@@ -11536,7 +11750,7 @@ const docTemplate = `{
                 "AiScanIssueSeverityOther"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.CIStatus": {
+        "github_com_easysoft_gitfox-community_app_constant.CIStatus": {
             "type": "string",
             "enum": [
                 "skipped",
@@ -11563,7 +11777,7 @@ const docTemplate = `{
                 "CIStatusDeclined"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ContentEncodingType": {
+        "github_com_easysoft_gitfox-community_app_constant.ContentEncodingType": {
             "type": "string",
             "enum": [
                 "utf8",
@@ -11574,7 +11788,7 @@ const docTemplate = `{
                 "ContentEncodingTypeBase64"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.Order": {
+        "github_com_easysoft_gitfox-community_app_constant.Order": {
             "type": "string",
             "enum": [
                 "asc",
@@ -11587,7 +11801,7 @@ const docTemplate = `{
                 "orderNone"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.RepoProviderType": {
+        "github_com_easysoft_gitfox-community_app_constant.RepoProviderType": {
             "type": "string",
             "enum": [
                 "GitHub",
@@ -11610,7 +11824,7 @@ const docTemplate = `{
                 "RepoProviderTypeSVN"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.RespCode": {
+        "github_com_easysoft_gitfox-community_app_constant.RespCode": {
             "type": "string",
             "enum": [
                 "success",
@@ -11621,7 +11835,7 @@ const docTemplate = `{
                 "RespFailCode"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.RunnerActiveStatus": {
+        "github_com_easysoft_gitfox-community_app_constant.RunnerActiveStatus": {
             "type": "string",
             "enum": [
                 "enable",
@@ -11632,7 +11846,7 @@ const docTemplate = `{
                 "RunnerDisable"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.RunnerStatus": {
+        "github_com_easysoft_gitfox-community_app_constant.RunnerStatus": {
             "type": "string",
             "enum": [
                 "online",
@@ -11643,7 +11857,7 @@ const docTemplate = `{
                 "RunnerOffline"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanIssueResolution": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanIssueResolution": {
             "type": "string",
             "enum": [
                 "",
@@ -11668,7 +11882,7 @@ const docTemplate = `{
                 "ScanIssueResolutionToStory"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanIssueStatus": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanIssueStatus": {
             "type": "string",
             "enum": [
                 "wait",
@@ -11687,7 +11901,7 @@ const docTemplate = `{
                 "ScanIssueStatusIgnore"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanLangID": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanLangID": {
             "type": "integer",
             "enum": [
                 0,
@@ -11718,7 +11932,7 @@ const docTemplate = `{
                 "ScanLangCsharp"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanLangName": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanLangName": {
             "type": "string",
             "enum": [
                 "Custom",
@@ -11749,7 +11963,7 @@ const docTemplate = `{
                 "ScanLangCsharpName"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanMethod": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanMethod": {
             "type": "string",
             "enum": [
                 "check",
@@ -11762,7 +11976,7 @@ const docTemplate = `{
                 "ScanMethodAI"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanPlanTriggerType": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanPlanTriggerType": {
             "type": "string",
             "enum": [
                 "manual",
@@ -11775,7 +11989,7 @@ const docTemplate = `{
                 "ScanPlanTriggerTypeAction"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleBind": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanRuleBind": {
             "type": "string",
             "enum": [
                 "bind",
@@ -11788,7 +12002,7 @@ const docTemplate = `{
                 "scanRuleBindNone"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRulePriority": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanRulePriority": {
             "type": "string",
             "enum": [
                 "low",
@@ -11803,7 +12017,7 @@ const docTemplate = `{
                 "scanRulePriorityNone"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleSort": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanRuleSort": {
             "type": "string",
             "enum": [
                 "id",
@@ -11830,7 +12044,7 @@ const docTemplate = `{
                 "scanRuleSortNone"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleStatus": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanRuleStatus": {
             "type": "string",
             "enum": [
                 "enabled",
@@ -11843,7 +12057,7 @@ const docTemplate = `{
                 "scanRuleStatusNone"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleType": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanRuleType": {
             "type": "string",
             "enum": [
                 "defect",
@@ -11873,7 +12087,7 @@ const docTemplate = `{
                 "scanRuleTypeNone"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleUnit": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanRuleUnit": {
             "type": "string",
             "enum": [
                 "count",
@@ -11884,7 +12098,7 @@ const docTemplate = `{
                 "ScanRuleUnitPercent"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskResult": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanTaskResult": {
             "type": "string",
             "enum": [
                 "pass",
@@ -11897,7 +12111,7 @@ const docTemplate = `{
                 "ScanTaskResultNull"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskStatus": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanTaskStatus": {
             "type": "string",
             "enum": [
                 "in_progress",
@@ -11910,7 +12124,7 @@ const docTemplate = `{
                 "ScanTaskStatusFailed"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanType": {
+        "github_com_easysoft_gitfox-community_app_constant.ScanType": {
             "type": "string",
             "enum": [
                 "full",
@@ -11921,7 +12135,7 @@ const docTemplate = `{
                 "ScanTypeIncremental"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.TriggerAction": {
+        "github_com_easysoft_gitfox-community_app_constant.TriggerAction": {
             "type": "string",
             "enum": [
                 "branch_created",
@@ -11948,7 +12162,7 @@ const docTemplate = `{
                 "TriggerActionCron"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookAuthMethod": {
+        "github_com_easysoft_gitfox-community_app_constant.WebhookAuthMethod": {
             "type": "string",
             "enum": [
                 "",
@@ -11961,7 +12175,7 @@ const docTemplate = `{
                 "WebhookAuthMethodToken"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookExecutionResult": {
+        "github_com_easysoft_gitfox-community_app_constant.WebhookExecutionResult": {
             "type": "string",
             "enum": [
                 "success",
@@ -11974,7 +12188,7 @@ const docTemplate = `{
                 "WebhookExecutionResultFatalError"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookTrigger": {
+        "github_com_easysoft_gitfox-community_app_constant.WebhookTrigger": {
             "type": "string",
             "enum": [
                 "branch_created",
@@ -12027,7 +12241,7 @@ const docTemplate = `{
                 "WebhookTriggerArtifactDeleted"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.ArtifactEntitieReq": {
+        "github_com_easysoft_gitfox-community_app_model_artifact.ArtifactEntitieReq": {
             "type": "object",
             "properties": {
                 "entityID": {
@@ -12035,7 +12249,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.ArtifactFormat": {
+        "github_com_easysoft_gitfox-community_app_model_artifact.ArtifactFormat": {
             "type": "string",
             "enum": [
                 "all",
@@ -12058,14 +12272,14 @@ const docTemplate = `{
                 "ArtifactNpmFormat"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.ArtifactTreeListReq": {
+        "github_com_easysoft_gitfox-community_app_model_artifact.ArtifactTreeListReq": {
             "type": "object",
             "properties": {
                 "artifactID": {
                     "type": "integer"
                 },
                 "format": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.ArtifactFormat"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_artifact.ArtifactFormat"
                 },
                 "level": {
                     "type": "string"
@@ -12084,7 +12298,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.CreateArtifactLibReq": {
+        "github_com_easysoft_gitfox-community_app_model_artifact.CreateArtifactLibReq": {
             "type": "object",
             "properties": {
                 "artifactID": {
@@ -12110,7 +12324,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.CreateGroupReq": {
+        "github_com_easysoft_gitfox-community_app_model_artifact.CreateGroupReq": {
             "type": "object",
             "required": [
                 "names"
@@ -12127,7 +12341,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.ListAssetReq": {
+        "github_com_easysoft_gitfox-community_app_model_artifact.ListAssetReq": {
             "type": "object",
             "required": [
                 "entityID"
@@ -12177,7 +12391,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.RefreshTreeReq": {
+        "github_com_easysoft_gitfox-community_app_model_artifact.RefreshTreeReq": {
             "type": "object",
             "properties": {
                 "format": {
@@ -12185,7 +12399,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.RelocateEntityReq": {
+        "github_com_easysoft_gitfox-community_app_model_artifact.RelocateEntityReq": {
             "type": "object",
             "properties": {
                 "entityID": {
@@ -12206,7 +12420,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_artifact.SoftRemoveEntitiesReq": {
+        "github_com_easysoft_gitfox-community_app_model_artifact.SoftRemoveEntitiesReq": {
             "type": "object",
             "properties": {
                 "entityIDs": {
@@ -12217,14 +12431,14 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_auth.Session": {
+        "github_com_easysoft_gitfox-community_app_model_auth.Session": {
             "type": "object",
             "properties": {
                 "principal": {
                     "description": "Principal is the authenticated principal.",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_user.Principal"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_user.Principal"
                         }
                     ]
                 },
@@ -12232,13 +12446,13 @@ const docTemplate = `{
                     "description": "User is the end principal. default to Principal, override if SudoUser exist",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_user.User"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_user.User"
                         }
                     ]
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ActivateResult": {
+        "github_com_easysoft_gitfox-community_app_model_branch.ActivateResult": {
             "type": "object",
             "properties": {
                 "branchName": {
@@ -12252,7 +12466,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ArchiveResult": {
+        "github_com_easysoft_gitfox-community_app_model_branch.ArchiveResult": {
             "type": "object",
             "properties": {
                 "branchName": {
@@ -12266,14 +12480,14 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.Branch": {
+        "github_com_easysoft_gitfox-community_app_model_branch.Branch": {
             "type": "object",
             "properties": {
                 "commit": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Commit"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Commit"
                 },
                 "commitDivergence": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.CommitDivergence"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.CommitDivergence"
                 },
                 "isDefault": {
                     "type": "boolean"
@@ -12286,7 +12500,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.BranchType": {
+        "github_com_easysoft_gitfox-community_app_model_branch.BranchType": {
             "type": "object",
             "properties": {
                 "createdBy": {
@@ -12324,7 +12538,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.Prefix": {
+        "github_com_easysoft_gitfox-community_app_model_branch.Prefix": {
             "type": "object",
             "properties": {
                 "name": {
@@ -12335,7 +12549,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_branch.ReqFilter": {
             "type": "object",
             "properties": {
                 "archivedOnly": {
@@ -12380,7 +12594,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqFilterBranchType": {
+        "github_com_easysoft_gitfox-community_app_model_branch.ReqFilterBranchType": {
             "type": "object",
             "properties": {
                 "desc": {
@@ -12405,7 +12619,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForArchive": {
+        "github_com_easysoft_gitfox-community_app_model_branch.ReqForArchive": {
             "type": "object",
             "required": [
                 "branchNames"
@@ -12424,7 +12638,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_branch.ReqForCreate": {
             "type": "object",
             "required": [
                 "name"
@@ -12440,7 +12654,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForCreateBranchType": {
+        "github_com_easysoft_gitfox-community_app_model_branch.ReqForCreateBranchType": {
             "type": "object",
             "required": [
                 "key",
@@ -12474,7 +12688,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForDelete": {
+        "github_com_easysoft_gitfox-community_app_model_branch.ReqForDelete": {
             "type": "object",
             "required": [
                 "name"
@@ -12487,7 +12701,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_branch.ReqForUpdateBranchType": {
+        "github_com_easysoft_gitfox-community_app_model_branch.ReqForUpdateBranchType": {
             "type": "object",
             "required": [
                 "name",
@@ -12515,14 +12729,14 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Action": {
+        "github_com_easysoft_gitfox-community_app_model_commit.Action": {
             "type": "object",
             "properties": {
                 "action": {
                     "type": "string"
                 },
                 "encoding": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ContentEncodingType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ContentEncodingType"
                 },
                 "path": {
                     "type": "string"
@@ -12535,7 +12749,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Author": {
+        "github_com_easysoft_gitfox-community_app_model_commit.Author": {
             "type": "object",
             "properties": {
                 "email": {
@@ -12546,7 +12760,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.ChangeStats": {
+        "github_com_easysoft_gitfox-community_app_model_commit.ChangeStats": {
             "type": "object",
             "properties": {
                 "changes": {
@@ -12560,14 +12774,14 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Commit": {
+        "github_com_easysoft_gitfox-community_app_model_commit.Commit": {
             "type": "object",
             "properties": {
                 "author": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Signature"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Signature"
                 },
                 "committer": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Signature"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Signature"
                 },
                 "message": {
                     "type": "string"
@@ -12582,14 +12796,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "stats": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.CommitStats"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.CommitStats"
                 },
                 "title": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.CommitDivergence": {
+        "github_com_easysoft_gitfox-community_app_model_commit.CommitDivergence": {
             "type": "object",
             "properties": {
                 "ahead": {
@@ -12602,7 +12816,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.CommitFileStats": {
+        "github_com_easysoft_gitfox-community_app_model_commit.CommitFileStats": {
             "type": "object",
             "properties": {
                 "changes": {
@@ -12621,25 +12835,25 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git_enum.FileDiffStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git_enum.FileDiffStatus"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.CommitStats": {
+        "github_com_easysoft_gitfox-community_app_model_commit.CommitStats": {
             "type": "object",
             "properties": {
                 "files": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.CommitFileStats"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.CommitFileStats"
                     }
                 },
                 "total": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.ChangeStats"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.ChangeStats"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.CompareGitRef": {
+        "github_com_easysoft_gitfox-community_app_model_commit.CompareGitRef": {
             "type": "object",
             "properties": {
                 "from": {
@@ -12650,7 +12864,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Identity": {
+        "github_com_easysoft_gitfox-community_app_model_commit.Identity": {
             "type": "object",
             "properties": {
                 "email": {
@@ -12661,7 +12875,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.RenameDetails": {
+        "github_com_easysoft_gitfox-community_app_model_commit.RenameDetails": {
             "type": "object",
             "properties": {
                 "commitShaAfter": {
@@ -12678,7 +12892,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.ReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_commit.ReqFilter": {
             "type": "object",
             "properties": {
                 "after": {
@@ -12727,17 +12941,17 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.ReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_commit.ReqForCreate": {
             "type": "object",
             "properties": {
                 "actions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Action"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Action"
                     }
                 },
                 "author": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Author"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Author"
                 },
                 "branch": {
                     "type": "string"
@@ -12750,7 +12964,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.ReqForDivergence": {
+        "github_com_easysoft_gitfox-community_app_model_commit.ReqForDivergence": {
             "type": "object",
             "properties": {
                 "maxDivergence": {
@@ -12759,12 +12973,12 @@ const docTemplate = `{
                 "requests": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.CompareGitRef"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.CompareGitRef"
                     }
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.ReqForGet": {
+        "github_com_easysoft_gitfox-community_app_model_commit.ReqForGet": {
             "type": "object",
             "properties": {
                 "sha": {
@@ -12772,7 +12986,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.RespForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_commit.RespForCreate": {
             "type": "object",
             "properties": {
                 "sha": {
@@ -12780,19 +12994,19 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.RespForList": {
+        "github_com_easysoft_gitfox-community_app_model_commit.RespForList": {
             "type": "object",
             "properties": {
                 "commits": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Commit"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Commit"
                     }
                 },
                 "renameDetails": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.RenameDetails"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.RenameDetails"
                     }
                 },
                 "totalCommits": {
@@ -12800,18 +13014,18 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Signature": {
+        "github_com_easysoft_gitfox-community_app_model_commit.Signature": {
             "type": "object",
             "properties": {
                 "identity": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Identity"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Identity"
                 },
                 "when": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_execution.Execution": {
+        "github_com_easysoft_gitfox-community_app_model_execution.Execution": {
             "type": "object",
             "properties": {
                 "commit": {
@@ -12866,14 +13080,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.CIStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.CIStatus"
                 },
                 "trigger": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_execution.ExecutionByPr": {
+        "github_com_easysoft_gitfox-community_app_model_execution.ExecutionByPr": {
             "type": "object",
             "properties": {
                 "commit": {
@@ -12892,14 +13106,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.CIStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.CIStatus"
                 },
                 "trigger": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_execution.ExecutionInfoReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_execution.ExecutionInfoReqFilter": {
             "type": "object",
             "properties": {
                 "commit": {
@@ -12910,7 +13124,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_execution.ExecutionWithStages": {
+        "github_com_easysoft_gitfox-community_app_model_execution.ExecutionWithStages": {
             "type": "object",
             "properties": {
                 "commit": {
@@ -12964,21 +13178,21 @@ const docTemplate = `{
                 "stages": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_stage.StageWithSteps"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_stage.StageWithSteps"
                     }
                 },
                 "started": {
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.CIStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.CIStatus"
                 },
                 "trigger": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_execution.ReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_execution.ReqForCreate": {
             "type": "object",
             "required": [
                 "pipelineID"
@@ -12995,7 +13209,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_jobs.CreateJobRequest": {
+        "github_com_easysoft_gitfox-community_app_model_jobs.CreateJobRequest": {
             "type": "object",
             "required": [
                 "cronDef",
@@ -13023,7 +13237,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_jobs.DeleteJobRequest": {
+        "github_com_easysoft_gitfox-community_app_model_jobs.DeleteJobRequest": {
             "type": "object",
             "required": [
                 "jobName"
@@ -13034,7 +13248,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_jobs.State": {
+        "github_com_easysoft_gitfox-community_app_model_jobs.State": {
             "type": "string",
             "enum": [
                 "running",
@@ -13051,7 +13265,7 @@ const docTemplate = `{
                 "StateCanceled"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.GroupedPlugins": {
+        "github_com_easysoft_gitfox-community_app_model_pipeline.GroupedPlugins": {
             "type": "object",
             "properties": {
                 "desc": {
@@ -13066,12 +13280,12 @@ const docTemplate = `{
                 "plugins": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.SimpleStep"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_pipeline.SimpleStep"
                     }
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.SimpleStep": {
+        "github_com_easysoft_gitfox-community_app_model_pipeline.SimpleStep": {
             "type": "object",
             "properties": {
                 "alias": {
@@ -13088,7 +13302,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_pipeline.Trigger": {
+        "github_com_easysoft_gitfox-community_app_model_pipeline.Trigger": {
             "type": "object",
             "properties": {
                 "comment": {
@@ -13129,7 +13343,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_publickey.AddPublicKeyInput": {
+        "github_com_easysoft_gitfox-community_app_model_publickey.AddPublicKeyInput": {
             "type": "object",
             "required": [
                 "content",
@@ -13146,7 +13360,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_publickey.PublicKey": {
+        "github_com_easysoft_gitfox-community_app_model_publickey.PublicKey": {
             "type": "object",
             "properties": {
                 "account": {
@@ -13202,7 +13416,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_publickey.UpdatePublicKeyInput": {
+        "github_com_easysoft_gitfox-community_app_model_publickey.UpdatePublicKeyInput": {
             "type": "object",
             "properties": {
                 "content": {
@@ -13215,7 +13429,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.BranchCompareRequest": {
+        "github_com_easysoft_gitfox-community_app_model_repo.BranchCompareRequest": {
             "type": "object",
             "required": [
                 "source",
@@ -13232,7 +13446,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.ContentType": {
+        "github_com_easysoft_gitfox-community_app_model_repo.ContentType": {
             "type": "string",
             "enum": [
                 "file",
@@ -13247,7 +13461,7 @@ const docTemplate = `{
                 "ContentTypeSubmodule"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.CreateRepoReq": {
+        "github_com_easysoft_gitfox-community_app_model_repo.CreateRepoReq": {
             "type": "object",
             "required": [
                 "acl",
@@ -13302,7 +13516,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.DiffStats": {
+        "github_com_easysoft_gitfox-community_app_model_repo.DiffStats": {
             "type": "object",
             "properties": {
                 "additions": {
@@ -13329,7 +13543,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "mergeCheckStatus": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeCheckStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.MergeCheckStatus"
                 },
                 "mergeConflicts": {
                     "type": "array",
@@ -13344,7 +13558,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "rebaseCheckStatus": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeCheckStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.MergeCheckStatus"
                 },
                 "rebaseConflicts": {
                     "type": "array",
@@ -13357,7 +13571,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.EventTrigger": {
+        "github_com_easysoft_gitfox-community_app_model_repo.EventTrigger": {
             "type": "object",
             "properties": {
                 "type": {
@@ -13366,7 +13580,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.FileDiff": {
+        "github_com_easysoft_gitfox-community_app_model_repo.FileDiff": {
             "type": "object",
             "properties": {
                 "path": {
@@ -13377,12 +13591,12 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.GetContentOutput": {
+        "github_com_easysoft_gitfox-community_app_model_repo.GetContentOutput": {
             "type": "object",
             "properties": {
                 "content": {},
                 "latest_commit": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Commit"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Commit"
                 },
                 "name": {
                     "type": "string"
@@ -13394,11 +13608,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.ContentType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.ContentType"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.ImportInput": {
+        "github_com_easysoft_gitfox-community_app_model_repo.ImportInput": {
             "type": "object",
             "required": [
                 "acl",
@@ -13429,14 +13643,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "provider": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Provider"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.Provider"
                 },
                 "spaceID": {
                     "type": "integer"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Merge": {
+        "github_com_easysoft_gitfox-community_app_model_repo.Merge": {
             "type": "object",
             "properties": {
                 "bypassRules": {
@@ -13455,7 +13669,7 @@ const docTemplate = `{
                     "description": "合并策略: merge , squash , rebase , fast-forward (*DryRun 时可选)",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeMethod"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.MergeMethod"
                         }
                     ]
                 },
@@ -13469,7 +13683,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeCheck": {
+        "github_com_easysoft_gitfox-community_app_model_repo.MergeCheck": {
             "type": "object",
             "properties": {
                 "conflictFiles": {
@@ -13497,7 +13711,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeCheckStatus": {
+        "github_com_easysoft_gitfox-community_app_model_repo.MergeCheckStatus": {
             "type": "string",
             "enum": [
                 "unchecked",
@@ -13510,7 +13724,7 @@ const docTemplate = `{
                 "MergeCheckStatusMergeable"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeMethod": {
+        "github_com_easysoft_gitfox-community_app_model_repo.MergeMethod": {
             "type": "string",
             "enum": [
                 "merge",
@@ -13525,14 +13739,14 @@ const docTemplate = `{
                 "MergeMethodFastForward"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeResponse": {
+        "github_com_easysoft_gitfox-community_app_model_repo.MergeResponse": {
             "type": "object",
             "properties": {
                 "allowedMethods": {
                     "description": "当前规则允许的合并方式（如只允许 squash）",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git_enum.MergeMethod"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git_enum.MergeMethod"
                     }
                 },
                 "branchDeleted": {
@@ -13558,7 +13772,7 @@ const docTemplate = `{
                     "description": "--- 规则相关 ---\n即使合并成功，也可能存在被\"绕过\"的规则（比如管理员强制合并）\n这里列出的是那些\"虽然违规但被允许绕过\"的规则详情",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.RuleViolations"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.RuleViolations"
                     }
                 },
                 "sha": {
@@ -13567,7 +13781,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.MergeViolations": {
+        "github_com_easysoft_gitfox-community_app_model_repo.MergeViolations": {
             "type": "object",
             "properties": {
                 "conflictFiles": {
@@ -13585,12 +13799,12 @@ const docTemplate = `{
                     "description": "规则拦截详情（业务规则冲突）",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.RuleViolations"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.RuleViolations"
                     }
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.PathsDetailsInput": {
+        "github_com_easysoft_gitfox-community_app_model_repo.PathsDetailsInput": {
             "type": "object",
             "properties": {
                 "gitRef": {
@@ -13604,18 +13818,18 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.PathsDetailsOutput": {
+        "github_com_easysoft_gitfox-community_app_model_repo.PathsDetailsOutput": {
             "type": "object",
             "properties": {
                 "details": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.PathDetails"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git.PathDetails"
                     }
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.PathsOutput": {
+        "github_com_easysoft_gitfox-community_app_model_repo.PathsOutput": {
             "type": "object",
             "properties": {
                 "directories": {
@@ -13632,7 +13846,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Progress": {
+        "github_com_easysoft_gitfox-community_app_model_repo.Progress": {
             "type": "object",
             "properties": {
                 "failure": {
@@ -13641,15 +13855,18 @@ const docTemplate = `{
                 "lastExecuted": {
                     "type": "string"
                 },
+                "nextExecuted": {
+                    "type": "string"
+                },
                 "result": {
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_jobs.State"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_jobs.State"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Provider": {
+        "github_com_easysoft_gitfox-community_app_model_repo.Provider": {
             "type": "object",
             "required": [
                 "host",
@@ -13686,7 +13903,7 @@ const docTemplate = `{
                     ],
                     "allOf": [
                         {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.RepoProviderType"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.RepoProviderType"
                         }
                     ]
                 },
@@ -13696,7 +13913,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Repo": {
+        "github_com_easysoft_gitfox-community_app_model_repo.Repo": {
             "type": "object",
             "properties": {
                 "acl": {
@@ -13776,7 +13993,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.RepositoryOutput": {
+        "github_com_easysoft_gitfox-community_app_model_repo.RepositoryOutput": {
             "type": "object",
             "properties": {
                 "acl": {
@@ -13856,7 +14073,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.ReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_repo.ReqFilter": {
             "type": "object",
             "properties": {
                 "page": {
@@ -13876,13 +14093,13 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.ReqForDiff": {
+        "github_com_easysoft_gitfox-community_app_model_repo.ReqForDiff": {
             "type": "object",
             "properties": {
                 "files": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git_api.FileDiffRequest"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git_api.FileDiffRequest"
                     }
                 },
                 "range": {
@@ -13890,7 +14107,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.ReqForUpdate": {
+        "github_com_easysoft_gitfox-community_app_model_repo.ReqForUpdate": {
             "type": "object",
             "properties": {
                 "acl": {
@@ -13924,7 +14141,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.RuleInfo": {
+        "github_com_easysoft_gitfox-community_app_model_repo.RuleInfo": {
             "type": "object",
             "properties": {
                 "buildin": {
@@ -13933,7 +14150,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.RuleViolations": {
+        "github_com_easysoft_gitfox-community_app_model_repo.RuleViolations": {
             "type": "object",
             "properties": {
                 "bypassable": {
@@ -13948,7 +14165,7 @@ const docTemplate = `{
                     "description": "违规的规则元数据",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.RuleInfo"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.RuleInfo"
                         }
                     ]
                 },
@@ -13956,12 +14173,12 @@ const docTemplate = `{
                     "description": "具体违规信息列表",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Violation"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_repo.Violation"
                     }
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_repo.Violation": {
+        "github_com_easysoft_gitfox-community_app_model_repo.Violation": {
             "type": "object",
             "properties": {
                 "code": {
@@ -13979,7 +14196,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.GenerateTokenResponse": {
+        "github_com_easysoft_gitfox-community_app_model_runner.GenerateTokenResponse": {
             "type": "object",
             "properties": {
                 "token": {
@@ -13990,7 +14207,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.RegisterRunnerReq": {
+        "github_com_easysoft_gitfox-community_app_model_runner.RegisterRunnerReq": {
             "type": "object",
             "required": [
                 "name"
@@ -14028,7 +14245,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.ReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_runner.ReqFilter": {
             "type": "object",
             "properties": {
                 "arch": {
@@ -14062,7 +14279,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.ReqForUpdateBasicInfo": {
+        "github_com_easysoft_gitfox-community_app_model_runner.ReqForUpdateBasicInfo": {
             "type": "object",
             "required": [
                 "name"
@@ -14076,7 +14293,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.ReqForUpdateStatus": {
+        "github_com_easysoft_gitfox-community_app_model_runner.ReqForUpdateStatus": {
             "type": "object",
             "required": [
                 "status"
@@ -14089,13 +14306,13 @@ const docTemplate = `{
                     ],
                     "allOf": [
                         {
-                            "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.RunnerActiveStatus"
+                            "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.RunnerActiveStatus"
                         }
                     ]
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_runner.Runner": {
+        "github_com_easysoft_gitfox-community_app_model_runner.Runner": {
             "type": "object",
             "properties": {
                 "arch": {
@@ -14141,7 +14358,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "online": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.RunnerStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.RunnerStatus"
                 },
                 "os": {
                     "type": "string"
@@ -14150,7 +14367,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.RunnerActiveStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.RunnerActiveStatus"
                 },
                 "token": {
                     "type": "string"
@@ -14160,7 +14377,30 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Pattern": {
+        "github_com_easysoft_gitfox-community_app_model_scan.AIReviewConfig": {
+            "type": "object",
+            "properties": {
+                "llmApiKey": {
+                    "type": "string"
+                },
+                "llmLanguage": {
+                    "type": "string"
+                },
+                "llmModel": {
+                    "type": "string"
+                },
+                "llmProtocol": {
+                    "type": "string"
+                },
+                "llmProvider": {
+                    "type": "string"
+                },
+                "llmUrl": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_easysoft_gitfox-community_app_model_scan.Pattern": {
             "type": "object",
             "properties": {
                 "default": {
@@ -14180,7 +14420,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Rule": {
+        "github_com_easysoft_gitfox-community_app_model_scan.Rule": {
             "type": "object",
             "properties": {
                 "content": {
@@ -14219,7 +14459,7 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "lang": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanLangName"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanLangName"
                 },
                 "name": {
                     "type": "string"
@@ -14228,27 +14468,27 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "priority": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRulePriority"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRulePriority"
                 },
                 "ruleKey": {
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleStatus"
                 },
                 "tag": {
                     "type": "string"
                 },
                 "type": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleType"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleListReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_scan.RuleListReqFilter": {
             "type": "object",
             "properties": {
                 "bind": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleBind"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleBind"
                 },
                 "id": {
                     "type": "integer"
@@ -14257,13 +14497,13 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "langID": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanLangID"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanLangID"
                 },
                 "name": {
                     "type": "string"
                 },
                 "order": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.Order"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.Order"
                 },
                 "page": {
                     "type": "integer"
@@ -14275,7 +14515,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "priority": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRulePriority"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRulePriority"
                 },
                 "rulesetID": {
                     "type": "integer"
@@ -14284,20 +14524,20 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "sort": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleSort"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleSort"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleStatus"
                 },
                 "tag": {
                     "type": "string"
                 },
                 "type": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleType"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSet": {
+        "github_com_easysoft_gitfox-community_app_model_scan.RuleSet": {
             "type": "object",
             "properties": {
                 "createdBy": {
@@ -14330,7 +14570,7 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "lang": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanLangName"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanLangName"
                 },
                 "name": {
                     "type": "string"
@@ -14342,14 +14582,14 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleStatus"
                 },
                 "tag": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSetReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_scan.RuleSetReqFilter": {
             "type": "object",
             "properties": {
                 "id": {
@@ -14359,7 +14599,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "langID": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanLangID"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanLangID"
                 },
                 "name": {
                     "type": "string"
@@ -14394,7 +14634,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSetReqForBind": {
+        "github_com_easysoft_gitfox-community_app_model_scan.RuleSetReqForBind": {
             "type": "object",
             "properties": {
                 "ruleIDList": {
@@ -14405,7 +14645,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSetReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.RuleSetReqForCreate": {
             "type": "object",
             "required": [
                 "name"
@@ -14438,7 +14678,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSetReqForUpdate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.RuleSetReqForUpdate": {
             "type": "object",
             "properties": {
                 "desc": {
@@ -14469,7 +14709,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanBaseResp": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanBaseResp": {
             "type": "object",
             "properties": {
                 "count": {
@@ -14492,7 +14732,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanCondition": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanCondition": {
             "type": "object",
             "properties": {
                 "createdBy": {
@@ -14517,7 +14757,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "priority": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRulePriority"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRulePriority"
                 },
                 "repoID": {
                     "type": "integer"
@@ -14529,31 +14769,31 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "type": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleType"
                 },
                 "unit": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleUnit"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleUnit"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanConditionItem": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanConditionItem": {
             "type": "object",
             "properties": {
                 "priority": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRulePriority"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRulePriority"
                 },
                 "threshold": {
                     "type": "integer"
                 },
                 "type": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleType"
                 },
                 "unit": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleUnit"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleUnit"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanConditionReqForBatchCreate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanConditionReqForBatchCreate": {
             "type": "object",
             "required": [
                 "conditions"
@@ -14562,12 +14802,12 @@ const docTemplate = `{
                 "conditions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanConditionItem"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanConditionItem"
                     }
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanConditionReqForBatchDelete": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanConditionReqForBatchDelete": {
             "type": "object",
             "required": [
                 "ids"
@@ -14581,7 +14821,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueIDsReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanIssueIDsReqFilter": {
             "type": "object",
             "required": [
                 "ids"
@@ -14595,11 +14835,11 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueInfo": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanIssueInfo": {
             "type": "object",
             "properties": {
                 "category": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.AiScanIssueCategory"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.AiScanIssueCategory"
                 },
                 "closedDate": {
                     "type": "string"
@@ -14620,6 +14860,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "endLine": {
+                    "type": "integer"
+                },
+                "executionID": {
                     "type": "integer"
                 },
                 "id": {
@@ -14665,7 +14908,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "resolution": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanIssueResolution"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanIssueResolution"
                 },
                 "resolvedDate": {
                     "type": "string"
@@ -14680,35 +14923,35 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "rulePriority": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRulePriority"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRulePriority"
                 },
                 "ruleType": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleType"
                 },
                 "scanMethod": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanMethod"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanMethod"
                 },
                 "severity": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.AiScanIssueSeverity"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.AiScanIssueSeverity"
                 },
                 "startLine": {
                     "type": "integer"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanIssueStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanIssueStatus"
                 },
                 "title": {
                     "type": "string"
                 },
                 "trigger": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskTrigger"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTaskTrigger"
                 },
                 "updatedByTaskID": {
                     "type": "integer"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueReport": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanIssueReport": {
             "type": "object",
             "properties": {
                 "add": {
@@ -14734,14 +14977,14 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanIssueReqFilter": {
             "type": "object",
             "properties": {
                 "branch": {
                     "type": "string"
                 },
                 "category": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.AiScanIssueCategory"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.AiScanIssueCategory"
                 },
                 "content": {
                     "type": "string"
@@ -14795,23 +15038,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "ruleType": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleType"
                 },
                 "scanMethods": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanMethod"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanMethod"
                     }
                 },
                 "severity": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.AiScanIssueSeverity"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.AiScanIssueSeverity"
                 },
                 "sort": {
                     "type": "string",
                     "default": "id"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanIssueStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanIssueStatus"
                 },
                 "title": {
                     "type": "string"
@@ -14827,7 +15070,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanIssueUpdateStatusReq": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanIssueUpdateStatusReq": {
             "type": "object",
             "required": [
                 "ids"
@@ -14843,21 +15086,21 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "resolution": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanIssueResolution"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanIssueResolution"
                 },
                 "resolved": {
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanIssueStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanIssueStatus"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlan": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanPlan": {
             "type": "object",
             "properties": {
                 "branches": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Pattern"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Pattern"
                 },
                 "conditionCount": {
                     "type": "integer"
@@ -14871,7 +15114,7 @@ const docTemplate = `{
                 "conditions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanCondition"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanCondition"
                     }
                 },
                 "createdBy": {
@@ -14893,7 +15136,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "files": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Pattern"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Pattern"
                 },
                 "id": {
                     "type": "integer"
@@ -14905,10 +15148,10 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "latestTaskResult": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskResult"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanTaskResult"
                 },
                 "latestTaskStatus": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanTaskStatus"
                 },
                 "name": {
                     "type": "string"
@@ -14934,7 +15177,7 @@ const docTemplate = `{
                 "solutions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Solution"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Solution"
                     }
                 },
                 "spaceID": {
@@ -14955,12 +15198,12 @@ const docTemplate = `{
                 "triggers": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTrigger"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTrigger"
                     }
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanConditionReqForBatchCreate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanPlanConditionReqForBatchCreate": {
             "type": "object",
             "required": [
                 "conditions"
@@ -14969,12 +15212,12 @@ const docTemplate = `{
                 "conditions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanConditionReqForCreate"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanPlanConditionReqForCreate"
                     }
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanConditionReqForBatchDelete": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanPlanConditionReqForBatchDelete": {
             "type": "object",
             "required": [
                 "ids"
@@ -14988,41 +15231,41 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanConditionReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanPlanConditionReqForCreate": {
             "type": "object",
             "properties": {
                 "priority": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRulePriority"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRulePriority"
                 },
                 "threshold": {
                     "type": "integer"
                 },
                 "type": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleType"
                 },
                 "unit": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleUnit"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleUnit"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanConditionReqForUpdate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanPlanConditionReqForUpdate": {
             "type": "object",
             "properties": {
                 "priority": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRulePriority"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRulePriority"
                 },
                 "threshold": {
                     "type": "integer"
                 },
                 "type": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleType"
                 },
                 "unit": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleUnit"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleUnit"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanPlanReqFilter": {
             "type": "object",
             "properties": {
                 "latestTaskResult": {
@@ -15055,7 +15298,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanReqForBind": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanPlanReqForBind": {
             "type": "object",
             "properties": {
                 "solutionIDs": {
@@ -15066,20 +15309,20 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanPlanReqForCreate": {
             "type": "object",
             "required": [
                 "name"
             ],
             "properties": {
                 "branches": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Pattern"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Pattern"
                 },
                 "desc": {
                     "type": "string"
                 },
                 "files": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Pattern"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Pattern"
                 },
                 "name": {
                     "type": "string",
@@ -15096,17 +15339,17 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanPlanReqForUpdate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanPlanReqForUpdate": {
             "type": "object",
             "properties": {
                 "branches": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Pattern"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Pattern"
                 },
                 "desc": {
                     "type": "string"
                 },
                 "files": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Pattern"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Pattern"
                 },
                 "name": {
                     "type": "string"
@@ -15116,7 +15359,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTask": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTask": {
             "type": "object",
             "properties": {
                 "createdBy": {
@@ -15144,23 +15387,23 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "result": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskResult"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanTaskResult"
                 },
                 "scanType": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanType"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanTaskStatus"
                 },
                 "triggerID": {
                     "type": "integer"
                 },
                 "triggerType": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanPlanTriggerType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanPlanTriggerType"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskInfo": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTaskInfo": {
             "type": "object",
             "properties": {
                 "cost": {
@@ -15215,23 +15458,23 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "result": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskResult"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanTaskResult"
                 },
                 "scanType": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanType"
                 },
                 "started": {
                     "type": "integer"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanTaskStatus"
                 },
                 "trigger": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskTrigger"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTaskTrigger"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskInfoReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTaskInfoReqFilter": {
             "type": "object",
             "properties": {
                 "branch": {
@@ -15264,7 +15507,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "result": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskResult"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanTaskResult"
                 },
                 "sort": {
                     "type": "string"
@@ -15276,7 +15519,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanTaskStatus"
                 },
                 "taskID": {
                     "type": "integer"
@@ -15286,14 +15529,14 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskIssueReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTaskIssueReqFilter": {
             "type": "object",
             "properties": {
                 "branch": {
                     "type": "string"
                 },
                 "category": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.AiScanIssueCategory"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.AiScanIssueCategory"
                 },
                 "content": {
                     "type": "string"
@@ -15338,23 +15581,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "ruleType": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleType"
                 },
                 "scanMethods": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanMethod"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanMethod"
                     }
                 },
                 "severity": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.AiScanIssueSeverity"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.AiScanIssueSeverity"
                 },
                 "sort": {
                     "type": "string",
                     "default": "id"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanIssueStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanIssueStatus"
                 },
                 "taskID": {
                     "type": "integer"
@@ -15367,7 +15610,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTaskReqForCreate": {
             "type": "object",
             "required": [
                 "branch",
@@ -15386,7 +15629,37 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTaskTrigger": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTaskRunnerCreateReq": {
+            "type": "object",
+            "required": [
+                "executionID",
+                "planID",
+                "repoID"
+            ],
+            "properties": {
+                "executionID": {
+                    "type": "integer"
+                },
+                "planID": {
+                    "type": "integer"
+                },
+                "repoID": {
+                    "type": "integer"
+                },
+                "triggerType": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTaskRunnerCreateResp": {
+            "type": "object",
+            "properties": {
+                "taskID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTaskTrigger": {
             "type": "object",
             "properties": {
                 "triggerID": {
@@ -15396,17 +15669,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "triggerType": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanPlanTriggerType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanPlanTriggerType"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTrigger": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTrigger": {
             "type": "object",
             "properties": {
                 "actions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.TriggerAction"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.TriggerAction"
                     }
                 },
                 "conditionCount": {
@@ -15421,7 +15694,7 @@ const docTemplate = `{
                 "conditions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanCondition"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanCondition"
                     }
                 },
                 "createdBy": {
@@ -15464,10 +15737,10 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "latestTaskResult": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskResult"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanTaskResult"
                 },
                 "latestTaskStatus": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanTaskStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanTaskStatus"
                 },
                 "name": {
                     "type": "string"
@@ -15479,7 +15752,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "scanType": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanType"
                 },
                 "solutionCount": {
                     "type": "integer"
@@ -15493,18 +15766,18 @@ const docTemplate = `{
                 "solutions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Solution"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.Solution"
                     }
                 },
                 "spaceID": {
                     "type": "integer"
                 },
                 "type": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTriggerType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTriggerType"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTriggerReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTriggerReqForCreate": {
             "type": "object",
             "required": [
                 "name"
@@ -15513,7 +15786,7 @@ const docTemplate = `{
                 "actions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.TriggerAction"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.TriggerAction"
                     }
                 },
                 "cron": {
@@ -15536,7 +15809,7 @@ const docTemplate = `{
                     "maxLength": 100
                 },
                 "scanType": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanType"
                 },
                 "solutionIDs": {
                     "type": "array",
@@ -15545,17 +15818,17 @@ const docTemplate = `{
                     }
                 },
                 "type": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTriggerType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTriggerType"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTriggerReqForUpdate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTriggerReqForUpdate": {
             "type": "object",
             "properties": {
                 "actions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.TriggerAction"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.TriggerAction"
                     }
                 },
                 "cron": {
@@ -15577,7 +15850,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "scanType": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanType"
                 },
                 "solutionIDs": {
                     "type": "array",
@@ -15586,11 +15859,11 @@ const docTemplate = `{
                     }
                 },
                 "type": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTriggerType"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.ScanTriggerType"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.ScanTriggerType": {
+        "github_com_easysoft_gitfox-community_app_model_scan.ScanTriggerType": {
             "type": "string",
             "enum": [
                 "cron",
@@ -15603,7 +15876,7 @@ const docTemplate = `{
                 "ScanTriggerTypeEvent"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.Solution": {
+        "github_com_easysoft_gitfox-community_app_model_scan.Solution": {
             "type": "object",
             "properties": {
                 "createdBy": {
@@ -15651,7 +15924,7 @@ const docTemplate = `{
                 "ruleSets": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.RuleSet"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.RuleSet"
                     }
                 },
                 "ruleSetsCount": {
@@ -15661,14 +15934,14 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleStatus"
                 },
                 "tag": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.SolutionReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_scan.SolutionReqFilter": {
             "type": "object",
             "properties": {
                 "createdBy": {
@@ -15707,7 +15980,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.SolutionReqForBind": {
+        "github_com_easysoft_gitfox-community_app_model_scan.SolutionReqForBind": {
             "type": "object",
             "properties": {
                 "rulesetIDList": {
@@ -15718,7 +15991,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.SolutionReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.SolutionReqForCreate": {
             "type": "object",
             "required": [
                 "name"
@@ -15735,14 +16008,14 @@ const docTemplate = `{
                     "maxLength": 100
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleStatus"
                 },
                 "tag": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.SolutionReqForUpdate": {
+        "github_com_easysoft_gitfox-community_app_model_scan.SolutionReqForUpdate": {
             "type": "object",
             "properties": {
                 "desc": {
@@ -15757,20 +16030,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.ScanRuleStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.ScanRuleStatus"
                 },
                 "tag": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.TreeNode": {
+        "github_com_easysoft_gitfox-community_app_model_scan.TreeNode": {
             "type": "object",
             "properties": {
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_scan.TreeNode"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_scan.TreeNode"
                     }
                 },
                 "isLeaf": {
@@ -15788,7 +16061,7 @@ const docTemplate = `{
                 "ref": {}
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_space.CreateSpaceRequest": {
+        "github_com_easysoft_gitfox-community_app_model_space.CreateSpaceRequest": {
             "type": "object",
             "required": [
                 "acl",
@@ -15832,7 +16105,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_space.SpaceResponse": {
+        "github_com_easysoft_gitfox-community_app_model_space.SpaceResponse": {
             "type": "object",
             "properties": {
                 "acl": {
@@ -15867,7 +16140,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_space.UpdateSpaceRequest": {
+        "github_com_easysoft_gitfox-community_app_model_space.UpdateSpaceRequest": {
             "type": "object",
             "required": [
                 "auth",
@@ -15900,7 +16173,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_stage.StageWithSteps": {
+        "github_com_easysoft_gitfox-community_app_model_stage.StageWithSteps": {
             "type": "object",
             "properties": {
                 "arch": {
@@ -15973,12 +16246,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.CIStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.CIStatus"
                 },
                 "steps": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_step.Step"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_step.Step"
                     }
                 },
                 "type": {
@@ -15986,7 +16259,66 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_step.Step": {
+        "github_com_easysoft_gitfox-community_app_model_statistics.AuthorCount": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "提交者账号。",
+                    "type": "string",
+                    "example": "admin"
+                },
+                "count": {
+                    "description": "提交次数。",
+                    "type": "integer",
+                    "example": 3
+                },
+                "email": {
+                    "description": "提交者邮箱。",
+                    "type": "string",
+                    "example": "admin@example.com"
+                },
+                "name": {
+                    "description": "提交者姓名。",
+                    "type": "string",
+                    "example": "张三"
+                }
+            }
+        },
+        "github_com_easysoft_gitfox-community_app_model_statistics.DailyCount": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "description": "当日提交次数。",
+                    "type": "integer",
+                    "example": 3
+                },
+                "date": {
+                    "description": "统计日期。",
+                    "type": "string",
+                    "example": "2026-09-16"
+                }
+            }
+        },
+        "github_com_easysoft_gitfox-community_app_model_statistics.RespForCommitStatistics": {
+            "type": "object",
+            "properties": {
+                "authors": {
+                    "description": "按提交者统计的结果，仅当 byUser 为 true 时返回。",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_statistics.AuthorCount"
+                    }
+                },
+                "stats": {
+                    "description": "按日期升序排列的统计结果。",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_statistics.DailyCount"
+                    }
+                }
+            }
+        },
+        "github_com_easysoft_gitfox-community_app_model_step.Step": {
             "type": "object",
             "properties": {
                 "code": {
@@ -16035,11 +16367,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.CIStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.CIStatus"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_svn.Command": {
+        "github_com_easysoft_gitfox-community_app_model_svn.Command": {
             "type": "string",
             "enum": [
                 "ls",
@@ -16058,7 +16390,7 @@ const docTemplate = `{
                 "Diff"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_svn.ReqForExec": {
+        "github_com_easysoft_gitfox-community_app_model_svn.ReqForExec": {
             "type": "object",
             "required": [
                 "command"
@@ -16069,11 +16401,11 @@ const docTemplate = `{
                     "additionalProperties": {}
                 },
                 "command": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_svn.Command"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_svn.Command"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_tag.ReqFilter": {
+        "github_com_easysoft_gitfox-community_app_model_tag.ReqFilter": {
             "type": "object",
             "properties": {
                 "includeCommit": {
@@ -16100,7 +16432,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_tag.ReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_tag.ReqForCreate": {
             "type": "object",
             "required": [
                 "name"
@@ -16117,14 +16449,14 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_tag.Tag": {
+        "github_com_easysoft_gitfox-community_app_model_tag.Tag": {
             "type": "object",
             "properties": {
                 "commit": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Commit"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Commit"
                 },
                 "createdBy": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_commit.Signature"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_model_commit.Signature"
                 },
                 "message": {
                     "type": "string"
@@ -16137,7 +16469,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_user.Principal": {
+        "github_com_easysoft_gitfox-community_app_model_user.Principal": {
             "type": "object",
             "properties": {
                 "admin": {
@@ -16154,7 +16486,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_user.User": {
+        "github_com_easysoft_gitfox-community_app_model_user.User": {
             "type": "object",
             "properties": {
                 "account": {
@@ -16174,7 +16506,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.Execution": {
+        "github_com_easysoft_gitfox-community_app_model_webhook.Execution": {
             "type": "object",
             "properties": {
                 "createdDate": {
@@ -16220,7 +16552,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "result": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookExecutionResult"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.WebhookExecutionResult"
                 },
                 "retriggerID": {
                     "type": "integer"
@@ -16233,14 +16565,14 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.ReqForCreate": {
+        "github_com_easysoft_gitfox-community_app_model_webhook.ReqForCreate": {
             "type": "object",
             "properties": {
                 "authHeader": {
                     "type": "string"
                 },
                 "authMethod": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookAuthMethod"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.WebhookAuthMethod"
                 },
                 "description": {
                     "type": "string"
@@ -16260,7 +16592,7 @@ const docTemplate = `{
                 "triggers": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookTrigger"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.WebhookTrigger"
                     }
                 },
                 "url": {
@@ -16268,14 +16600,14 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.ReqForUpdate": {
+        "github_com_easysoft_gitfox-community_app_model_webhook.ReqForUpdate": {
             "type": "object",
             "properties": {
                 "authHeader": {
                     "type": "string"
                 },
                 "authMethod": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookAuthMethod"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.WebhookAuthMethod"
                 },
                 "description": {
                     "type": "string"
@@ -16295,7 +16627,7 @@ const docTemplate = `{
                 "triggers": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookTrigger"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.WebhookTrigger"
                     }
                 },
                 "url": {
@@ -16303,14 +16635,14 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_model_webhook.Webhook": {
+        "github_com_easysoft_gitfox-community_app_model_webhook.Webhook": {
             "type": "object",
             "properties": {
                 "authHeader": {
                     "type": "string"
                 },
                 "authMethod": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookAuthMethod"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.WebhookAuthMethod"
                 },
                 "createdBy": {
                     "type": "string"
@@ -16340,7 +16672,7 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "latestExecutionResult": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookExecutionResult"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.WebhookExecutionResult"
                 },
                 "parentID": {
                     "type": "integer"
@@ -16354,7 +16686,7 @@ const docTemplate = `{
                 "triggers": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_app_constant.WebhookTrigger"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_app_constant.WebhookTrigger"
                     }
                 },
                 "url": {
@@ -16362,7 +16694,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_app_service_utils.BranchPermissionResult": {
+        "github_com_easysoft_gitfox-community_app_service_utils.BranchPermissionResult": {
             "type": "object",
             "properties": {
                 "commitLine": {
@@ -16427,19 +16759,19 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.Commit": {
+        "github_com_easysoft_gitfox-community_pkg_git.Commit": {
             "type": "object",
             "properties": {
                 "author": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.Signature"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git.Signature"
                 },
                 "committer": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.Signature"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git.Signature"
                 },
                 "file_stats": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.CommitFileStats"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git.CommitFileStats"
                     }
                 },
                 "message": {
@@ -16448,18 +16780,18 @@ const docTemplate = `{
                 "parent_shas": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git_sha.SHA"
+                        "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git_sha.SHA"
                     }
                 },
                 "sha": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git_sha.SHA"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git_sha.SHA"
                 },
                 "title": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.CommitFileStats": {
+        "github_com_easysoft_gitfox-community_pkg_git.CommitFileStats": {
             "type": "object",
             "properties": {
                 "deletions": {
@@ -16478,11 +16810,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git_enum.FileDiffStatus"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git_enum.FileDiffStatus"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.Identity": {
+        "github_com_easysoft_gitfox-community_pkg_git.Identity": {
             "type": "object",
             "properties": {
                 "email": {
@@ -16493,29 +16825,29 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.PathDetails": {
+        "github_com_easysoft_gitfox-community_pkg_git.PathDetails": {
             "type": "object",
             "properties": {
                 "last_commit": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.Commit"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git.Commit"
                 },
                 "path": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.Signature": {
+        "github_com_easysoft_gitfox-community_pkg_git.Signature": {
             "type": "object",
             "properties": {
                 "identity": {
-                    "$ref": "#/definitions/gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git.Identity"
+                    "$ref": "#/definitions/github_com_easysoft_gitfox-community_pkg_git.Identity"
                 },
                 "when": {
                     "type": "string"
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git_api.FileDiffRequest": {
+        "github_com_easysoft_gitfox-community_pkg_git_api.FileDiffRequest": {
             "type": "object",
             "properties": {
                 "path": {
@@ -16526,7 +16858,7 @@ const docTemplate = `{
                 }
             }
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git_enum.FileDiffStatus": {
+        "github_com_easysoft_gitfox-community_pkg_git_enum.FileDiffStatus": {
             "type": "string",
             "enum": [
                 "UNDEFINED",
@@ -16545,7 +16877,7 @@ const docTemplate = `{
                 "FileDiffStatusCopied"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git_enum.MergeMethod": {
+        "github_com_easysoft_gitfox-community_pkg_git_enum.MergeMethod": {
             "type": "string",
             "enum": [
                 "merge",
@@ -16560,7 +16892,7 @@ const docTemplate = `{
                 "MergeMethodFastForward"
             ]
         },
-        "gitfox_zcorp_cc_git_Pangu_gitfox-community_pkg_git_sha.SHA": {
+        "github_com_easysoft_gitfox-community_pkg_git_sha.SHA": {
             "type": "object",
             "properties": {
                 "str": {

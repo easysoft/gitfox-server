@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      caiyan <caiyan@chandao.com>
+
 package config
 
 import "testing"
@@ -51,6 +55,20 @@ func TestComposeDatasource(t *testing.T) {
 				},
 			},
 			want: "dm://SYSDBA:Zxcvbnm123@10.0.4.16:5236",
+		},
+		{
+			name: "gaussdb uses key=value dsn",
+			cfg: &Config{
+				Database: DatabaseConfig{
+					Driver:   "gaussdb",
+					Host:     "10.0.4.16",
+					Port:     "5432",
+					User:     "gaussdb",
+					Password: "Zxcvbnm123",
+					Name:     "gitfox",
+				},
+			},
+			want: "host=10.0.4.16 port=5432 user=gaussdb password=Zxcvbnm123 dbname=gitfox sslmode=disable",
 		},
 	}
 

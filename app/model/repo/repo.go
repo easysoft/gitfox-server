@@ -1,14 +1,18 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      caiyan <caiyan@chandao.com>
+
 package repo
 
 import (
 	"regexp"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	gitTypes "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/api"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	gitTypes "github.com/easysoft/gitfox-community/pkg/git/api"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 // CreateRemoteRepoRequest 创建远端仓库请求参数

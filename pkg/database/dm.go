@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package database
 
 import (
@@ -8,8 +12,8 @@ import (
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 
-	dm "gitfox.zcorp.cc/git/Pangu/dm-gorm"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
+	dameng "github.com/godoes/gorm-dameng"
+	"github.com/easysoft/gitfox-community/pkg/config"
 )
 
 // DaMengDB 是 gorm.DB 的命名类型，用于达梦数据库
@@ -31,7 +35,7 @@ func NewDaMengDB(dbConf config.DatabaseConfig, logConf config.LoggingConfig) (*D
 	if slowThreshold <= 0 {
 		slowThreshold = 500 * time.Millisecond
 	}
-	db, err := gorm.Open(dm.Open(dbConf.Datasource), &gorm.Config{
+	db, err := gorm.Open(dameng.Open(dbConf.Datasource), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   "ops_", // 表名前缀，"repo" 的表应为 "ops_repo"
 			SingularTable: true,   // 使用单数表名，启用此选项时，"repo" 的表将为 "repo"

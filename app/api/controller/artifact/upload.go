@@ -1,12 +1,16 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package artifact
 
 import (
 	"net/http"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/utils/resp"
-	model "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/artifact"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/app/api/utils/resp"
+	model "github.com/easysoft/gitfox-community/app/model/artifact"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,6 +25,8 @@ import (
 // @Param name formData string true "文件名（覆盖 asset.path）"
 // @Param packageName formData string false "raw 包名（raw 上传必传）"
 // @Param group formData string false "上传目录路径（支持多级 a/b/c，不存在时自动递归创建；与 groupID 二选一）"
+// @Param overwrite formData bool false "同名文件是否直接覆盖（true/1 开启；缺省 false 走原逻辑：同内容跳过、异内容追加 (n) 后缀）"
+// @Param rename formData bool false "同名文件是否自动追加 (n) 后缀保留两份（true/1 开启；缺省 false 重名报已存在）"
 // @Param file formData file true "制品文件"
 // @Success 200 {object} resp.ObjectResponse "成功"
 // @Failure 400 {object} resp.ObjectResponse "参数错误"

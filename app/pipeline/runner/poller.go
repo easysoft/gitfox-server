@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package runner
 
 import (
@@ -7,15 +11,15 @@ import (
 	"runtime"
 	"runtime/debug"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	runnerModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/runner"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/pipeline/logger"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/pipeline/manager"
-	runnerStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/runner"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
-	gitfoxLogger "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/runner/docker/engine/resource"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/netutil"
+	"github.com/easysoft/gitfox-community/app/constant"
+	runnerModel "github.com/easysoft/gitfox-community/app/model/runner"
+	"github.com/easysoft/gitfox-community/app/pipeline/logger"
+	"github.com/easysoft/gitfox-community/app/pipeline/manager"
+	runnerStore "github.com/easysoft/gitfox-community/app/store/runner"
+	"github.com/easysoft/gitfox-community/pkg/config"
+	gitfoxLogger "github.com/easysoft/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine/resource"
+	"github.com/easysoft/gitfox-community/pkg/utils/netutil"
 
 	"github.com/drone/drone-go/drone"
 	runnerclient "github.com/drone/runner-go/client"

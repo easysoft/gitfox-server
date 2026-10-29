@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package svn
 
 import (
@@ -6,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/svn/command"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/svn/command"
 )
 
 // LogParams contains the parameters for svn log.
@@ -77,7 +81,8 @@ func (s *Service) Log(ctx context.Context, params *LogParams) (string, error) {
 		}
 	}
 
-	cmd := command.New("log",
+	cmd := s.newCommand("log",
+		command.WithFlag("--non-interactive"),
 		command.WithArg(target),
 		withLogAuth(params.Username, params.Password),
 	)

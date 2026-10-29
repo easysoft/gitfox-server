@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package pullrequest
 
 import (
@@ -5,15 +9,15 @@ import (
 	"strconv"
 	"time"
 
-	pullreqevents "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/pullreq"
-	eventModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/event"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/events"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
-	gitenum "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/enum"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/sha"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
+	pullreqevents "github.com/easysoft/gitfox-community/app/events/pullreq"
+	eventModel "github.com/easysoft/gitfox-community/app/model/event"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/events"
+	"github.com/easysoft/gitfox-community/pkg/git"
+	gitenum "github.com/easysoft/gitfox-community/pkg/git/enum"
+	"github.com/easysoft/gitfox-community/pkg/git/sha"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 )
 
 const (
@@ -127,7 +131,7 @@ func (s *Service) deleteMergeRef(ctx context.Context, repoID int64, prID int64) 
 		return errors.Wrapf(err, "failed to get repo with ID %d", repoID)
 	}
 
-	writeParams, err := createSystemRPCWriteParams(ctx, s.urlProvider, int64(repo.ID), repo.GitUID)
+	writeParams, err := CreateSystemRPCWriteParams(ctx, s.urlProvider, int64(repo.ID), repo.GitUID)
 	if err != nil {
 		return errors.Wrapf(err, "failed to generate rpc write params")
 	}
@@ -180,7 +184,7 @@ func (s *Service) updateMergeData(
 		}
 	}
 
-	writeParams, err := createSystemRPCWriteParams(ctx, s.urlProvider, int64(targetRepo.ID), targetRepo.GitUID)
+	writeParams, err := CreateSystemRPCWriteParams(ctx, s.urlProvider, int64(targetRepo.ID), targetRepo.GitUID)
 	if err != nil {
 		return errors.Wrapf(err, "failed to generate rpc write params")
 	}

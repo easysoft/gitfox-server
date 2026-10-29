@@ -1,11 +1,15 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package pipeline
 
 import (
 	"context"
 
-	pipelineModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/pipeline"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
+	pipelineModel "github.com/easysoft/gitfox-community/app/model/pipeline"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/errors"
 )
 
 // CreatePipeline 创建流水线
@@ -72,7 +76,7 @@ func mapModelToPipeline(p *pipelineModel.Pipeline) *Pipeline {
 		CreatedDate:      p.CreatedDate,
 		EditedBy:         p.EditedBy,
 		EditedDate:       p.EditedDate,
-		Deleted:          p.Deleted,
+		Deleted:          uint8(p.Deleted),
 	}
 }
 
@@ -99,6 +103,6 @@ func mapPipelineToModel(p *Pipeline) *pipelineModel.Pipeline {
 		CreatedDate:      p.CreatedDate,
 		EditedBy:         p.EditedBy,
 		EditedDate:       p.EditedDate,
-		Deleted:          p.Deleted,
+		Deleted:          int8(p.Deleted),
 	}
 }

@@ -1,10 +1,14 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package importer
 
 import (
 	"context"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
+	"github.com/easysoft/gitfox-community/app/model/auth"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
 )
 
 type Interface interface {

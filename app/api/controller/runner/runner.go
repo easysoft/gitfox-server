@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package runner
 
 import (
@@ -7,19 +11,20 @@ import (
 	"net/http"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/utils/req"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/utils/resp"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	runnerModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/runner"
-	stageModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/stage"
-	stepModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/step"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/pipeline/manager"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/runner"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/livelog"
-	urlprovider "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/url"
+	"github.com/easysoft/gitfox-community/app/api/utils/req"
+	"github.com/easysoft/gitfox-community/app/api/utils/resp"
+	"github.com/easysoft/gitfox-community/app/constant"
+	runnerModel "github.com/easysoft/gitfox-community/app/model/runner"
+	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
+	stepModel "github.com/easysoft/gitfox-community/app/model/step"
+	"github.com/easysoft/gitfox-community/app/pipeline/manager"
+	"github.com/easysoft/gitfox-community/app/service/runner"
+	"github.com/easysoft/gitfox-community/pkg/config"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/livelog"
+	urlprovider "github.com/easysoft/gitfox-community/pkg/utils/url"
+	"github.com/drone/runner-go/client"
 	"github.com/gin-gonic/gin"
 )
 
@@ -514,6 +519,16 @@ func (ctl *Controller) AcceptStage(c *gin.Context) {
 
 	stage, err := ctl.execManager.Accept(c.Request.Context(), stageID, reqData.Machine)
 	if err != nil {
+		// the stage could not be accepted because it was already
+		// claimed by another runner or the canceler marked it
+		// terminal (killed/skipped) while it was in-flight. Signal
+		// the agent with 409 (mapped to client.ErrOptimisticLock)
+		// instead of a generic 500 — the stage is no longer ours,
+		// the agent must abandon it silently and keep polling.
+		if errors.Is(err, client.ErrOptimisticLock) {
+			resp.Error(c, errors.WithHttpStatus(err, http.StatusConflict))
+			return
+		}
 		err = errors.WithI18nKey(err, i18n.RunnerStageAcceptError)
 		resp.InternalError(c, err)
 		return
@@ -567,6 +582,16 @@ func (ctl *Controller) UpdateStage(c *gin.Context) {
 		err = ctl.execManager.AfterStage(c.Request.Context(), &reqData)
 	}
 	if err != nil {
+		// the stage was refused because the execution was cancelled
+		// (setup.do) or the stage is already terminal (teardown.do,
+		// a state written by the canceler). Signal the agent with 409
+		// (mapped to client.ErrOptimisticLock) instead of a generic
+		// 500 — the agent must not overwrite the cancelled stage with
+		// an error status.
+		if errors.Is(err, manager.ErrStageCancelled) || errors.Is(err, manager.ErrStageTerminal) {
+			resp.Error(c, errors.WithHttpStatus(err, http.StatusConflict))
+			return
+		}
 		err = errors.WithI18nKey(err, i18n.RunnerStageUpdateError)
 		resp.InternalError(c, err)
 		return
@@ -596,6 +621,14 @@ func (ctl *Controller) UpdateStep(c *gin.Context) {
 		err = ctl.execManager.AfterStep(c.Request.Context(), &reqData)
 	}
 	if err != nil {
+		// the step is already in a terminal state (written by the
+		// canceler) or does not exist (the stage was refused to
+		// start). Signal the agent with 409 so it stops updating the
+		// step instead of overwriting the server's terminal state.
+		if errors.Is(err, manager.ErrStepTerminal) {
+			resp.Error(c, errors.WithHttpStatus(err, http.StatusConflict))
+			return
+		}
 		err = errors.WithI18nKey(err, i18n.RunnerStepUpdateError)
 		resp.InternalError(c, err)
 		return

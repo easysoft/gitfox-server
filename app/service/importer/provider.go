@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package importer
 
 import (
@@ -10,11 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	userModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/user"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/paths"
+	"github.com/easysoft/gitfox-community/app/constant"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	userModel "github.com/easysoft/gitfox-community/app/model/user"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/paths"
 
 	"github.com/drone/go-scm/scm"
 	"github.com/drone/go-scm/scm/driver/gitea"

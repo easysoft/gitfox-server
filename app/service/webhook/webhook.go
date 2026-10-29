@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package webhook
 
 import (
@@ -7,24 +11,24 @@ import (
 	"strings"
 	"time"
 
-	webhookModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/webhook"
-	webhookStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/webhook"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
+	webhookModel "github.com/easysoft/gitfox-community/app/model/webhook"
+	webhookStore "github.com/easysoft/gitfox-community/app/store/webhook"
+	"github.com/easysoft/gitfox-community/pkg/config"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/git"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	gitevents "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/git"
-	pullreqevents "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/pullreq"
-	repoSvc "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/repo"
-	pullreqStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/pullrequest"
-	repoStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/repo"
-	userStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/user"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/events"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/stream"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/url"
+	"github.com/easysoft/gitfox-community/app/constant"
+	gitevents "github.com/easysoft/gitfox-community/app/events/git"
+	pullreqevents "github.com/easysoft/gitfox-community/app/events/pullreq"
+	repoSvc "github.com/easysoft/gitfox-community/app/service/repo"
+	pullreqStore "github.com/easysoft/gitfox-community/app/store/pullrequest"
+	repoStore "github.com/easysoft/gitfox-community/app/store/repo"
+	userStore "github.com/easysoft/gitfox-community/app/store/user"
+	"github.com/easysoft/gitfox-community/pkg/events"
+	"github.com/easysoft/gitfox-community/pkg/stream"
+	"github.com/easysoft/gitfox-community/pkg/utils/url"
 )
 
 const (
@@ -194,12 +198,12 @@ func (s *Service) Create(ctx context.Context, info webhookModel.Webhook) (*webho
 		Desc:        info.Description,
 		URL:         info.URL,
 		Secret:      info.Secret,
-		IsSSL:       !info.Insecure,
+		IsSSL:       database.BoolToUint8(!info.Insecure),
 		Triggers:    strings.Join(triggerParts, ","),
-		Internal:    info.Internal,
+		Internal:    database.BoolToUint8(info.Internal),
 		AuthMethod:  string(info.AuthMethod),
 		AuthHeader:  info.AuthHeader,
-		Enabled:     info.Enabled,
+		Enabled:     database.BoolToUint8(info.Enabled),
 		CreatedBy:   info.CreatedBy,
 		EditedBy:    info.EditedBy,
 	}
@@ -266,7 +270,7 @@ func (s *Service) Update(ctx context.Context, webhookID uint, req webhookModel.R
 		updates["secret"] = *req.Secret
 	}
 	if req.Insecure != nil {
-		updates["isSSL"] = !*req.Insecure
+		updates["isSSL"] = database.BoolToUint8(!*req.Insecure)
 	}
 	if req.AuthMethod != nil {
 		updates["authMethod"] = string(*req.AuthMethod)
@@ -275,7 +279,7 @@ func (s *Service) Update(ctx context.Context, webhookID uint, req webhookModel.R
 		updates["authHeader"] = *req.AuthHeader
 	}
 	if req.Enabled != nil {
-		updates["enabled"] = *req.Enabled
+		updates["enabled"] = database.BoolToUint8(*req.Enabled)
 	}
 
 	return s.webhookStore.Update(ctx, webhookID, updates)

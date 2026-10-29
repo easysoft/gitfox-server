@@ -1,7 +1,11 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      caiyan <caiyan@chandao.com>
+
 package repo
 
 import (
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 	"gorm.io/gorm"
 )
 
@@ -17,7 +21,7 @@ type Repository struct {
 	DefaultBranch string          `gorm:"column:defaultBranch;comment:'默认分支名'"`
 	ForkID        uint            `gorm:"column:forkID;comment:'派生来源代码库ID'"`
 	ACL           string          `gorm:"column:acl;comment:'权限类型（private=私有，open=公开）'"`
-	Mirror        bool            `gorm:"column:mirror;comment:'是否为镜像库（0=普通库，1=镜像库）'"`
+	Mirror        uint8           `gorm:"column:mirror;comment:'是否为镜像库（0=普通库，1=镜像库）'"`
 	ProviderID    uint            `gorm:"column:providerID;comment:'源代码库提供商ID'"`
 	Connector     string          `gorm:"column:connector;comment:'源代码库连接器信息'"`
 	Status        string          `gorm:"column:status;comment:'代码库状态（active,importing,archived）'"`

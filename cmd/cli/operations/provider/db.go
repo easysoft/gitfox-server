@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package provider
 
 import (
@@ -5,8 +9,8 @@ import (
 
 	"github.com/google/wire"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/config"
+	"github.com/easysoft/gitfox-community/pkg/database"
 	"gorm.io/gorm"
 )
 
@@ -36,6 +40,12 @@ func NewDB(cfg *config.Config, systemLog *SystemLog) (*gorm.DB, func(), error) {
 		dmDB, cleanup, err = database.NewDaMengDB(cfg.Database, cfg.Logging)
 		if dmDB != nil {
 			db = dmDB.DB()
+		}
+	case "gaussdb":
+		var gaussDB *database.GaussDB
+		gaussDB, cleanup, err = database.NewGaussDB(cfg.Database, cfg.Logging)
+		if gaussDB != nil {
+			db = gaussDB.DB()
 		}
 	default:
 		systemLog.Errorw("[Provider] Unsupported database driver", "driver", driver)

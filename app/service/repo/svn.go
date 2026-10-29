@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package repo
 
 import (
@@ -6,12 +10,12 @@ import (
 	"encoding/json"
 	"io"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	svnModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/svn"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	svnPkg "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/svn"
+	"github.com/easysoft/gitfox-community/app/constant"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	svnModel "github.com/easysoft/gitfox-community/app/model/svn"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	svnPkg "github.com/easysoft/gitfox-community/pkg/svn"
 )
 
 // ExecSvn 是 SVN 子命令统一调度入口。

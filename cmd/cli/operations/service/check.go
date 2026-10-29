@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package service
 
 import (
@@ -16,8 +20,8 @@ import (
 	"strings"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	clii18n "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n/cli"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	clii18n "github.com/easysoft/gitfox-community/pkg/i18n/cli"
 	"github.com/charmbracelet/huh/spinner"
 	"github.com/charmbracelet/lipgloss"
 	_ "github.com/go-sql-driver/mysql"

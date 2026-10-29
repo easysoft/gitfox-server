@@ -1,13 +1,17 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package trigger
 
 import (
 	"context"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	gitevents "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/pipeline/triggerer"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/events"
+	"github.com/easysoft/gitfox-community/app/constant"
+	gitevents "github.com/easysoft/gitfox-community/app/events/git"
+	"github.com/easysoft/gitfox-community/app/pipeline/triggerer"
+	"github.com/easysoft/gitfox-community/pkg/events"
 )
 
 func (s *Service) handleEventTagCreated(ctx context.Context,
@@ -26,11 +30,12 @@ func (s *Service) handleEventTagCreated(ctx context.Context,
 func (s *Service) handleEventTagUpdated(ctx context.Context,
 	event *events.Event[*gitevents.TagUpdatedPayload]) error {
 	hook := &triggerer.Hook{
-		Trigger: event.Payload.Account,
-		Action:  constant.TriggerActionTagUpdated,
-		Ref:     event.Payload.Ref,
-		Match:   strings.TrimPrefix(event.Payload.Ref, "refs/tags/"),
-		Commit:  event.Payload.NewSHA,
+		Trigger:      event.Payload.Account,
+		Action:       constant.TriggerActionTagUpdated,
+		Ref:          event.Payload.Ref,
+		Match:        strings.TrimPrefix(event.Payload.Ref, "refs/tags/"),
+		Commit:       event.Payload.NewSHA,
+		CommitBefore: event.Payload.OldSHA,
 	}
 	return s.trigger(ctx, event.Payload.RepoID, 0, hook)
 }

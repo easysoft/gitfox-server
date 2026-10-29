@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package repo
 
 import (
@@ -6,14 +10,14 @@ import (
 	"fmt"
 	"io"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/utils"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/model/auth"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	"github.com/easysoft/gitfox-community/app/service/utils"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/git"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 )
 
 func (s *Service) GetContent(ctx context.Context, session *auth.Session, repo *repoModel.Repo, gitRef string, repoPath string, includeLatestCommit bool, flattenDirectories bool) (*repoModel.GetContentOutput, error) {

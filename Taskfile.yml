@@ -2,7 +2,7 @@ version: '3'
 
 vars:
   LOCALES_DIR: ./resources/locales
-  GO_MODULE: gitfox.zcorp.cc/git/Pangu/gitfox-community
+  GO_MODULE: github.com/easysoft/gitfox-community
   GOPROXY: 'https://goproxy.cn,direct'
   GOSUMDB: sum.golang.google.cn
   BIN_DIR: "{{.ROOT_DIR}}/bin"
@@ -19,9 +19,7 @@ vars:
   GIT_COMMIT:
     sh: git rev-parse --short HEAD 2>/dev/null || echo "unknown"
 
-  RELEASE: 'false'
-
-  VERSION_PKG: gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/common
+  VERSION_PKG: github.com/easysoft/gitfox-community/pkg/utils/common
   LDFLAGS: "-w -s \
     -X '{{.VERSION_PKG}}.Version={{.BUILD_RELEASE}}' \
     -X '{{.VERSION_PKG}}.BuildDate={{.BUILD_DATE}}' \
@@ -83,7 +81,7 @@ tasks:
         echo "🚀 开始执行 service 单测..."
         # 生成 JSON 日志（用于原生统计）
         go test -v -json \
-          -coverpkg="gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/..." \
+          -coverpkg="github.com/easysoft/gitfox-community/app/service/..." \
           -coverprofile="{{.COVER_PROFILE_FILE}}" \
           -covermode=atomic \
           ./... > "{{.UNIT_JSON_FILE}}" 2>&1
@@ -273,7 +271,7 @@ tasks:
     parallel: true
 
   docker:push:
-    desc: 构建多架构 Docker 镜像并推送至 hub.zentao.net
+    desc: 构建多架构 Docker 镜像并推送至 hub.zentao.net（正式包传 FORMAL=true，tag 不带日期）
     deps: [cross-build]
     vars:
       IMAGE: 'hub.zentao.net/app/gitfox-community'
@@ -281,7 +279,8 @@ tasks:
         sh: date '+%Y%m%d'
       TAG:
         sh: |
-          if [ "{{.RELEASE}}" = "true" ]; then
+          FORMAL="{{default "false" .FORMAL}}"
+          if [ "$FORMAL" = "true" ]; then
             echo "{{.BUILD_RELEASE}}" | tr '/' '-'
           else
             echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
@@ -374,4 +373,4 @@ tasks:
     desc: download ci plugin
     cmds:
       - mkdir -p resources/ciPlugins
-      - wget -O resources/ciPlugins/plugins.tar.gz https://pkg.zentao.net/gitfox/2.0_beta1/plugins.tar.gz
+      - wget -O resources/ciPlugins/plugins.tar.gz https://pkg.zentao.net/qucheng/gitfox/community/4.3/plugin.tar.gz

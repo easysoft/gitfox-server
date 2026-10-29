@@ -1,11 +1,15 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package token
 
 import (
 	"database/sql"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/model/auth"
 	"gorm.io/gorm"
 )
 
@@ -66,7 +70,7 @@ type Entry struct {
 	CalledTime  uint       `gorm:"column:calledTime;not null;default:0"`
 	EditedBy    string     `gorm:"column:editedBy;type:varchar(30);not null;default:''"`
 	EditedDate  *time.Time `gorm:"column:editedDate"`
-	Deleted     string     `gorm:"column:deleted;type:enum('0','1');not null;default:'0'"`
+	Deleted     uint8      `gorm:"column:deleted;not null;default:0"`
 }
 
 func (Entry) TableName() string {

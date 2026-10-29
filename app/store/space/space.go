@@ -1,12 +1,16 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package space
 
 import (
 	"context"
 	"strings"
 
-	spaceModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/space"
+	spaceModel "github.com/easysoft/gitfox-community/app/model/space"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/database"
 	"gorm.io/gorm"
 )
 
@@ -102,7 +106,7 @@ func (s *SpaceStore) List(ctx context.Context, filter spaceModel.ListSpaceFilter
 		tx = tx.Where("id IN ?", ids)
 	}
 
-	tx = tx.Distinct().Order("FIELD(acl, 'private', 'open'), id DESC")
+	tx = tx.Distinct().Order("CASE acl WHEN 'private' THEN 0 WHEN 'open' THEN 1 ELSE 2 END, id DESC")
 
 	// 2. 调用通用分页工具（NeedTotal默认true，自动统计总条数）
 	var spaces []*Space

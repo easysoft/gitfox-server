@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 //go:build wireinject
 // +build wireinject
 
@@ -8,12 +12,12 @@ import (
 
 	"github.com/google/wire"
 
-	jobsStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/jobs"
-	runnerStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/runner"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/lock"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/pubsub"
+	jobsStore "github.com/easysoft/gitfox-community/app/store/jobs"
+	runnerStore "github.com/easysoft/gitfox-community/app/store/runner"
+	"github.com/easysoft/gitfox-community/pkg/config"
+	"github.com/easysoft/gitfox-community/pkg/lock"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/pubsub"
 )
 
 // WireSet provides the wire set for job service.

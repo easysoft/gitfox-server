@@ -1,17 +1,22 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package canceler
 
 import (
 	"context"
 	"fmt"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/constant"
 
-	executionStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/execution"
-	pipelineStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/pipeline"
-	stageStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/stage"
-	stepStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/step"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/pipeline/scheduler"
+	executionStore "github.com/easysoft/gitfox-community/app/store/execution"
+	pipelineStore "github.com/easysoft/gitfox-community/app/store/pipeline"
+	stageStore "github.com/easysoft/gitfox-community/app/store/stage"
+	stepStore "github.com/easysoft/gitfox-community/app/store/step"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 type service struct {
@@ -19,7 +24,7 @@ type service struct {
 	pipelineStore  pipelineStore.Interface
 	stageStore     stageStore.Interface
 	stepStore      stepStore.Interface
-	// scheduler      scheduler.Scheduler
+	scheduler      scheduler.Scheduler
 }
 
 // Canceler cancels a build.
@@ -35,13 +40,14 @@ func New(
 	pipelineStore pipelineStore.Interface,
 	stageStore stageStore.Interface,
 	stepStore stepStore.Interface,
-	// scheduler scheduler.Scheduler,
+	scheduler scheduler.Scheduler,
 ) Canceler {
 	return &service{
 		executionStore: executionStore,
 		pipelineStore:  pipelineStore,
 		stageStore:     stageStore,
 		stepStore:      stepStore,
+		scheduler:      scheduler,
 	}
 }
 
@@ -129,6 +135,14 @@ func (s *service) Cancel(ctx context.Context, executionID uint, account string) 
 				log.Errorf("[canceler]: could not update step %d status: %v", step.ID, err)
 			}
 		}
+	}
+
+	// notify the scheduler so any runner watching for cancellation
+	// requests (via Watch) is woken up immediately and kills the
+	// running containers. Without this, the in-memory cancel signal
+	// is never delivered and the runner keeps running to completion.
+	if err := s.scheduler.Cancel(ctx, int64(execution.ID)); err != nil {
+		log.Errorf("[canceler]: could not notify scheduler: %v", err)
 	}
 
 	log.Infof("[canceler]: cancelled execution %d successfully", execution.ID)

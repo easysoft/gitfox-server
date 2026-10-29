@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package token
 
 import (
@@ -6,11 +10,11 @@ import (
 	"math/rand"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	principal "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/user"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/model/auth"
+	principal "github.com/easysoft/gitfox-community/app/model/user"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/errors"
 
 	"gorm.io/gorm"
 )
@@ -98,7 +102,7 @@ func (s *tokensStore) GetByIdentifier(ctx context.Context, account string, ident
 func (s *tokensStore) GetDevopsToken(ctx context.Context) (*Entry, error) {
 	var entry Entry
 
-	if err := s.db.WithContext(ctx).Where("name = 'GitFox' and code = 'gitfox' and deleted = '0'").First(&entry).Error; err != nil {
+	if err := s.db.WithContext(ctx).Where("name = 'GitFox' and code = 'gitfox' and deleted = 0").First(&entry).Error; err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}
 
@@ -107,7 +111,7 @@ func (s *tokensStore) GetDevopsToken(ctx context.Context) (*Entry, error) {
 
 func (s *tokensStore) SetDevopsToken(ctx context.Context) error {
 	var count int64
-	if err := s.db.WithContext(ctx).Model(&Entry{}).Where("name = 'GitFox' and code = 'gitfox' and deleted = '0'").Count(&count).Error; err != nil {
+	if err := s.db.WithContext(ctx).Model(&Entry{}).Where("name = 'GitFox' and code = 'gitfox' and deleted = 0").Count(&count).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
 	if count > 0 {
@@ -134,7 +138,7 @@ func (s *tokensStore) SetDevopsToken(ctx context.Context) error {
 		IP:         "*",
 		Desc:       "devops 调用 gitfox API 时使用",
 		CreatedBy:  "admin",
-		Deleted:    "0",
+		Deleted:    0,
 	}
 
 	if err := s.db.WithContext(ctx).Create(entry).Error; err != nil {

@@ -1,8 +1,6 @@
-// Copyright (c) 2023-2024 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
-// Use of this source code is covered by the following dual licenses:
-// (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
-// (2) Affero General Public License 3.0 (AGPL 3.0)
-// license that can be found in the LICENSE file.
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
 
 package factory
 
@@ -10,7 +8,7 @@ import (
 	"context"
 	"fmt"
 
-	storagedriver "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage/driver"
+	storagedriver "github.com/easysoft/gitfox-community/pkg/storage/driver"
 )
 
 // driverFactories stores an internal mapping between storage driver names and their respective

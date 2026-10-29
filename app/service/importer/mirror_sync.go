@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package importer
 
 import (
@@ -8,19 +12,19 @@ import (
 	"strings"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	simpleJob "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/jobs"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/encrypt"
-	providerStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/provider"
-	repoStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/repo"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	pkgJobs "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/jobs"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/svn"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	simpleJob "github.com/easysoft/gitfox-community/app/model/jobs"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	"github.com/easysoft/gitfox-community/app/service/encrypt"
+	providerStore "github.com/easysoft/gitfox-community/app/store/provider"
+	repoStore "github.com/easysoft/gitfox-community/app/store/repo"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/git"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	pkgJobs "github.com/easysoft/gitfox-community/pkg/jobs"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/svn"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 const (
@@ -141,6 +145,7 @@ func (r *Repository) GetMirrorSyncProgress(ctx context.Context, repoID int64) (r
 	recentProgress := pickRecentProgress(progress, progressErr, cronProgress, cronErr)
 
 	lastExecuted, _ := recentProgress["lastExecuted"].(*datetime.Local)
+	nextExecuted, _ := recentProgress["nextExecuted"].(*datetime.Local)
 	status, _ := recentProgress["state"].(simpleJob.State)
 	result, _ := recentProgress["result"].(string)
 	failure, _ := recentProgress["failure"].(string)
@@ -149,6 +154,7 @@ func (r *Repository) GetMirrorSyncProgress(ctx context.Context, repoID int64) (r
 		Result:       result,
 		Failure:      failure,
 		LastExecuted: lastExecuted,
+		NextExecuted: nextExecuted,
 	}, nil
 }
 

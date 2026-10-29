@@ -1,16 +1,20 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package scan
 
 import (
 	"context"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	authModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	scanModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/scan"
-	scanStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/scan"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	authModel "github.com/easysoft/gitfox-community/app/model/auth"
+	scanModel "github.com/easysoft/gitfox-community/app/model/scan"
+	scanStore "github.com/easysoft/gitfox-community/app/store/scan"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 var _ ISolution = (*SolutionService)(nil)
@@ -37,7 +41,7 @@ func (s *SolutionService) Create(ctx context.Context, session *authModel.Session
 		Desc:      req.Desc,
 		DescEn:    req.DescEn,
 		Tag:       req.Tag,
-		IsCustom:  true,
+		IsCustom:  database.BoolToUint8(true),
 		Status:    req.Status,
 		CreatedBy: session.User.Account,
 		EditedBy:  session.User.Account,

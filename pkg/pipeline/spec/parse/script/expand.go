@@ -18,7 +18,7 @@ import (
 	"regexp"
 	"strings"
 
-	schema "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/pipeline/spec"
+	schema "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 )
 
 var pattern = regexp.MustCompile(`\${{(.*)}}`)
@@ -91,6 +91,7 @@ func ExpandStep(step *schema.Step, inputs map[string]interface{}) {
 		spec.Run = Expand(spec.Run, inputs)
 		spec.Image = Expand(spec.Image, inputs)
 		spec.Connector = Expand(spec.Connector, inputs)
+		spec.Entry = Expand(spec.Entry, inputs)
 		spec.Entrypoint = Expand(spec.Entrypoint, inputs)
 		for i, s := range spec.Args {
 			spec.Args[i] = Expand(s, inputs)

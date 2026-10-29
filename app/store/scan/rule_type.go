@@ -1,10 +1,14 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package scan
 
 import (
 	"database/sql"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 	"gorm.io/gorm"
 )
 
@@ -22,13 +26,13 @@ type Rule struct {
 	Type        constant.ScanRuleType     `gorm:"column:type"`
 	Content     sql.NullString            `gorm:"column:content"`
 	ContentEn   sql.NullString            `gorm:"column:contentEn"`
-	IsCustom    bool                      `gorm:"column:isCustom"`
+	IsCustom    uint8                     `gorm:"column:isCustom"`
 	Status      constant.ScanRuleStatus   `gorm:"column:status"`
 	CreatedBy   string                    `gorm:"column:createdBy"`
 	CreatedDate *datetime.Local           `gorm:"column:createdDate"`
 	EditedBy    string                    `gorm:"column:editedBy"`
 	EditedDate  *datetime.Local           `gorm:"column:editedDate"`
-	Deleted     bool                      `gorm:"column:deleted"`
+	Deleted     uint8                     `gorm:"column:deleted"`
 }
 
 // TableName 指定数据库表名

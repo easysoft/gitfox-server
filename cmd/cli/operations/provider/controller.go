@@ -1,25 +1,30 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      caiyan <caiyan@chandao.com>
+
 package provider
 
 import (
 	"github.com/google/wire"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/artifact"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/branch"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/commit"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/cron"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/execution"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/fit"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/pipeline"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/repo"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/runner"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/scan"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/space"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/svn"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/tag"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/user"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/webhook"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/router"
+	"github.com/easysoft/gitfox-community/app/api/controller/artifact"
+	"github.com/easysoft/gitfox-community/app/api/controller/branch"
+	"github.com/easysoft/gitfox-community/app/api/controller/commit"
+	"github.com/easysoft/gitfox-community/app/api/controller/cron"
+	"github.com/easysoft/gitfox-community/app/api/controller/execution"
+	"github.com/easysoft/gitfox-community/app/api/controller/fit"
+	"github.com/easysoft/gitfox-community/app/api/controller/git"
+	"github.com/easysoft/gitfox-community/app/api/controller/pipeline"
+	"github.com/easysoft/gitfox-community/app/api/controller/repo"
+	"github.com/easysoft/gitfox-community/app/api/controller/runner"
+	"github.com/easysoft/gitfox-community/app/api/controller/scan"
+	"github.com/easysoft/gitfox-community/app/api/controller/space"
+	"github.com/easysoft/gitfox-community/app/api/controller/statistics"
+	"github.com/easysoft/gitfox-community/app/api/controller/svn"
+	"github.com/easysoft/gitfox-community/app/api/controller/tag"
+	"github.com/easysoft/gitfox-community/app/api/controller/user"
+	"github.com/easysoft/gitfox-community/app/api/controller/webhook"
+	"github.com/easysoft/gitfox-community/app/api/router"
 )
 
 var ControllersWireSet = wire.NewSet(
@@ -44,23 +49,25 @@ func NewControllers(
 	webhookController *webhook.Controller,
 	artifactController *artifact.Controller,
 	cronController *cron.Controller,
+	statisticsController *statistics.Controller,
 ) *router.Controller {
 	return &router.Controller{
-		Space:     spaceController,
-		Branch:    branchController,
-		Tag:       tagController,
-		Commit:    commitController,
-		Repo:      repoController,
-		User:      userController,
-		Git:       gitController,
-		Scan:      scanController,
-		Pipeline:  pipelineController,
-		Execution: executionController,
-		Runner:    runnerController,
-		Svn:       svnController,
-		Fit:       fitController,
-		Webhook:   webhookController,
-		Artifact:  artifactController,
-		Cron:      cronController,
+		Space:      spaceController,
+		Branch:     branchController,
+		Tag:        tagController,
+		Commit:     commitController,
+		Repo:       repoController,
+		User:       userController,
+		Git:        gitController,
+		Scan:       scanController,
+		Pipeline:   pipelineController,
+		Execution:  executionController,
+		Runner:     runnerController,
+		Svn:        svnController,
+		Fit:        fitController,
+		Webhook:    webhookController,
+		Artifact:   artifactController,
+		Cron:       cronController,
+		Statistics: statisticsController,
 	}
 }

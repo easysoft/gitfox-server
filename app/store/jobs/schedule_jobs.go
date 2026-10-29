@@ -1,13 +1,17 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package jobs
 
 import (
 	"context"
 	"time"
 
-	jobModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/jobs"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	jobModel "github.com/easysoft/gitfox-community/app/model/jobs"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 	"gorm.io/gorm"
 )
 
@@ -75,6 +79,11 @@ func (s *Store) Create(ctx context.Context, job *jobModel.ScheduleJob) error {
 
 // Upsert will insert the job in the database if the job didn't already exist,
 // or it will update the existing one but only if its definition has changed.
+//
+// 采用"先查询、再插入或更新"的两段式实现，避免依赖 clause.OnConflict：
+// gorm.io/driver/gaussdb 将 OnConflict 生成为 MySQL 的 ON DUPLICATE KEY UPDATE，
+// 在 GaussDB 不同兼容格式（PG/B）下支持情况不一致，容易报错。改用标准
+// SELECT + INSERT/UPDATE 可同时兼容两种格式。
 func (s *Store) Upsert(ctx context.Context, job *jobModel.ScheduleJob) error {
 	storeJob := mapJobToStore(job)
 	storeJob.EditedDate = datetime.NowLocalTime()
@@ -293,7 +302,7 @@ func (s *Store) DeleteOld(ctx context.Context, olderThan time.Time) (int64, erro
 
 	result := s.db.WithContext(ctx).
 		Where("isRecurring = ? AND state IN (?, ?, ?) AND lastExecuted < ?",
-			false, jobModel.StateFinished, jobModel.StateFailed, jobModel.StateCanceled, olderThanLocal).
+			0, jobModel.StateFinished, jobModel.StateFailed, jobModel.StateCanceled, olderThanLocal).
 		Delete(&ScheduleJob{})
 
 	if result.Error != nil {
@@ -332,7 +341,7 @@ func mapJobToModel(j ScheduleJob) *jobModel.ScheduleJob {
 		RunDeadline:         j.RunDeadline,
 		RunProgress:         j.RunProgress,
 		LastExecuted:        j.LastExecuted,
-		IsRecurring:         j.IsRecurring,
+		IsRecurring:         j.IsRecurring != 0,
 		RecurringCron:       j.RecurringCron,
 		ConsecutiveFailures: j.ConsecutiveFailures,
 		LastFailureError:    j.LastFailureError.String,
@@ -362,7 +371,7 @@ func mapJobToStore(j *jobModel.ScheduleJob) *ScheduleJob {
 		RunDeadline:         j.RunDeadline,
 		RunProgress:         j.RunProgress,
 		LastExecuted:        j.LastExecuted,
-		IsRecurring:         j.IsRecurring,
+		IsRecurring:         database.BoolToUint8(j.IsRecurring),
 		RecurringCron:       j.RecurringCron,
 		ConsecutiveFailures: j.ConsecutiveFailures,
 		LastFailureError:    database.NoNull(j.LastFailureError),

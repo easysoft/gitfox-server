@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      caiyan <caiyan@chandao.com>
+
 package common
 
 import (
@@ -11,6 +15,15 @@ var (
 	GitBranch     string
 )
 
+// edition 表示当前发行版本，社区版默认为 "community"，付费版启动时通过 SetEdition 设置为 "pro"。
+var edition = "community"
+
+// Edition 返回当前发行版本标识。
+func Edition() string { return edition }
+
+// SetEdition 设置当前发行版本标识，供付费版启动时调用。
+func SetEdition(e string) { edition = e }
+
 // VersionInfo 是 `gitfox version` 命令对外暴露的结构化版本信息。
 //
 // 该结构体被两处共用：
@@ -20,6 +33,7 @@ var (
 // 字段未填充时（编译注入失败）返回兜底字符串而非空串，避免下游做 nil 判断。
 type VersionInfo struct {
 	Version       string `json:"version"`
+	Edition       string `json:"edition"`
 	BuildDate     string `json:"buildDate"`
 	GitBranch     string `json:"gitBranch"`
 	GitCommitHash string `json:"gitCommitHash"`
@@ -45,6 +59,7 @@ func GetVersionInfo() VersionInfo {
 	}
 	return VersionInfo{
 		Version:       v,
+		Edition:       Edition(),
 		BuildDate:     bd,
 		GitBranch:     br,
 		GitCommitHash: gc,

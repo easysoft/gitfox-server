@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      liyang <liyang@easycorp.ltd>
+
 package repo
 
 import (
@@ -6,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	spaceStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/space"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	spaceStore "github.com/easysoft/gitfox-community/app/store/space"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -60,5 +64,38 @@ func TestStoreListJoinsOpsSpace(t *testing.T) {
 	got := pageResult.Data[0]
 	if got.Path != "team1/repo1" {
 		t.Fatalf("expected path %q, got %q", "team1/repo1", got.Path)
+	}
+}
+
+// TestStoreListAllGitRepos 验证一次性查询只返回未删除的git代码库，且按 ID 升序排列。
+func TestStoreListAllGitRepos(t *testing.T) {
+	store := newTestStore(t)
+	ctx := context.Background()
+
+	repos := []Repository{
+		{Identifier: "repo1", SCMType: "git", GitUID: "uid1", Status: "active", Deleted: 0},
+		{Identifier: "repo2", SCMType: "svn", GitUID: "uid2", Status: "active", Deleted: 0},
+		{Identifier: "repo3", SCMType: "git", GitUID: "uid3", Status: "active", Deleted: 1},
+		{Identifier: "repo4", SCMType: "git", GitUID: "uid4", Status: "active", Deleted: 0},
+	}
+	if err := store.db.WithContext(ctx).Create(&repos).Error; err != nil {
+		t.Fatalf("seed repos failed: %v", err)
+	}
+
+	got, err := store.ListAllGitRepos(ctx)
+	if err != nil {
+		t.Fatalf("ListAllGitRepos returned error: %v", err)
+	}
+	if len(got) != 2 {
+		t.Fatalf("expected 2 repos, got %d(%+v)", len(got), got)
+	}
+	if got[0].Identifier != "repo1" || got[1].Identifier != "repo4" {
+		t.Errorf("unexpected repos: %s, %s", got[0].Identifier, got[1].Identifier)
+	}
+	if got[0].GitUID != "uid1" || got[1].GitUID != "uid4" {
+		t.Errorf("unexpected git uids: %s, %s", got[0].GitUID, got[1].GitUID)
+	}
+	if got[0].ID >= got[1].ID {
+		t.Errorf("expected repos ordered by id asc, got %d, %d", got[0].ID, got[1].ID)
 	}
 }

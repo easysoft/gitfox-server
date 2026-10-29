@@ -1,11 +1,15 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package scan
 
 import (
 	"encoding/json"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	scanModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/scan"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	scanModel "github.com/easysoft/gitfox-community/app/model/scan"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 	"gorm.io/gorm"
 )
 
@@ -22,6 +26,7 @@ type ScanIssue struct {
 	OldCode         string                        `gorm:"column:oldCode"`
 	NewCode         string                        `gorm:"column:newCode"`
 	PpmID           int64                         `gorm:"column:ppmID"`
+	ExecutionID     int64                         `gorm:"column:pipelineExecutionID"`
 	RepoID          int64                         `gorm:"column:repoID"`
 	RepoBranch      string                        `gorm:"column:repoBranch"`
 	CreatedByTaskID int64                         `gorm:"column:createdByTaskID"`
@@ -32,7 +37,7 @@ type ScanIssue struct {
 	Payload         string                        `gorm:"column:payload"`
 	CreatedDate     *datetime.Local               `gorm:"column:createdDate"`
 	EditedDate      *datetime.Local               `gorm:"column:editedDate"`
-	Deleted         bool                          `gorm:"column:deleted"`
+	Deleted         uint8                         `gorm:"column:deleted"`
 	ResolvedDate    *datetime.Local               `gorm:"column:resolvedDate"`
 	ClosedDate      *datetime.Local               `gorm:"column:closedDate"`
 	IgnoredDate     *int64                        `gorm:"column:ignoredDate"`
@@ -83,6 +88,7 @@ type issueJoin struct {
 	OldCode         string                        `gorm:"column:oldCode"`
 	NewCode         string                        `gorm:"column:newCode"`
 	PpmID           int64                         `gorm:"column:ppmID"`
+	ExecutionID     int64                         `gorm:"column:pipelineExecutionID"`
 	PpmTitle        string                        `gorm:"column:ppmTitle"`
 	RepoID          int64                         `gorm:"column:repoID"`
 	RepoBranch      string                        `gorm:"column:repoBranch"`
@@ -130,6 +136,7 @@ func mapIssueJoinToModel(in *issueJoin) *scanModel.ScanIssueInfo {
 		OldCode:         in.OldCode,
 		NewCode:         in.NewCode,
 		PpmID:           in.PpmID,
+		ExecutionID:     in.ExecutionID,
 		PpmTitle:        in.PpmTitle,
 		RepoID:          in.RepoID,
 		RepoBranch:      in.RepoBranch,

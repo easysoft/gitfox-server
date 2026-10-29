@@ -1,11 +1,15 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package svn
 
 import (
 	"context"
 	"os"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/svn/command"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/svn/command"
 )
 
 // CheckoutParams contains the parameters for svn checkout.
@@ -48,7 +52,8 @@ func (s *Service) Checkout(ctx context.Context, params *CheckoutParams) error {
 		return errors.Wrapf(ErrCheckout, "failed to create target directory %s: %v", targetPath, err)
 	}
 
-	cmd := command.New("checkout",
+	cmd := s.newCommand("checkout",
+		command.WithFlag("--non-interactive"),
 		command.WithArg(sourceURL),
 		command.WithArg(targetPath),
 		withCheckoutAuth(params.Username, params.Password),

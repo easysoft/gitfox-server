@@ -1,8 +1,12 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package scan
 
 import (
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 	"gorm.io/gorm"
 )
 
@@ -15,13 +19,13 @@ type RuleSet struct {
 	Lang        constant.ScanLangName   `gorm:"column:lang"`
 	Plugin      string                  `gorm:"column:plugin"`
 	Tag         string                  `gorm:"column:tag"`
-	IsCustom    bool                    `gorm:"column:isCustom"`
+	IsCustom    uint8                   `gorm:"column:isCustom"`
 	Status      constant.ScanRuleStatus `gorm:"column:status"`
 	CreatedBy   string                  `gorm:"column:createdBy"`
 	CreatedDate *datetime.Local         `gorm:"column:createdDate"`
 	EditedBy    string                  `gorm:"column:editedBy"`
 	EditedDate  *datetime.Local         `gorm:"column:editedDate"`
-	Deleted     bool                    `gorm:"column:deleted;comment:'删除标识（0=未删除，1=已删除）'"`
+	Deleted     uint8                   `gorm:"column:deleted;comment:'删除标识（0=未删除，1=已删除）'"`
 }
 
 // TableName 指定数据库表名（GORM自动映射时使用）

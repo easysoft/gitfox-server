@@ -18,9 +18,8 @@ import (
 	"fmt"
 	"time"
 
-	// "github.com/easysoft/gitfox/app/services/codeowners"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/hook"
+	"github.com/easysoft/gitfox-community/pkg/git"
+	"github.com/easysoft/gitfox-community/pkg/git/hook"
 
 	"github.com/fatih/color"
 	"github.com/gotidy/ptr"

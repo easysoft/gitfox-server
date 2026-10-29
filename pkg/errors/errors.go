@@ -1,9 +1,13 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package errors
 
 import (
 	"fmt"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
 	"github.com/pkg/errors"
 )
 
@@ -24,6 +28,9 @@ type errorContext struct {
 }
 
 func Is(err, target error) bool { return errors.Is(err, target) }
+
+// As 查找 err 链中是否有与 target 匹配的错误
+func As(err error, target any) bool { return errors.As(err, target) }
 
 // New 创建一个新的customError
 func (errorType ErrorType) New(msg string) error {
@@ -229,4 +236,9 @@ func GetType(err error) ErrorType {
 
 func IsNotFound(err error) bool {
 	return GetType(err) == NotFound
+}
+
+// IsConflict 检查错误是否为冲突类型错误
+func IsConflict(err error) bool {
+	return GetType(err) == Conflict
 }

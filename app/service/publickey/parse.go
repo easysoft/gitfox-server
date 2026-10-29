@@ -1,10 +1,14 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package publickey
 
 import (
 	"crypto/sha256"
 	"encoding/base64"
 
-	"github.com/easysoft/gitfox/errors"
+	"github.com/easysoft/gitfox-community/pkg/errors"
 
 	"github.com/gliderlabs/ssh"
 	gossh "golang.org/x/crypto/ssh"
@@ -45,12 +49,12 @@ func Parse(keyData []byte) (KeyInfo, string, error) {
 
 	// explicitly disallowed
 	if slices.Contains(DisallowedTypes, keyType) {
-		return KeyInfo{}, "", errors.InvalidArgument("keys of type %s are not allowed", keyType)
+		return KeyInfo{}, "", errors.InvalidArgument.Newf("keys of type %s are not allowed", keyType)
 	}
 
 	// only allowed
 	if !slices.Contains(AllowedTypes, keyType) {
-		return KeyInfo{}, "", errors.InvalidArgument("allowed key types are %v", AllowedTypes)
+		return KeyInfo{}, "", errors.InvalidArgument.Newf("allowed key types are %v", AllowedTypes)
 	}
 
 	return KeyInfo{

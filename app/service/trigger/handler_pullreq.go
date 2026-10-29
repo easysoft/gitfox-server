@@ -1,13 +1,17 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package trigger
 
 import (
 	"context"
 	"fmt"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	pullreqevents "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/pullreq"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/pipeline/triggerer"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/events"
+	"github.com/easysoft/gitfox-community/app/constant"
+	pullreqevents "github.com/easysoft/gitfox-community/app/events/pullreq"
+	"github.com/easysoft/gitfox-community/app/pipeline/triggerer"
+	"github.com/easysoft/gitfox-community/pkg/events"
 )
 
 func (s *Service) handleEventPullReqCreated(ctx context.Context, event *events.Event[*pullreqevents.CreatedPayload]) error {
@@ -67,6 +71,8 @@ func (s *Service) handleEventPullReqMerged(
 		Ref:     fmt.Sprintf("refs/heads/%s", event.Payload.TargetBranch),
 		Match:   event.Payload.TargetBranch,
 		Commit:  event.Payload.MergeSHA,
+		// TargetSHA 是合并前目标分支的最新提交（pkg/git 的 MergeOutput.BaseSHA）
+		CommitBefore: event.Payload.TargetSHA,
 	}
 	return s.trigger(ctx, event.Payload.SourceRepoID, event.Payload.PullReqID, hook)
 }

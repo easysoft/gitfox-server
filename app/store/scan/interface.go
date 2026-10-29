@@ -1,12 +1,16 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package scan
 
 import (
 	"context"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	scanModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/scan"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/resources"
+	"github.com/easysoft/gitfox-community/app/constant"
+	scanModel "github.com/easysoft/gitfox-community/app/model/scan"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/resources"
 )
 
 //go:generate go run go.uber.org/mock/mockgen@v0.6.0 -source=$GOFILE -destination=mock/scan_store.go -package=mock

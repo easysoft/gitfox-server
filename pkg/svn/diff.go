@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package svn
 
 import (
@@ -6,8 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/svn/command"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/svn/command"
 )
 
 // DiffParams contains the parameters for svn diff.
@@ -54,7 +58,8 @@ func (s *Service) Diff(ctx context.Context, params *DiffParams) (string, error) 
 		target = filepath.Join(target, params.Subpath)
 	}
 
-	cmd := command.New("diff",
+	cmd := s.newCommand("diff",
+		command.WithFlag("--non-interactive"),
 		command.WithArg(target),
 		withDiffAuth(params.Username, params.Password),
 	)

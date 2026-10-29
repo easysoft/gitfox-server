@@ -1,11 +1,15 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package scan
 
 import (
 	"context"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	scanModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/scan"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/app/constant"
+	scanModel "github.com/easysoft/gitfox-community/app/model/scan"
+	"github.com/easysoft/gitfox-community/pkg/database"
 )
 
 // ListDistinctFilesByRepo 按仓库或任务维度聚合 issue 文件路径
@@ -21,7 +25,7 @@ func (s *ScanIssueStore) listDistinctFilesByRepo(ctx context.Context, repoID int
 	stmt := s.db.WithContext(ctx).
 		Table("ops_scan_issues").
 		Select("repoBranch, path, COUNT(*) AS totalCount").
-		Where("repoID = ? AND deleted = ?", repoID, false).
+		Where("repoID = ? AND deleted = ?", repoID, 0).
 		Group("repoBranch, path").
 		Order("totalCount DESC")
 	if len(scanMethods) > 0 {
@@ -67,7 +71,7 @@ func (s *ScanIssueStore) listDistinctRulesByRepo(ctx context.Context, repoID int
 	var dst []*scanModel.IssueRuleRaw
 	subQuery := s.db.Table("ops_scan_issues").
 		Select("ruleID, COUNT(*) AS totalCount").
-		Where("repoID = ? AND deleted = ?", repoID, false).
+		Where("repoID = ? AND deleted = ?", repoID, 0).
 		Group("ruleID")
 
 	err := s.db.WithContext(ctx).

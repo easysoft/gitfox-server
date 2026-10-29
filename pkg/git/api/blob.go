@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"io"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/sha"
-	"github.com/easysoft/gitfox/errors"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/git/sha"
 )
 
 type BlobReader struct {
@@ -61,7 +61,7 @@ func GetBlob(
 	}
 	if output.Type != string(GitObjectTypeBlob) {
 		cancel()
-		return nil, errors.InvalidArgument(
+		return nil, errors.InvalidArgument.Newf(
 			"cat-file returned object type '%s' but expected '%s'", output.Type, GitObjectTypeBlob)
 	}
 

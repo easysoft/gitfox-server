@@ -1,11 +1,15 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package scan
 
 import (
 	"context"
 	"strings"
 
-	scanModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/scan"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
+	scanModel "github.com/easysoft/gitfox-community/app/model/scan"
+	"github.com/easysoft/gitfox-community/pkg/database"
 	"gorm.io/gorm"
 )
 
@@ -37,7 +41,7 @@ func (s *RuleSetStore) GetByID(ctx context.Context, id uint) (*scanModel.RuleSet
 	var ruleSet rulesetWithCount
 	if err := s.db.WithContext(ctx).
 		Table("ops_scan_rulesets AS r").
-		Select("r.*, (SELECT COUNT(*) FROM ops_scan_ruleset_rules WHERE rulesetID = r.id AND deleted = ?) as rules_count", false).
+		Select("r.*, (SELECT COUNT(*) FROM ops_scan_ruleset_rules WHERE rulesetID = r.id AND deleted = ?) as rules_count", 0).
 		Where("r.id = ?", id).
 		First(&ruleSet).Error; err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
@@ -65,12 +69,12 @@ func (s *RuleSetStore) Update(ctx context.Context, id uint, updates map[string]i
 func (s *RuleSetStore) Delete(ctx context.Context, id uint) error {
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		// 软删除规则集
-		if err := tx.Model(&RuleSet{}).Where("id = ?", id).Update("deleted", true).Error; err != nil {
+		if err := tx.Model(&RuleSet{}).Where("id = ?", id).Update("deleted", 1).Error; err != nil {
 			return database.ProcessSQLErrorf(ctx, err)
 		}
 
 		// 软删除关联表中的记录
-		if err := tx.Model(&RuleSetRules{}).Where("ruleSetID = ?", id).Update("deleted", true).Error; err != nil {
+		if err := tx.Model(&RuleSetRules{}).Where("ruleSetID = ?", id).Update("deleted", 1).Error; err != nil {
 			return database.ProcessSQLErrorf(ctx, err)
 		}
 
@@ -82,7 +86,7 @@ func (s *RuleSetStore) Delete(ctx context.Context, id uint) error {
 func (s *RuleSetStore) IsUsedBySolution(ctx context.Context, id uint) (bool, error) {
 	var count int64
 	err := s.db.WithContext(ctx).Model(&SolutionRuleSets{}).
-		Where("ruleSetID = ? AND deleted = ?", id, false).
+		Where("ruleSetID = ? AND deleted = ?", id, 0).
 		Count(&count).Error
 	if err != nil {
 		return false, database.ProcessSQLErrorf(ctx, err)
@@ -99,8 +103,8 @@ func (s *RuleSetStore) List(ctx context.Context, filter scanModel.RuleSetReqFilt
 
 	tx := s.db.WithContext(ctx).
 		Table("ops_scan_rulesets AS r").
-		Select("r.*, (SELECT COUNT(*) FROM ops_scan_ruleset_rules WHERE rulesetID = r.id AND deleted = ?) as rules_count", false).
-		Where("r.deleted = ?", false)
+		Select("r.*, (SELECT COUNT(*) FROM ops_scan_ruleset_rules WHERE rulesetID = r.id AND deleted = ?) as rules_count", 0).
+		Where("r.deleted = ?", 0)
 
 	// 过滤条件
 	if filter.ID != 0 {
@@ -200,8 +204,8 @@ func mapToModel(data RuleSet) *scanModel.RuleSet {
 		CreatedDate: data.CreatedDate,
 		EditedBy:    data.EditedBy,
 		EditedDate:  data.EditedDate,
-		IsCustom:    data.IsCustom,
-		Deleted:     data.Deleted,
+		IsCustom:    data.IsCustom != 0,
+		Deleted:     data.Deleted != 0,
 	}
 }
 
@@ -209,7 +213,7 @@ func mapToModel(data RuleSet) *scanModel.RuleSet {
 func (s *RuleSetStore) GetRuleIDList(ctx context.Context, ruleSetID uint) ([]int64, error) {
 	var ruleIDs []int64
 	err := s.db.WithContext(ctx).Model(&RuleSetRules{}).
-		Where("rulesetID = ? AND deleted = ?", ruleSetID, false).
+		Where("rulesetID = ? AND deleted = ?", ruleSetID, 0).
 		Pluck("ruleID", &ruleIDs).Error
 	if err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
@@ -231,7 +235,7 @@ func (s *RuleSetStore) BindRule(ctx context.Context, ruleSetID uint, ruleIDs []u
 				newRecord := RuleSetRules{
 					RuleSetID: uint64(ruleSetID),
 					RuleID:    uint64(ruleID),
-					Deleted:   false,
+					Deleted:   0,
 				}
 				if err := tx.Create(&newRecord).Error; err != nil {
 					return database.ProcessSQLErrorf(ctx, err)
@@ -239,11 +243,11 @@ func (s *RuleSetStore) BindRule(ctx context.Context, ruleSetID uint, ruleIDs []u
 			} else if err != nil {
 				// 查询出错
 				return database.ProcessSQLErrorf(ctx, err)
-			} else if existingRecord.Deleted {
+			} else if existingRecord.Deleted != 0 {
 				// 记录存在但已被删除，恢复记录
 				if err := tx.Model(&RuleSetRules{}).
 					Where("rulesetID = ? AND ruleID = ?", ruleSetID, ruleID).
-					Update("deleted", false).Error; err != nil {
+					Update("deleted", 0).Error; err != nil {
 					return database.ProcessSQLErrorf(ctx, err)
 				}
 			}
@@ -261,7 +265,7 @@ func (s *RuleSetStore) BindRule(ctx context.Context, ruleSetID uint, ruleIDs []u
 func (s *RuleSetStore) UnBindRule(ctx context.Context, ruleSetID uint, ruleIDs []uint) error {
 	err := s.db.WithContext(ctx).Model(&RuleSetRules{}).
 		Where("rulesetID = ? AND ruleID IN ?", ruleSetID, ruleIDs).
-		Update("deleted", true).Error
+		Update("deleted", 1).Error
 	if err != nil {
 		return err
 	}
@@ -282,7 +286,7 @@ func (s *RuleSetStore) autoUpdatePlugin(ctx context.Context, ruleSetID uint) err
 		Table("ops_scan_rules AS r").
 		Select("r.plugin, COUNT(*) AS count").
 		Joins("JOIN ops_scan_ruleset_rules AS rsr ON r.id = rsr.ruleID").
-		Where("rsr.rulesetID = ? AND rsr.deleted = ?", ruleSetID, false).
+		Where("rsr.rulesetID = ? AND rsr.deleted = ?", ruleSetID, 0).
 		Group("r.plugin").
 		Order("count DESC").
 		Find(&counts).Error
@@ -318,4 +322,3 @@ func (s *RuleSetStore) autoUpdatePlugin(ctx context.Context, ruleSetID uint) err
 		Where("id = ?", ruleSetID).
 		Update("plugin", plugin).Error
 }
-

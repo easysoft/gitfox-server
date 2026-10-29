@@ -1,15 +1,13 @@
-// Copyright (c) 2023-2024 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
-// Use of this source code is covered by the following dual licenses:
-// (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
-// (2) Affero General Public License 3.0 (AGPL 3.0)
-// license that can be found in the LICENSE file.
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
 
 package util
 
 import (
 	"fmt"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/enum"
+	"github.com/easysoft/gitfox-community/pkg/git/enum"
 )
 
 func GetHookTemplates() (hookNames, hookTpls, giteaHookTpls []string) {
@@ -103,33 +101,12 @@ else
 fi
 
 case "$refname","$newrev_type" in
-	refs/for/*,commit)
-		# branch
-		if [ "$oldrev" = "$zero" -a "$denycreatebranch" = "true" ]; then
-			echo "*** Creating a branch is not allowed in this repository" >&2
-			exit 1
-		fi
-		branch_number=$(echo $refname | sed 's!refs/for/!!')
-		# branch_number=$(echo $branch_number | tr '/' '-')
-		new_branch="refs/heads/ztflow-$branch_number"
-		mail=$(get_mail)
-		[ ! -z "$mail" ] && new_branch="refs/heads/ztflow-$mail-$branch_number"
-		# if git show-ref --verify --quiet $new_branch; then
-		# echo "Error: Branch $new_branch already exists."
-		# exit 1
-		# fi
-		git update-ref $new_branch $newrev
-		if [ $? -ne 0 ]; then
-				echo "Error: Failed to create branch $new_branch."
-				exit 1
-		fi
-		;;
-		*)
-			exit 0
-		;;
+%s	*)
+		exit 0
+	;;
 esac
 exit 0
-`, enum.ScriptType),
+`, enum.ScriptType, pushRequestHookCase),
 
 		// for post-receive
 		fmt.Sprintf(`#!/usr/bin/env %s

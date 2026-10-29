@@ -1,31 +1,35 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package provider
 
 import (
 	"fmt"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/githook"
-	gitevents "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/git"
-	pullreqevents "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/pullreq"
-	gitSvc "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/git"
-	repoSvc "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/repo"
-	settingsSvc "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/settings"
-	spaceSvc "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/space"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/pullrequest"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/repo"
-	settingsStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/settings"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/token"
-	principal "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/user"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/cache"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
-	gitPkg "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/api"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/enum"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/hook"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/storage"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/types"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/url"
+	"github.com/easysoft/gitfox-community/app/api/controller/git"
+	"github.com/easysoft/gitfox-community/app/api/controller/githook"
+	gitevents "github.com/easysoft/gitfox-community/app/events/git"
+	pullreqevents "github.com/easysoft/gitfox-community/app/events/pullreq"
+	gitSvc "github.com/easysoft/gitfox-community/app/service/git"
+	repoSvc "github.com/easysoft/gitfox-community/app/service/repo"
+	settingsSvc "github.com/easysoft/gitfox-community/app/service/settings"
+	spaceSvc "github.com/easysoft/gitfox-community/app/service/space"
+	"github.com/easysoft/gitfox-community/app/store/pullrequest"
+	"github.com/easysoft/gitfox-community/app/store/repo"
+	settingsStore "github.com/easysoft/gitfox-community/app/store/settings"
+	"github.com/easysoft/gitfox-community/app/store/token"
+	principal "github.com/easysoft/gitfox-community/app/store/user"
+	"github.com/easysoft/gitfox-community/pkg/cache"
+	"github.com/easysoft/gitfox-community/pkg/config"
+	gitPkg "github.com/easysoft/gitfox-community/pkg/git"
+	"github.com/easysoft/gitfox-community/pkg/git/api"
+	"github.com/easysoft/gitfox-community/pkg/git/enum"
+	"github.com/easysoft/gitfox-community/pkg/git/hook"
+	"github.com/easysoft/gitfox-community/pkg/git/storage"
+	"github.com/easysoft/gitfox-community/pkg/git/types"
+	"github.com/easysoft/gitfox-community/pkg/utils/url"
 	"github.com/google/wire"
 )
 
@@ -118,6 +122,7 @@ func NewGitHookController(
 	cfg *config.Config,
 	prReporter *pullreqevents.Reporter,
 	gitReporter *gitevents.Reporter,
+	pushRequest githook.PushRequestFlow,
 ) *githook.Controller {
 	ctrl := githook.NewController(
 		principalStore,
@@ -129,8 +134,8 @@ func NewGitHookController(
 		cfg.Devops,
 		prReporter,
 		gitReporter,
+		pushRequest,
 	)
-	// Wire the controller into the factory
 	// Wire the controller into the factory
 	if fct, ok := githookFactory.(*githook.ControllerClientFactory); ok {
 		fct.GithookCtrl = ctrl
@@ -138,6 +143,13 @@ func NewGitHookController(
 	}
 	return ctrl
 }
+
+// CommunityZtflowWireSet binds the community-edition no-op code push request
+// (AGit refs/for) flow. The paid edition replaces this with its own wire set.
+var CommunityZtflowWireSet = wire.NewSet(
+	wire.Bind(new(githook.PushRequestFlow), new(*githook.NoopPushRequestFlow)),
+	githook.NewNoopPushRequestFlow,
+)
 
 func NewGitLocalStore() storage.Store {
 	return storage.NewLocalStore()

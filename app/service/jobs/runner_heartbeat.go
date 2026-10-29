@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package jobs
 
 import (
@@ -5,11 +9,11 @@ import (
 	"fmt"
 	"time"
 
-	runnerModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/runner"
-	runnerStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/runner"
-	pkgJobs "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/jobs"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/lock"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
+	runnerModel "github.com/easysoft/gitfox-community/app/model/runner"
+	runnerStore "github.com/easysoft/gitfox-community/app/store/runner"
+	pkgJobs "github.com/easysoft/gitfox-community/pkg/jobs"
+	"github.com/easysoft/gitfox-community/pkg/lock"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 )
 
 const (

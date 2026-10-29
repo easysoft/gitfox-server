@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package logger
 
 import (
@@ -7,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
+	"github.com/easysoft/gitfox-community/pkg/config"
 )
 
 // ContextLogger 是 logger 在 Context 中的 key

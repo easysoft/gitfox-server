@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package i18n
 
 // 此文件由 i18n-keygen 工具自动生成，请勿手动修改
@@ -74,7 +78,7 @@ const (
 	ArtifactRecycleListSuccess              I18nKey = "artifact.recycle_list_success"                // 制品回收站查询成功.
 	ArtifactRefreshTreeSuccess              I18nKey = "artifact.refresh_tree_success"                // 制品树刷新成功.
 	ArtifactRelocateSuccess                 I18nKey = "artifact.relocate_success"                    // 操作成功.
-	ArtifactRenameContainerNotSupported     I18nKey = "artifact.rename_container_not_supported"      // container 格式制品不支持重命名；镜像名称是推拉地址的一部分,重命名会导致客户端地址失效.
+	ArtifactRenameContainerNotSupported     I18nKey = "artifact.rename_container_not_supported"      // container 格式的镜像包/版本不支持重命名；镜像名称是推拉地址的一部分,重命名会导致客户端地址失效.
 	ArtifactRenameEntityTypeInvalid         I18nKey = "artifact.rename_entity_type_invalid"          // 不支持的重命名实体类型.
 	ArtifactRenameNewNameRequired           I18nKey = "artifact.rename_new_name_required"            // 重命名操作必须指定 newName.
 	ArtifactRenameSiblingConflict           I18nKey = "artifact.rename_sibling_conflict"             // 同级已存在同名实体.
@@ -496,6 +500,7 @@ const (
 	CliUpgradeDescription                I18nKey = "cli.upgrade_description"                   // 升级 GitFox:备份当前注册的旧版本,再用本进程二进制替换之
 	CliUpgradeDowngradeNotSupported      I18nKey = "cli.upgrade_downgrade_not_supported"       // 本进程版本 (%s @ %s) 低于已安装版本 (%s @ %s),暂不支持降级,已跳过.
 	CliUpgradeErrApply                   I18nKey = "cli.upgrade_err_apply"                     // 替换二进制失败: %v
+	CliUpgradeErrApplyEnv                I18nKey = "cli.upgrade_err_apply_env"                 // 更新 prod.env 失败: %v
 	CliUpgradeErrApplyRollback           I18nKey = "cli.upgrade_err_apply_rollback"            // 替换失败且回滚失败,文件系统处于不一致状态: %v / 回滚: %v
 	CliUpgradeErrBackup                  I18nKey = "cli.upgrade_err_backup"                    // 备份失败: %v
 	CliUpgradeErrChmod                   I18nKey = "cli.upgrade_err_chmod"                     // 为新二进制设置可执行权限失败: %v
@@ -504,12 +509,15 @@ const (
 	CliUpgradeErrGetOldVersion           I18nKey = "cli.upgrade_err_get_old_version"           // 执行旧二进制 version 命令失败: %v
 	CliUpgradeErrNotRegistered           I18nKey = "cli.upgrade_err_not_registered"            // 未检测到 GitFox 系统服务注册,请先执行 install 完成首次部署.
 	CliUpgradeErrParseVersion            I18nKey = "cli.upgrade_err_parse_version"             // 解析旧二进制版本信息失败: %v
+	CliUpgradeErrPrepareEnv              I18nKey = "cli.upgrade_err_prepare_env"               // 准备 prod.env 升级配置失败: %v
+	CliUpgradeErrRestoreEnv              I18nKey = "cli.upgrade_err_restore_env"               // 恢复 prod.env 失败: %v
 	CliUpgradeErrSelfOverwrite           I18nKey = "cli.upgrade_err_self_overwrite"            // 当前进程二进制 (%s) 已是系统注册位置,无需升级.
 	CliUpgradeErrStart                   I18nKey = "cli.upgrade_err_start"                     // 启动新版服务失败: %v
 	CliUpgradeErrStop                    I18nKey = "cli.upgrade_err_stop"                      // 停止服务失败: %v
 	CliUpgradeErrStopTimeout             I18nKey = "cli.upgrade_err_stop_timeout"              // 等待服务停止超时(30 秒),端口仍有响应.
 	CliUpgradeInfoNew                    I18nKey = "cli.upgrade_info_new"                      // 本进程版本: %s (构建于 %s)
 	CliUpgradeInfoOld                    I18nKey = "cli.upgrade_info_old"                      // 已安装版本: %s (构建于 %s)
+	CliUpgradeInfoPluginsURLDefaulted    I18nKey = "cli.upgrade_info_plugins_url_defaulted"    // 已备份原配置到 %s,并注释 GITFOX_CI_PLUGINS_ZIP_URL 以使用内置默认值.
 	CliUpgradeSameVersion                I18nKey = "cli.upgrade_same_version"                  // 新旧版本一致 (%s @ %s),无需升级.
 	CliUpgradeServiceNotRunning          I18nKey = "cli.upgrade_service_not_running"           // 服务未运行,跳过停止步骤.
 	CliUpgradeStepApply                  I18nKey = "cli.upgrade_step_apply"                    // 正在替换二进制文件...
@@ -540,6 +548,7 @@ const (
 
 	// CodeReview 相关常量
 	CodeReviewBodyParamError      I18nKey = "codeReview.body_param_error"      // 请求体参数解析失败.
+	CodeReviewConfigSuccess       I18nKey = "codeReview.config_success"        // AI 评审配置查询成功.
 	CodeReviewPathParamError      I18nKey = "codeReview.path_param_error"      // 路径参数解析失败.
 	CodeReviewReportUploadError   I18nKey = "codeReview.report_upload_error"   // 代码评审报告上传失败.
 	CodeReviewReportUploadSuccess I18nKey = "codeReview.report_upload_success" // 代码评审报告上传成功.
@@ -649,6 +658,7 @@ const (
 	GitMergeCheckNoCommits          I18nKey = "git.merge_check_no_commits"            // 合并检查头分支没有新提交.
 	GitMergeCheckRefTypeNotFound    I18nKey = "git.merge_check_ref_type_not_found"    // 合并检查引用类型不能为空.
 	GitMergeConflict                I18nKey = "git.merge_conflict"                    // 合并冲突.
+	GitMergeSourceOutOfDate         I18nKey = "git.merge_source_out_of_date"          // 源分支已有新提交,当前记录的提交版本已过期,请刷新后重试.
 	GitObjectNotFound               I18nKey = "git.object_not_found"                  // 对象不存在.
 	GitPathNotFound                 I18nKey = "git.path_not_found"                    // 路径不存在.
 	GitPushOutOfDate                I18nKey = "git.push_out_of_date"                  // 推送过期,需要先拉取.
@@ -1002,6 +1012,14 @@ const (
 	SpaceSecretsListSuccess      I18nKey = "space.secrets_list_success"      // 仓库密钥列表成功.
 	SpaceUpdateError             I18nKey = "space.update_error"              // 空间更新失败.
 	SpaceUpdateSuccess           I18nKey = "space.update_success"            // 空间更新成功.
+
+	// Statistics 相关常量
+	StatisticsCommitSuccess     I18nKey = "statistics.commit_success"      // 查询代码提交统计成功.
+	StatisticsQueryParamError   I18nKey = "statistics.query_param_error"   // Query 参数解析失败.
+	StatisticsRangeTooLarge     I18nKey = "statistics.range_too_large"     // 统计的时间范围不能超过一年.
+	StatisticsTimeFormatInvalid I18nKey = "statistics.time_format_invalid" // 时间格式不正确,正确格式为 yyyy-mm-dd.
+	StatisticsTimeRangeInvalid  I18nKey = "statistics.time_range_invalid"  // 统计的结束时间不能早于开始时间.
+	StatisticsTimeRequired      I18nKey = "statistics.time_required"       // 请传入统计的开始时间和结束时间.
 
 	// Svn 相关常量
 	SvnBlameFailed         I18nKey = "svn.blame_failed"          // SVN blame 命令执行失败.

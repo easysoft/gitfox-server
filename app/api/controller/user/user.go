@@ -1,13 +1,17 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package user
 
 import (
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/utils/req"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/utils/resp"
-	authModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/publickey"
-	userSvc "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/user"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/app/api/utils/req"
+	"github.com/easysoft/gitfox-community/app/api/utils/resp"
+	authModel "github.com/easysoft/gitfox-community/app/model/auth"
+	"github.com/easysoft/gitfox-community/app/service/publickey"
+	userSvc "github.com/easysoft/gitfox-community/app/service/user"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
 	"github.com/gin-gonic/gin"
 )
 

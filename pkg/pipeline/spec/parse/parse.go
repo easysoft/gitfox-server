@@ -1,12 +1,18 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package parse
 
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"os"
 
-	schema "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/pipeline/spec"
+	schema "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 
 	"github.com/ghodss/yaml"
 )
@@ -84,4 +90,23 @@ func ParseMultiFile(p string) ([]*schema.Config, error) {
 	}
 	defer f.Close()
 	return ParseMulti(f)
+}
+
+// ToConfig converts any config-like value into a *schema.Config by
+// round-tripping through JSON.
+func ToConfig(src any) (*schema.Config, error) {
+	if src == nil {
+		return nil, errors.New("source config is nil")
+	}
+	// Marshal src to JSON
+	data, err := json.Marshal(src)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal config: %w", err)
+	}
+	// Unmarshal JSON to schema.Config
+	dst := new(schema.Config)
+	if err := json.Unmarshal(data, dst); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal to schema.Config: %w", err)
+	}
+	return dst, nil
 }

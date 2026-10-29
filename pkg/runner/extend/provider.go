@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package extend
 
 import (
@@ -5,13 +9,13 @@ import (
 	"context"
 	"errors"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/pipeline/storage"
-	stageStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/stage"
-	schema "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/pipeline/spec"
+	"github.com/easysoft/gitfox-community/app/pipeline/storage"
+	stageStore "github.com/easysoft/gitfox-community/app/store/stage"
+	schema "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 
 	"github.com/drone/runner-go/environ/provider"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 )
 
 type StageDynamicEnvProvider struct {

@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package svn
 
 import (
@@ -5,8 +9,8 @@ import (
 	"context"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/svn/command"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/svn/command"
 )
 
 // InfoParams contains the parameters for svn info.
@@ -67,7 +71,8 @@ func (s *Service) Info(ctx context.Context, params *InfoParams) (string, error) 
 		target = strings.TrimRight(target, "/") + "/" + strings.TrimLeft(params.Subpath, "/")
 	}
 
-	cmd := command.New("info",
+	cmd := s.newCommand("info",
+		command.WithFlag("--non-interactive"),
 		command.WithArg(target),
 		withInfoAuth(params.Username, params.Password),
 	)

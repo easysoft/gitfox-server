@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package compiler
 
 import (
@@ -5,9 +9,9 @@ import (
 	"os"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/runner/docker/engine"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/runner/docker/engine/resource"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/runner/docker/internal/docker/image"
+	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine"
+	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine/resource"
+	"github.com/easysoft/gitfox-community/pkg/runner/docker/internal/docker/image"
 
 	"github.com/dchest/uniuri"
 	"github.com/drone/drone-go/drone"

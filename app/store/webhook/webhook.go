@@ -1,12 +1,16 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package webhook
 
 import (
 	"context"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	webhookModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/webhook"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/app/constant"
+	webhookModel "github.com/easysoft/gitfox-community/app/model/webhook"
+	"github.com/easysoft/gitfox-community/pkg/database"
 	"gorm.io/gorm"
 )
 
@@ -197,7 +201,7 @@ func (s *Store) CreateExecution(ctx context.Context, execution *webhookModel.Exe
 		RespHeaders:    execution.RespHeaders,
 		RespBody:       execution.RespBody,
 		RetriggerID:    uint(execution.RetriggerID),
-		Retriggerable:  execution.ReTriggerable,
+		Retriggerable:  database.BoolToUint8(execution.ReTriggerable),
 		CreatedDate:    execution.CreatedDate,
 		EditedDate:     execution.EditedDate,
 	}
@@ -259,7 +263,7 @@ func mapExecutionToModel(data Execution) *webhookModel.Execution {
 		RespHeaders:    data.RespHeaders,
 		RespBody:       data.RespBody,
 		RetriggerID:    int64(data.RetriggerID),
-		ReTriggerable:  data.Retriggerable,
+		ReTriggerable:  data.Retriggerable != 0,
 		CreatedDate:    data.CreatedDate,
 		EditedDate:     data.EditedDate,
 	}
@@ -297,13 +301,13 @@ func mapToModel(data Webhook) *webhookModel.Webhook {
 		CreatedDate:           data.CreatedDate,
 		EditedBy:              data.EditedBy,
 		EditedDate:            data.EditedDate,
-		Internal:              data.Internal,
+		Internal:              data.Internal != 0,
 		DisplayName:           data.DisplayName,
 		Description:           data.Desc,
 		URL:                   data.URL,
 		Secret:                data.Secret,
-		Enabled:               data.Enabled,
-		Insecure:              !data.IsSSL,
+		Enabled:               data.Enabled != 0,
+		Insecure:              data.IsSSL == 0,
 		Triggers:              triggers,
 		LatestExecutionResult: latestExecResult,
 		AuthMethod:            constant.WebhookAuthMethod(data.AuthMethod),

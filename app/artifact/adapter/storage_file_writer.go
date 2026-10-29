@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package adapter
 
 import (
@@ -6,10 +10,10 @@ import (
 	"path"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/artifact"
-	model "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/artifact"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage"
-	storagedriver "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage/driver"
+	"github.com/easysoft/gitfox-community/app/model/artifact"
+	model "github.com/easysoft/gitfox-community/app/model/artifact"
+	"github.com/easysoft/gitfox-community/pkg/storage"
+	storagedriver "github.com/easysoft/gitfox-community/pkg/storage/driver"
 
 	"github.com/google/uuid"
 )

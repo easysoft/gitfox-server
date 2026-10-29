@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package manager
 
 import (
@@ -6,28 +10,33 @@ import (
 	"fmt"
 	"strings"
 
-	// "github.com/easysoft/gitfox/livelog"
-
 	"github.com/hashicorp/go-multierror"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	events "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/pipeline"
-	pullreqevents "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/pullreq"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/livelog"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	events "github.com/easysoft/gitfox-community/app/events/pipeline"
+	pullreqevents "github.com/easysoft/gitfox-community/app/events/pullreq"
+	"github.com/easysoft/gitfox-community/pkg/livelog"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 
-	eventModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/event"
-	executionModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/execution"
-	stageModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/stage"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/pipeline/scheduler"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/execution"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/pipeline"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/pullrequest"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/sse"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/stage"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/step"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
+	eventModel "github.com/easysoft/gitfox-community/app/model/event"
+	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
+	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
+	"github.com/easysoft/gitfox-community/app/pipeline/scheduler"
+	"github.com/easysoft/gitfox-community/app/service/execution"
+	"github.com/easysoft/gitfox-community/app/service/pipeline"
+	"github.com/easysoft/gitfox-community/app/service/pullrequest"
+	"github.com/easysoft/gitfox-community/app/service/sse"
+	"github.com/easysoft/gitfox-community/app/service/stage"
+	"github.com/easysoft/gitfox-community/app/service/step"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 )
+
+// ErrStageTerminal is returned when a stage update is refused because the
+// stage is already in a terminal state (e.g. a state written by the
+// canceler). The API layer maps this sentinel to an HTTP 409 so the agent
+// stops updating the stage instead of overwriting the server's terminal
+// state.
+var ErrStageTerminal = errors.New("stage already in terminal state")
 
 type teardown struct {
 	PipelineSvc  pipeline.Interface
@@ -53,6 +62,31 @@ func (t *teardown) do(ctx context.Context, stage *stageModel.StageWithSteps) err
 	if err != nil {
 		log.Errorw("manager: cannot find the execution", "error", err)
 		return err
+	}
+
+	// The canceler may have already written a terminal state (killed/
+	// skipped) for this stage while it was executing — or the execution
+	// was cancelled while the canceler's stage write was in flight. In
+	// both cases the agent's completion report is stale and must not
+	// overwrite the server's state: refuse with a conflict error so the
+	// agent abandons silently. Check the authoritative DB state, not the
+	// agent's request payload.
+	existing, err := t.StageSvc.GetByID(noContext, stage.ID)
+	if err != nil {
+		log.Errorw("manager: cannot find stage", "error", err)
+		return err
+	}
+	if existing.Status.IsDone() || execution.Status == constant.CIStatusKilled {
+		// still release the log streams for the steps the agent ran;
+		// the terminal stage would otherwise keep them in memory until
+		// the server restarts.
+		for _, step := range stage.Steps {
+			if err := t.Logz.Delete(noContext, int64(step.ID)); err != nil && !errors.Is(err, livelog.ErrStreamNotFound) {
+				log.Warnw("manager: cannot delete log stream for terminal stage step",
+					"step.id", step.ID, "error", err)
+			}
+		}
+		return fmt.Errorf("%w: stage %d status %s", ErrStageTerminal, stage.ID, existing.Status)
 	}
 
 	pipeline, err := t.PipelineSvc.GetPipelineByID(ctx, int64(execution.PipelineID))

@@ -1,7 +1,11 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package webhook
 
 import (
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 	"gorm.io/gorm"
 )
 
@@ -14,13 +18,13 @@ type Webhook struct {
 	Desc             string          `gorm:"column:desc"`
 	URL              string          `gorm:"column:url"`
 	Secret           string          `gorm:"column:secret"`
-	IsSSL            bool            `gorm:"column:isSSL"`
+	IsSSL            uint8           `gorm:"column:isSSL"`
 	Triggers         string          `gorm:"column:triggers"`
-	Internal         bool            `gorm:"column:internal"`
+	Internal         uint8           `gorm:"column:internal"`
 	AuthMethod       string          `gorm:"column:authMethod"`
 	AuthHeader       string          `gorm:"column:authHeader"`
 	LatestExecResult string          `gorm:"column:latestExecResult"`
-	Enabled          bool            `gorm:"column:enabled"`
+	Enabled          uint8           `gorm:"column:enabled"`
 	CreatedBy        string          `gorm:"column:createdBy"`
 	CreatedDate      *datetime.Local `gorm:"column:createdDate"`
 	EditedBy         string          `gorm:"column:editedBy"`
@@ -61,7 +65,7 @@ type Execution struct {
 	RespHeaders    string          `gorm:"column:respHeaders"`
 	RespBody       string          `gorm:"column:respBody"`
 	RetriggerID    uint            `gorm:"column:retriggerID"`
-	Retriggerable  bool            `gorm:"column:retriggerable"`
+	Retriggerable  uint8           `gorm:"column:retriggerable"`
 	CreatedDate    *datetime.Local `gorm:"column:createdDate"`
 	EditedDate     *datetime.Local `gorm:"column:editedDate"`
 }

@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package pipeline
 
 import (
@@ -5,11 +9,11 @@ import (
 	"io"
 	"time"
 
-	pipelineModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/pipeline"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/pipeline"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/livelog"
-	pkgS3 "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/s3"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage"
+	pipelineModel "github.com/easysoft/gitfox-community/app/model/pipeline"
+	"github.com/easysoft/gitfox-community/app/store/pipeline"
+	"github.com/easysoft/gitfox-community/pkg/livelog"
+	pkgS3 "github.com/easysoft/gitfox-community/pkg/s3"
+	"github.com/easysoft/gitfox-community/pkg/storage"
 )
 
 // CronScheduler is the interface used by the pipeline service to manage

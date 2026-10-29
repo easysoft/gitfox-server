@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package execution
 
 import (
@@ -6,11 +10,11 @@ import (
 	"math"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	executionModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/execution"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database/dbtx"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/sqladapter"
+	"github.com/easysoft/gitfox-community/app/constant"
+	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/database/dbtx"
+	"github.com/easysoft/gitfox-community/pkg/sqladapter"
 )
 
 // Create creates a new execution

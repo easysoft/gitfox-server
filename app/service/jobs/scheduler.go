@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package jobs
 
 import (
@@ -9,15 +13,15 @@ import (
 	"sync"
 	"time"
 
-	jobModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/jobs"
-	jobsStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/jobs"
-	runnerStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/runner"
-	pkgErrors "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	pkgJobs "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/jobs"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/lock"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/pubsub"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	jobModel "github.com/easysoft/gitfox-community/app/model/jobs"
+	jobsStore "github.com/easysoft/gitfox-community/app/store/jobs"
+	runnerStore "github.com/easysoft/gitfox-community/app/store/runner"
+	pkgErrors "github.com/easysoft/gitfox-community/pkg/errors"
+	pkgJobs "github.com/easysoft/gitfox-community/pkg/jobs"
+	"github.com/easysoft/gitfox-community/pkg/lock"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/pubsub"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 	"github.com/gorhill/cronexpr"
 )
 
@@ -879,11 +883,24 @@ func mapToProgressMany(jobs []*jobModel.ScheduleJob) []map[string]interface{} {
 }
 
 func mapToProgress(job *jobModel.ScheduleJob) map[string]interface{} {
-	return map[string]interface{}{
+	progress := map[string]interface{}{
 		"state":        job.State,
 		"progress":     job.RunProgress,
 		"result":       job.Result,
 		"failure":      job.LastFailureError,
 		"lastExecuted": job.LastExecuted,
 	}
+
+	// for recurring jobs, compute the next execution time from the
+	// cron expression. keep the same CST timezone handling as
+	// AddRecurringWithData.
+	if job.IsRecurring && job.RecurringCron != "" {
+		if exp, err := cronexpr.Parse(job.RecurringCron); err == nil {
+			next := exp.Next(time.Now().In(datetime.CST))
+			nextLocal := datetime.Local(next)
+			progress["nextExecuted"] = &nextLocal
+		}
+	}
+
+	return progress
 }

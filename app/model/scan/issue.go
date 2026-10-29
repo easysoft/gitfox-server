@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package scan
 
 import (
@@ -7,8 +11,8 @@ import (
 	"fmt"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 // ScanIssue 扫描问题内部模型
@@ -16,6 +20,7 @@ type ScanIssue struct {
 	Key             string                        `json:"key"`
 	RuleID          int64                         `json:"ruleID"`
 	PpmID           int64                         `json:"ppmID,omitempty"`
+	ExecutionID     int64                         `json:"executionID"`
 	Title           string                        `json:"title"`
 	Content         string                        `json:"content,omitempty"`
 	Path            string                        `json:"path"`
@@ -83,10 +88,12 @@ type ScanIssueComparedData struct {
 type IssueLocation struct {
 	Path  string `json:"path"`
 	Range struct {
-		StartLine int64 `json:"startLine"`
-		EndLine   int64 `json:"endLine"`
-		StartByte int64 `json:"startByte,omitempty"`
-		EndByte   int64 `json:"endByte,omitempty"`
+		StartLine   int64 `json:"startLine"`
+		EndLine     int64 `json:"endLine"`
+		StartColumn int64 `json:"startColumn,omitempty"`
+		EndColumn   int64 `json:"endColumn,omitempty"`
+		StartByte   int64 `json:"startByte,omitempty"`
+		EndByte     int64 `json:"endByte,omitempty"`
 	} `json:"range"`
 	Commit struct {
 		CommitID       string `json:"commit_id"`
@@ -189,9 +196,22 @@ type IssuePayloadAI struct {
 	ExistingCode   string `json:"existing_code"`
 }
 
-// UniqueKey 生成唯一标识
-func (t IssueInputAI) UniqueKey() string {
-	return fmt.Sprintf("ai/%d/%s/%d/%d", t.PpmID, t.Path, t.StartLine, t.EndLine)
+// AIScopePPM / AIScopeExecution 构造 AI issue 唯一键的作用域前缀。
+// ppmID 取自 ops_ppm.id、executionID 取自 ops_pipeline_executions.id，两者是互相独立的
+// 自增序列，同一仓库内极易取值相同（如都为 1）。两个作用域必须带前缀区分，否则 path 与
+// 行号一致时会算出同一个 key，后写入的 issue 被 insertAIIssues 的去重逻辑静默丢弃。
+func AIScopePPM(ppmID int64) string {
+	return fmt.Sprintf("ppm/%d", ppmID)
+}
+
+// AIScopeExecution 见 AIScopePPM
+func AIScopeExecution(executionID int64) string {
+	return fmt.Sprintf("exec/%d", executionID)
+}
+
+// UniqueKey 生成唯一标识；scope 为作用域标识，由 AIScopePPM/AIScopeExecution 构造
+func (t IssueInputAI) UniqueKey(scope string) string {
+	return fmt.Sprintf("ai/%s/%s/%d/%d", scope, t.Path, t.StartLine, t.EndLine)
 }
 
 // GenerateIssueKey 根据任务信息生成 issue 唯一 key
@@ -371,6 +391,7 @@ type ScanIssueInfo struct {
 	Category        constant.AiScanIssueCategory  `json:"category,omitempty"`
 	Severity        constant.AiScanIssueSeverity  `json:"severity,omitempty"`
 	PpmID           int64                         `json:"ppmID,omitempty"`
+	ExecutionID     int64                         `json:"executionID"`
 	PpmTitle        string                        `json:"ppmTitle,omitempty"`
 	RepoID          int64                         `json:"repoID"`
 	RepoBranch      string                        `json:"repoBranch"`

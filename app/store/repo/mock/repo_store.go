@@ -13,8 +13,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	repo "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	repo0 "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/repo"
+	repo "github.com/easysoft/gitfox-community/app/model/repo"
+	repo0 "github.com/easysoft/gitfox-community/app/store/repo"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -69,21 +69,6 @@ func (m *MockInterface) Delete(ctx context.Context, id uint) error {
 func (mr *MockInterfaceMockRecorder) Delete(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockInterface)(nil).Delete), ctx, id)
-}
-
-// FindByRef mocks base method.
-func (m *MockInterface) FindByRef(ctx context.Context, ref string) (*repo.Repo, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByRef", ctx, ref)
-	ret0, _ := ret[0].(*repo.Repo)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindByRef indicates an expected call of FindByRef.
-func (mr *MockInterfaceMockRecorder) FindByRef(ctx, ref any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByRef", reflect.TypeOf((*MockInterface)(nil).FindByRef), ctx, ref)
 }
 
 // GetByID mocks base method.
@@ -158,6 +143,21 @@ func (m *MockInterface) List(ctx context.Context, filter repo.ReqFilter) (repo0.
 func (mr *MockInterfaceMockRecorder) List(ctx, filter any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockInterface)(nil).List), ctx, filter)
+}
+
+// ListAllGitRepos mocks base method.
+func (m *MockInterface) ListAllGitRepos(ctx context.Context) ([]*repo.Repo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAllGitRepos", ctx)
+	ret0, _ := ret[0].([]*repo.Repo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAllGitRepos indicates an expected call of ListAllGitRepos.
+func (mr *MockInterfaceMockRecorder) ListAllGitRepos(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllGitRepos", reflect.TypeOf((*MockInterface)(nil).ListAllGitRepos), ctx)
 }
 
 // Update mocks base method.

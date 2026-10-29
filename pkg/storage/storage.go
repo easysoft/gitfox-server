@@ -1,13 +1,17 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package storage
 
 import (
 	"context"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage/driver"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage/driver/factory"
+	"github.com/easysoft/gitfox-community/pkg/storage/driver"
+	"github.com/easysoft/gitfox-community/pkg/storage/driver/factory"
 
-	_ "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage/driver/filesystem"
-	_ "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage/driver/inmemory"
+	_ "github.com/easysoft/gitfox-community/pkg/storage/driver/filesystem"
+	_ "github.com/easysoft/gitfox-community/pkg/storage/driver/inmemory"
 )
 
 func NewDriver(ctx context.Context, name string, parameters map[string]interface{}) (driver.StorageDriver, error) {

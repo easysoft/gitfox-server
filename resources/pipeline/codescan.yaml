@@ -19,8 +19,6 @@ spec:
                 cloneDepth: 50
                 cloneDir: ""
           - name: codescan
-            type: run
+            type: plugin
             spec:
-              container:
-                image: hub.zentao.net/ci/gitfoxscan:gitfox-community
-                pull: if-not-exists
+              name: codescan

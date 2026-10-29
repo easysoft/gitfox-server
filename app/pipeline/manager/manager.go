@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package manager
 
 import (
@@ -7,25 +11,27 @@ import (
 	"io"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	events "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/pipeline"
-	pullreqevents "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/pullreq"
+	"github.com/easysoft/gitfox-community/app/constant"
+	events "github.com/easysoft/gitfox-community/app/events/pipeline"
+	pullreqevents "github.com/easysoft/gitfox-community/app/events/pullreq"
 
-	executionModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/execution"
-	pipelineModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/pipeline"
-	stageModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/stage"
-	stepModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/step"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/pipeline/scheduler"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/execution"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/pipeline"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/pullrequest"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/sse"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/stage"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/step"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/livelog"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	urlprovider "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/url"
+	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
+	pipelineModel "github.com/easysoft/gitfox-community/app/model/pipeline"
+	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
+	stepModel "github.com/easysoft/gitfox-community/app/model/step"
+	"github.com/easysoft/gitfox-community/app/pipeline/scheduler"
+
+	"github.com/easysoft/gitfox-community/app/service/execution"
+	"github.com/easysoft/gitfox-community/app/service/pipeline"
+	"github.com/easysoft/gitfox-community/app/service/pullrequest"
+	"github.com/easysoft/gitfox-community/app/service/sse"
+	"github.com/easysoft/gitfox-community/app/service/stage"
+	"github.com/easysoft/gitfox-community/app/service/step"
+	"github.com/easysoft/gitfox-community/pkg/config"
+	"github.com/easysoft/gitfox-community/pkg/livelog"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	urlprovider "github.com/easysoft/gitfox-community/pkg/utils/url"
+	"github.com/drone/runner-go/client"
 )
 
 var noContext = context.Background()
@@ -65,6 +71,7 @@ type (
 		Stage     *stageModel.StageWithSteps          `json:"stage"`
 		Config    *pipelineModel.PipelineFile         `json:"config"`
 		Netrc     *Netrc                              `json:"netrc"`
+		Plugins   map[string]string                   `json:"plugins,omitempty"`
 		// Secrets   []*types.Secret           `json:"secrets"`
 	}
 
@@ -203,7 +210,16 @@ func (m *Manager) Accept(_ context.Context, id int64, machine string) (*stageMod
 	}
 	if stage.Host != "" {
 		log.Debug("manager: stage already assigned. abort.")
-		return nil, fmt.Errorf("stage already assigned, abort")
+		return nil, client.ErrOptimisticLock
+	}
+	// do not accept a stage that is no longer pending. The stage may
+	// have been dispatched in-memory by the queue before the canceler
+	// marked it skipped/killed, in which case it must not start.
+	if stage.Status != constant.CIStatusPending {
+		log.Debugw("manager: stage is no longer pending. abort.",
+			"stage.status", string(stage.Status),
+		)
+		return nil, client.ErrOptimisticLock
 	}
 
 	//TODO: 成功解析前先对machine不赋值
@@ -352,6 +368,7 @@ func (m *Manager) Details(ctx context.Context, stageID int64) (*ExecutionContext
 		Stage:     stage,
 		Config:    file,
 		Netrc:     netrc,
+		Plugins:   m.collectPlugins(noContext, file.Data),
 		// Secrets:   secrets,
 	}, nil
 }
@@ -442,35 +459,27 @@ func (m *Manager) AfterStage(_ context.Context, stage *stageModel.StageWithSteps
 
 // Watch watches for build cancellation requests.
 func (m *Manager) Watch(ctx context.Context, executionID int64) (bool, error) {
-	ok, err := m.Scheduler.Cancelled(ctx, executionID)
-	// we expect a context cancel error here which
-	// indicates a polling timeout. The subscribing
-	// client should look for the context cancel error
-	// and resume polling.
-	if err != nil {
-		return ok, err
-	}
-
-	// // TODO: we should be able to return
-	// // immediately if Cancelled returns true. This requires
-	// // some more testing but would avoid the extra database
-	// // call.
-	// if ok {
-	// 	return ok, err
-	// }
-
-	// if no error is returned we should check
-	// the database to see if the build is complete. If
-	// complete, return true.
+	// check the database first. If the execution is already in a done
+	// state (e.g. killed), return immediately. This makes cancellation
+	// detection robust against missed in-memory signals (server restart,
+	// cancel before the runner started watching, multi-instance setup).
 	execution, err := m.ExecutionSvc.GetByID(ctx, uint(executionID))
 	if err != nil {
 		log := logger.GetLogger(ctx).With(
 			"execution.id", executionID,
 		)
 		log.Warn("manager: cannot find build")
-		return ok, fmt.Errorf("could not find build for cancellation: %w", err)
+		return false, fmt.Errorf("could not find build for cancellation: %w", err)
 	}
-	return execution.Status.IsDone(), nil
+	if execution.Status.IsDone() {
+		return true, nil
+	}
+
+	// the execution is still running: block and wait for the in-memory
+	// cancel signal. We expect a context cancel error here which
+	// indicates a polling timeout. The subscribing client should look
+	// for the context cancel error and resume polling.
+	return m.Scheduler.Cancelled(ctx, executionID)
 }
 
 func (m *Manager) createNetrc(ctx context.Context) (*Netrc, error) {

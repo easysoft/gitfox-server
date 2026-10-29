@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package scan
 
 import (
@@ -6,13 +10,13 @@ import (
 	"testing"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	scanModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/scan"
-	scanStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/scan"
-	scanStoreMock "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/scan/mock"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	pkgErrors "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/app/constant"
+	scanModel "github.com/easysoft/gitfox-community/app/model/scan"
+	scanStore "github.com/easysoft/gitfox-community/app/store/scan"
+	scanStoreMock "github.com/easysoft/gitfox-community/app/store/scan/mock"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	pkgErrors "github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -38,7 +42,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 			CronBranch: "main",
 		}, nil)
 
-		svc := NewScanTriggerService(triggerStore, nil, &fakeRepoStore{}, planStore, nil, cronScheduler)
+		svc := NewScanTriggerService(triggerStore, nil, newRepoStoreMock(ctrl), planStore, nil, cronScheduler)
 		got, err := svc.Create(context.Background(), newTestSession("tester"), 1, 2, scanModel.ScanTriggerReqForCreate{
 			Name:       "t1",
 			Type:       scanModel.ScanTriggerTypeCron,
@@ -73,7 +77,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 			CronBranch: "release/devops062",
 		}, nil)
 
-		svc := NewScanTriggerService(triggerStore, nil, &fakeRepoStore{}, planStore, nil, cronScheduler)
+		svc := NewScanTriggerService(triggerStore, nil, newRepoStoreMock(ctrl), planStore, nil, cronScheduler)
 		got, err := svc.Update(context.Background(), newTestSession("tester"), 2, 1, 9, scanModel.ScanTriggerReqForUpdate{
 			Cron:       "*/5 * * * *",
 			CronBranch: "release/devops062",
@@ -106,7 +110,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 			Disabled:   true,
 		}, nil)
 
-		svc := NewScanTriggerService(triggerStore, nil, &fakeRepoStore{}, planStore, nil, cronScheduler)
+		svc := NewScanTriggerService(triggerStore, nil, newRepoStoreMock(ctrl), planStore, nil, cronScheduler)
 		_, err := svc.Update(context.Background(), newTestSession("tester"), 2, 1, 9, scanModel.ScanTriggerReqForUpdate{Disabled: &disabled})
 		require.NoError(t, err)
 		require.Len(t, cronScheduler.removeCalls, 1)
@@ -127,7 +131,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 		triggerStore.EXPECT().Delete(gomock.Any(), uint(1)).Return(nil)
 		triggerSolutionStore.EXPECT().DeleteByTriggerID(gomock.Any(), uint64(1)).Return(nil)
 
-		svc := NewScanTriggerService(triggerStore, triggerSolutionStore, &fakeRepoStore{}, planStore, nil, cronScheduler)
+		svc := NewScanTriggerService(triggerStore, triggerSolutionStore, newRepoStoreMock(ctrl), planStore, nil, cronScheduler)
 		err := svc.Delete(context.Background(), 1, 10, 1)
 		require.NoError(t, err)
 		require.Len(t, cronScheduler.removeCalls, 1)
@@ -156,7 +160,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 		planStore := scanStoreMock.NewMockIScanPlan(ctrl)
 		planStore.EXPECT().GetByRepoIDAndID(gomock.Any(), uint(1), uint(1)).Return(&scanModel.ScanPlan{ID: 1, RepoID: 1}, nil)
 
-		svc := NewScanTriggerService(triggerStore, nil, &fakeRepoStore{}, planStore, nil, nil)
+		svc := NewScanTriggerService(triggerStore, nil, newRepoStoreMock(ctrl), planStore, nil, nil)
 		_, err := svc.Create(context.Background(), newTestSession("tester"), 1, 1, scanModel.ScanTriggerReqForCreate{
 			Name:       "t1",
 			Type:       scanModel.ScanTriggerTypeCron,
@@ -172,9 +176,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 
 		triggerStore := scanStoreMock.NewMockIScanTrigger(ctrl)
 		planStore := scanStoreMock.NewMockIScanPlan(ctrl)
-		repo := &fakeRepoStore{err: pkgErrors.ErrResourceNotFound}
-
-		svc := NewScanTriggerService(triggerStore, nil, repo, planStore, nil, nil)
+		svc := NewScanTriggerService(triggerStore, nil, newRepoStoreErrMock(ctrl, pkgErrors.ErrResourceNotFound), planStore, nil, nil)
 		_, err := svc.Create(context.Background(), newTestSession("tester"), 1, 2, scanModel.ScanTriggerReqForCreate{
 			Name:       "t1",
 			Type:       scanModel.ScanTriggerTypeCron,
@@ -193,7 +195,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 		planStore := scanStoreMock.NewMockIScanPlan(ctrl)
 		planStore.EXPECT().GetByRepoIDAndID(gomock.Any(), uint(2), uint(1)).Return(nil, pkgErrors.ErrResourceNotFound)
 
-		svc := NewScanTriggerService(triggerStore, nil, &fakeRepoStore{}, planStore, nil, nil)
+		svc := NewScanTriggerService(triggerStore, nil, newRepoStoreMock(ctrl), planStore, nil, nil)
 		_, err := svc.Create(context.Background(), newTestSession("tester"), 1, 2, scanModel.ScanTriggerReqForCreate{
 			Name:       "t1",
 			Type:       scanModel.ScanTriggerTypeCron,
@@ -218,7 +220,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 			return &scanModel.ScanTrigger{ID: 100, PlanID: 1, RepoID: 2}, nil
 		})
 
-		svc := NewScanTriggerService(triggerStore, nil, &fakeRepoStore{}, planStore, nil, nil)
+		svc := NewScanTriggerService(triggerStore, nil, newRepoStoreMock(ctrl), planStore, nil, nil)
 		got, err := svc.Create(context.Background(), newTestSession("tester"), 1, 2, scanModel.ScanTriggerReqForCreate{
 			Name:       "t1",
 			Type:       scanModel.ScanTriggerTypeCron,
@@ -238,7 +240,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 		planStore.EXPECT().GetByRepoIDAndID(gomock.Any(), uint(1), uint(10)).Return(&scanModel.ScanPlan{ID: 10, RepoID: 1}, nil)
 		triggerStore.EXPECT().GetByRepoPlanAndID(gomock.Any(), uint(1), uint(10), uint(1)).Return(nil, pkgErrors.ErrResourceNotFound)
 
-		svc := NewScanTriggerService(triggerStore, nil, &fakeRepoStore{}, planStore, nil, nil)
+		svc := NewScanTriggerService(triggerStore, nil, newRepoStoreMock(ctrl), planStore, nil, nil)
 		err := svc.Delete(context.Background(), 1, 10, 1)
 		require.Error(t, err)
 		assert.Equal(t, i18n.TriggerNotFound, pkgErrors.GetI18nKey(err))
@@ -254,7 +256,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 		triggerStore.EXPECT().GetByRepoPlanAndID(gomock.Any(), uint(1), uint(10), uint(1)).Return(&scanModel.ScanTrigger{ID: 1, RepoID: 1, PlanID: 10}, nil)
 		triggerStore.EXPECT().Count(gomock.Any(), uint(1), uint(10)).Return(int64(1), nil)
 
-		svc := NewScanTriggerService(triggerStore, nil, &fakeRepoStore{}, planStore, nil, nil)
+		svc := NewScanTriggerService(triggerStore, nil, newRepoStoreMock(ctrl), planStore, nil, nil)
 		err := svc.Delete(context.Background(), 1, 10, 1)
 		require.Error(t, err)
 	})
@@ -272,7 +274,7 @@ func TestScanTriggerServiceCreateAndDelete(t *testing.T) {
 			Total: 1,
 		}, nil)
 
-		svc := NewScanTriggerService(triggerStore, nil, &fakeRepoStore{}, planStore, nil, nil)
+		svc := NewScanTriggerService(triggerStore, nil, newRepoStoreMock(ctrl), planStore, nil, nil)
 		got, err := svc.List(context.Background(), 1, 10, filter)
 		require.NoError(t, err)
 		require.Len(t, got.Data, 1)
@@ -301,7 +303,7 @@ func TestScanTriggerServiceSolutionSync(t *testing.T) {
 		}, nil)
 		triggerSolutionStore.EXPECT().ReplaceBatch(gomock.Any(), uint64(100), []int64{10, 20}, "tester").Return(nil)
 
-		svc := NewScanTriggerService(triggerStore, triggerSolutionStore, &fakeRepoStore{}, planStore, solutionStore, nil)
+		svc := NewScanTriggerService(triggerStore, triggerSolutionStore, newRepoStoreMock(ctrl), planStore, solutionStore, nil)
 		got, err := svc.Create(context.Background(), newTestSession("tester"), 1, 2, scanModel.ScanTriggerReqForCreate{
 			Name:        "t1",
 			Type:        scanModel.ScanTriggerTypeEvent,
@@ -328,7 +330,7 @@ func TestScanTriggerServiceSolutionSync(t *testing.T) {
 		}, nil)
 		// ReplaceBatch should NOT be called
 
-		svc := NewScanTriggerService(triggerStore, triggerSolutionStore, &fakeRepoStore{}, planStore, nil, nil)
+		svc := NewScanTriggerService(triggerStore, triggerSolutionStore, newRepoStoreMock(ctrl), planStore, nil, nil)
 		got, err := svc.Create(context.Background(), newTestSession("tester"), 1, 2, scanModel.ScanTriggerReqForCreate{
 			Name:    "t2",
 			Type:    scanModel.ScanTriggerTypeEvent,
@@ -357,7 +359,7 @@ func TestScanTriggerServiceSolutionSync(t *testing.T) {
 			ID: 9, RepoID: 2, PlanID: 1, Type: scanModel.ScanTriggerTypeEvent,
 		}, nil)
 
-		svc := NewScanTriggerService(triggerStore, triggerSolutionStore, &fakeRepoStore{}, planStore, solutionStore, nil)
+		svc := NewScanTriggerService(triggerStore, triggerSolutionStore, newRepoStoreMock(ctrl), planStore, solutionStore, nil)
 		got, err := svc.Update(context.Background(), newTestSession("tester"), 2, 1, 9, scanModel.ScanTriggerReqForUpdate{
 			Actions:     []constant.TriggerAction{constant.TriggerActionBranchUpdated},
 			SolutionIDs: []int64{30},
@@ -380,7 +382,7 @@ func TestScanTriggerServiceSolutionSync(t *testing.T) {
 		triggerStore.EXPECT().Delete(gomock.Any(), uint(5)).Return(nil)
 		triggerSolutionStore.EXPECT().DeleteByTriggerID(gomock.Any(), uint64(5)).Return(nil)
 
-		svc := NewScanTriggerService(triggerStore, triggerSolutionStore, &fakeRepoStore{}, planStore, nil, nil)
+		svc := NewScanTriggerService(triggerStore, triggerSolutionStore, newRepoStoreMock(ctrl), planStore, nil, nil)
 		err := svc.Delete(context.Background(), 1, 10, 5)
 		require.NoError(t, err)
 	})

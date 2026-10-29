@@ -1,13 +1,17 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package container
 
 import (
 	"context"
 
-	requtil "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/utils/req"
-	ctnAdapter "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/artifact/adapter/container"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
+	requtil "github.com/easysoft/gitfox-community/app/api/utils/req"
+	ctnAdapter "github.com/easysoft/gitfox-community/app/artifact/adapter/container"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 )
 
 // authorize 校验当前 session 对指定制品库的某项权限。

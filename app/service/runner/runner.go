@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package runner
 
 import (
@@ -10,10 +14,10 @@ import (
 	"strings"
 	"time"
 
-	runnerModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/runner"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/runner"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
+	runnerModel "github.com/easysoft/gitfox-community/app/model/runner"
+	"github.com/easysoft/gitfox-community/app/store/runner"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/errors"
 )
 
 type Service struct {

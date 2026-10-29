@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package artifact
 
 import (
@@ -5,10 +9,10 @@ import (
 	"strings"
 	"unicode"
 
-	enum "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	common "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/common"
+	enum "github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	common "github.com/easysoft/gitfox-community/pkg/utils/common"
 )
 
 // maxArtifactViewNameLen 制品库视图名称的最大长度（与 DB 字段保持一致的冗余保护）。

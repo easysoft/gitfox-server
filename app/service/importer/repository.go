@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package importer
 
 import (
@@ -10,28 +14,32 @@ import (
 	"strings"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/githook"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	simpleJob "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/jobs"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	principal "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/user"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/encrypt"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/jobs"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/sse"
-	notifyStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/notify"
-	providerStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/provider"
-	repoStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/repo"
-	webhookStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/webhook"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/auth/authn"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	pkgJobs "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/jobs"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	svnPkg "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/svn"
-	urlUtil "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/url"
+	"github.com/easysoft/gitfox-community/app/api/utils/req"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/githook"
+	artifactModel "github.com/easysoft/gitfox-community/app/model/artifact"
+	"github.com/easysoft/gitfox-community/app/model/auth"
+	simpleJob "github.com/easysoft/gitfox-community/app/model/jobs"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	principal "github.com/easysoft/gitfox-community/app/model/user"
+	artifactSvc "github.com/easysoft/gitfox-community/app/service/artifact"
+	"github.com/easysoft/gitfox-community/app/service/encrypt"
+	"github.com/easysoft/gitfox-community/app/service/jobs"
+	"github.com/easysoft/gitfox-community/app/service/sse"
+	notifyStore "github.com/easysoft/gitfox-community/app/store/notify"
+	providerStore "github.com/easysoft/gitfox-community/app/store/provider"
+	repoStore "github.com/easysoft/gitfox-community/app/store/repo"
+	webhookStore "github.com/easysoft/gitfox-community/app/store/webhook"
+	"github.com/easysoft/gitfox-community/pkg/auth/authn"
+	"github.com/easysoft/gitfox-community/pkg/config"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/git"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	pkgJobs "github.com/easysoft/gitfox-community/pkg/jobs"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	svnPkg "github.com/easysoft/gitfox-community/pkg/svn"
+	urlUtil "github.com/easysoft/gitfox-community/pkg/utils/url"
 )
 
 const (
@@ -57,6 +65,7 @@ type Repository struct {
 	sseStreamer   sse.Streamer
 	devopsConfig  config.DevopsConfig
 	webhookStore  webhookStore.Interface
+	artSvc        artifactSvc.Interface
 }
 
 var _ Interface = (*Repository)(nil)
@@ -75,6 +84,7 @@ func NewRepoImporterSvc(
 	sseStreamer sse.Streamer,
 	devopsConfig config.DevopsConfig,
 	webhookStore webhookStore.Interface,
+	artSvc artifactSvc.Interface,
 ) *Repository {
 	return &Repository{
 		defaultBranch: defaultBranch,
@@ -89,6 +99,7 @@ func NewRepoImporterSvc(
 		sseStreamer:   sseStreamer,
 		devopsConfig:  devopsConfig,
 		webhookStore:  webhookStore,
+		artSvc:        artSvc,
 	}
 }
 
@@ -104,7 +115,7 @@ func (r *Repository) Create(ctx context.Context, session *auth.Session, req *rep
 		DefaultBranch: req.DefaultBranch,
 		Status:        req.Status,
 		ACL:           req.ACL,
-		Mirror:        req.Mirror,
+		Mirror:        database.BoolToUint8(req.Mirror),
 		ProviderID:    req.ProviderID,
 		Connector:     string(req.Connector),
 	}
@@ -125,7 +136,13 @@ func (r *Repository) LoadRepositoryFromProvider(
 ) (RepositoryInfo, repoModel.Provider, error) {
 
 	if provider.Type == constant.RepoProviderTypeSVN {
-		cloneURL := fmt.Sprintf("%s/%s", provider.Host, provider.Slug)
+		cloneURL, err := buildSVNCloneURL(provider.Host, provider.Slug)
+		if err != nil {
+			return RepositoryInfo{}, provider, errors.WithI18nKey(
+				errors.BadRequest.Wrap(err, "invalid svn repository url"),
+				i18n.RepoImportSvnNotFoundOrUnreachable,
+			)
+		}
 
 		// 保证远端代码库可用
 		if _, err := r.svn.InfoRevision(ctx, cloneURL, provider.Username, provider.Password); err != nil {
@@ -179,6 +196,14 @@ func (r *Repository) LoadRepositoryFromProvider(
 		DefaultBranch: scmRepo.Branch,
 		IsPublic:      !scmRepo.Private,
 	}, provider, nil
+}
+
+// buildSVNCloneURL joins the provider host and repository slug into a canonical
+// SVN URL. It delegates to urlUtil.JoinSVNURL so import/migration and the repo
+// detail page share the same normalization, including legacy provider data where
+// the host part lacks the "//" authority separator.
+func buildSVNCloneURL(host, slug string) (string, error) {
+	return urlUtil.JoinSVNURL(host, slug)
 }
 
 func (r *Repository) Run(ctx context.Context, provider repoModel.Provider, repo *repoModel.Repo, cloneURL string, mirror bool, noticeLang string) error {
@@ -336,6 +361,9 @@ func (r *Repository) Handle(ctx context.Context, data string, reportFn pkgJobs.P
 		if err = r.createDefaultWebhook(ctx, repo, log); err != nil {
 			return "", fmt.Errorf("completed repository import, but failed to create webhook: %w", err)
 		}
+		if err = r.createDefaultArtifactLib(ctx, repo, input.NoticeLang, log); err != nil {
+			return "", fmt.Errorf("completed repository import, but failed to create default artifact lib: %w", err)
+		}
 	}
 
 	return "", nil
@@ -359,16 +387,51 @@ func (r *Repository) createDefaultWebhook(ctx context.Context, repo *repoModel.R
 		DisplayName: displayName,
 		URL:         fmt.Sprintf("%s/gitfox/webhook?repoID=%d", r.devopsConfig.URL, repo.ID),
 		Secret:      repo.GitUID,
-		IsSSL:       false,
-		Internal:    false,
+		IsSSL:       0,
+		Internal:    0,
 		AuthMethod:  constant.DefaultAuthMethod,
 		AuthHeader:  constant.DefaultAuthHeader,
-		Enabled:     true,
+		Enabled:     1,
 		CreatedBy:   repo.CreatedBy,
 		EditedBy:    repo.CreatedBy,
 	}
 	if _, err = r.webhookStore.Create(ctx, wh); err != nil {
 		log.Errorf("failed to create webhook: %v", err)
+		return err
+	}
+	return nil
+}
+
+// createDefaultArtifactLib 创建默认制品库（空库），与普通建仓时自动创建的默认库保持一致：
+// 名称同样走 DefaultArtifactLibViewName 按语言取本地化名称（noticeLang 取自发起导入的
+// 请求语言，随 job input 传入），否则中文环境下导入的仓库会出现 "Default" 与
+// "默认制品库" 两种展示名。
+// CreateLib 非幂等，同 scope 下已存在同名库时返回 ArtifactLibNameDuplicate，视为已创建跳过。
+func (r *Repository) createDefaultArtifactLib(ctx context.Context, repo *repoModel.Repo, noticeLang string, log *logger.SugaredMateLogger) error {
+	// 后台任务 ctx 无鉴权会话，CreateLib 内部会从 ctx 读取 session 写入 CreatedBy/EditedBy，
+	// 这里以应用管理员身份注入，与 firstSyncGitRepo 中 accountInfo 的口径一致。
+	ctx = req.SetAuthSession(ctx, &auth.Session{
+		User: &principal.User{
+			Account: authn.HeaderAppAdmin,
+			Email:   authn.HeaderAdminEmail,
+		},
+	})
+
+	_, err := r.artSvc.CreateLib(ctx, &artifactModel.CreateArtifactLibReq{
+		SpaceRepoReq: artifactModel.SpaceRepoReq{
+			SpaceID: int64(repo.SpaceID),
+			RepoID:  int64(repo.ID),
+		},
+		Name:   artifactModel.DefaultArtifactLibViewName(noticeLang),
+		Code:   artifactModel.DefaultArtifactLibCode,
+		Format: string(artifactModel.ArtifactFileFormat),
+	})
+	if err != nil {
+		if errors.GetI18nKey(err) == i18n.ArtifactLibNameDuplicate {
+			log.Infof("default artifact lib already exists, skipping creation")
+			return nil
+		}
+		log.Errorf("failed to create default artifact lib: %v", err)
 		return err
 	}
 	return nil

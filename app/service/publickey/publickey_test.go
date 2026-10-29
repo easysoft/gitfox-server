@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package publickey
 
 import (
@@ -10,14 +14,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/utils/req"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	publickeyModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/publickey"
-	principal "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/user"
-	storePublicKey "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/publickey"
-	publickeyStoreMock "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/publickey/mock"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/api/utils/req"
+	"github.com/easysoft/gitfox-community/app/model/auth"
+	publickeyModel "github.com/easysoft/gitfox-community/app/model/publickey"
+	principal "github.com/easysoft/gitfox-community/app/model/user"
+	storePublicKey "github.com/easysoft/gitfox-community/app/store/publickey"
+	publickeyStoreMock "github.com/easysoft/gitfox-community/app/store/publickey/mock"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 type fakeUserStore struct {

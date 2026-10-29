@@ -1,14 +1,18 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package repo
 
 import (
 	"regexp"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/jobs"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/model/jobs"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 type ImportInput struct {
@@ -61,6 +65,7 @@ type Progress struct {
 	Result       string          `json:"result,omitempty"`
 	Failure      string          `json:"failure,omitempty"`
 	LastExecuted *datetime.Local `json:"lastExecuted,omitempty"`
+	NextExecuted *datetime.Local `json:"nextExecuted,omitempty"`
 }
 
 type GitConnectInfo struct {

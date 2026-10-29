@@ -1,19 +1,23 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package tag
 
 import (
 	"context"
 	"time"
 
-	authModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	commitModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/commit"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	tagModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/tag"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/utils"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/util"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/url"
+	authModel "github.com/easysoft/gitfox-community/app/model/auth"
+	commitModel "github.com/easysoft/gitfox-community/app/model/commit"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	tagModel "github.com/easysoft/gitfox-community/app/model/tag"
+	"github.com/easysoft/gitfox-community/app/service/utils"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/git"
+	"github.com/easysoft/gitfox-community/pkg/git/util"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/utils/url"
 )
 
 type Service struct {

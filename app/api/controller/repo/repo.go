@@ -1,24 +1,28 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package repo
 
 import (
 	"fmt"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/utils/req"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/utils/resp"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	artifactModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/artifact"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	artifactSvc "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/artifact"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/importer"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/pullrequest"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/repo"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	gitPkg "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
-	gitAPI "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/api"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	urlPkg "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/url"
+	"github.com/easysoft/gitfox-community/app/api/utils/req"
+	"github.com/easysoft/gitfox-community/app/api/utils/resp"
+	"github.com/easysoft/gitfox-community/app/constant"
+	artifactModel "github.com/easysoft/gitfox-community/app/model/artifact"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	artifactSvc "github.com/easysoft/gitfox-community/app/service/artifact"
+	"github.com/easysoft/gitfox-community/app/service/importer"
+	"github.com/easysoft/gitfox-community/app/service/pullrequest"
+	"github.com/easysoft/gitfox-community/app/service/repo"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	gitPkg "github.com/easysoft/gitfox-community/pkg/git"
+	gitAPI "github.com/easysoft/gitfox-community/pkg/git/api"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	urlPkg "github.com/easysoft/gitfox-community/pkg/utils/url"
 	"github.com/gin-gonic/gin"
 )
 
@@ -95,13 +99,9 @@ func (ctl *Controller) Create(c *gin.Context) {
 
 	// 创建仓库时自动创建默认 generic 制品库
 	if ctl.artSvc != nil {
-		viewName := i18n.TGin(c, i18n.ArtifactDefaultViewName)
-		if viewName == "" {
-			viewName = artifactModel.DefaultArtifactLibName
-		}
 		_, _ = ctl.artSvc.CreateLib(c.Request.Context(), &artifactModel.CreateArtifactLibReq{
 			SpaceRepoReq: artifactModel.SpaceRepoReq{SpaceID: int64(reqData.SpaceID), RepoID: int64(data.ID)},
-			Name:         viewName,
+			Name:         artifactModel.DefaultArtifactLibViewName(i18n.GetLocaleFromGin(c)),
 			Code:         artifactModel.DefaultArtifactLibCode,
 			Format:       string(artifactModel.ArtifactFileFormat),
 		})

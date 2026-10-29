@@ -1,10 +1,14 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package svn
 
 import (
 	"context"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/svn/command"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/svn/command"
 )
 
 // SyncInitParams contains the parameters for initializing svnsync.
@@ -43,8 +47,9 @@ func (s *Service) SyncInit(ctx context.Context, params *SyncInitParams) error {
 		return err
 	}
 
-	cmd := command.New("init",
+	cmd := s.newCommand("init",
 		command.WithExecutable(command.SvnsyncExecutable),
+		command.WithFlag("--non-interactive"),
 		command.WithArg(s.FileURL(params.SvnUID)),
 		command.WithArg(params.SourceURL),
 		withSyncSourceAuth(params.SourceUsername, params.SourcePassword),
@@ -97,8 +102,9 @@ func (s *Service) Sync(ctx context.Context, params *SyncParams) error {
 		return err
 	}
 
-	cmd := command.New("sync",
+	cmd := s.newCommand("sync",
 		command.WithExecutable(command.SvnsyncExecutable),
+		command.WithFlag("--non-interactive"),
 		command.WithArg(s.FileURL(params.SvnUID)),
 		withSyncSourceAuth(params.SourceUsername, params.SourcePassword),
 	)
@@ -117,8 +123,9 @@ func (s *Service) SyncCopyRevProps(ctx context.Context, params *SyncParams) erro
 		return err
 	}
 
-	cmd := command.New("copy-revprops",
+	cmd := s.newCommand("copy-revprops",
 		command.WithExecutable(command.SvnsyncExecutable),
+		command.WithFlag("--non-interactive"),
 		command.WithArg(s.FileURL(params.SvnUID)),
 		withSyncSourceAuth(params.SourceUsername, params.SourcePassword),
 	)

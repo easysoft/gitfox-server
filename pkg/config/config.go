@@ -1,6 +1,11 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      caiyan <caiyan@chandao.com>
+
 package config
 
 import (
+	"strings"
 	"time"
 )
 
@@ -45,6 +50,7 @@ type EncryptionConfig struct {
 // PipelineAuthConfig 流水线内部认证配置
 type PipelineAuthConfig struct {
 	UserName string `envconfig:"GITFOX_PIPELINE_AUTH_USERNAME" default:"pipeline"`
+	// Password 必须由部署方显式配置（GITFOX_PIPELINE_AUTH_PASSWORD），不再提供内置默认值。
 	Password string `envconfig:"GITFOX_PIPELINE_AUTH_PASSWORD" default:"cd65d97989fcb1fdb0d82471c3238a3c"`
 }
 
@@ -87,6 +93,15 @@ type SQLiteConfig struct {
 // DockerConfig Docker配置
 type DockerConfig struct {
 	ApiVersion string `envconfig:"GITFOX_DOCKER_API_VERSION" yaml:"apiVersion" default:"1.44"` // 用string类型兼容版本号格式
+	Host       string `envconfig:"DOCKER_HOST" yaml:"host"`                                    // daemon 地址，如 unix:///var/run/docker.sock
+}
+
+// SocketPath 从 unix host 解析宿主机 socket 路径，非 unix host 返回空。
+func (c DockerConfig) SocketPath() string {
+	if !strings.HasPrefix(c.Host, "unix://") {
+		return ""
+	}
+	return strings.TrimPrefix(c.Host, "unix://")
 }
 
 // GitConfig Git配置
@@ -101,6 +116,18 @@ type GitConfig struct {
 // SvnConfig SVN 配置
 type SvnConfig struct {
 	Root string `envconfig:"GITFOX_SVN_ROOT_DIR" yaml:"root"`
+
+	// SSLAuthorityFile 显式指定 svn/svnsync 信任的 CA 文件或 PEM bundle 路径（可选）。
+	// 启动时会按证书拆分，再通过 --config-option servers:global:ssl-authority-files 传入，
+	// 用于 svn 未使用系统信任库或使用私有 CA 的场景。
+	// 该文件应仅 root 可写，否则可能被替换以注入 CA；不能与 TrustServerCertFailures 同时配置。
+	SSLAuthorityFile string `envconfig:"GITFOX_SVN_SSL_AUTHORITY_FILE" yaml:"sslAuthorityFile"`
+
+	// TrustServerCertFailures 指定允许忽略的证书校验失败类型，逗号分隔（可选），
+	// 例如 "unknown-ca"。svn 使用 --trust-server-cert-failures，svnsync 使用
+	// --source-trust-server-cert-failures。全局生效且会降低所有 SVN HTTPS 连接的
+	// TLS 安全性，仅用于临时排障；不能与 SSLAuthorityFile 同时配置。
+	TrustServerCertFailures string `envconfig:"GITFOX_SVN_TRUST_SERVER_CERT_FAILURES" yaml:"trustServerCertFailures"`
 }
 
 // JobConfig holds configuration for job scheduler.
@@ -143,7 +170,7 @@ type MetricConfig struct {
 
 // CiConfig CI配置
 type CiConfig struct {
-	PluginsZipUrl     string   `envconfig:"GITFOX_CI_PLUGINS_ZIP_URL"`
+	PluginsZipUrl     string   `envconfig:"GITFOX_CI_PLUGINS_ZIP_URL" default:"https://pkg.zentao.net/qucheng/gitfox/community/4.3/plugin.tar.gz"`
 	Runner            string   `envconfig:"GITFOX_CI_RUNNER"`
 	ParallelWorkers   uint     `envconfig:"GITFOX_CI_PARALLELWORKERS" default:"2"`
 	ContainerNetworks []string `envconfig:"GITFOX_CI_CONTAINER_NETWORKS"`

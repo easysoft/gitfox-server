@@ -1,33 +1,36 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package triggerer
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"runtime/debug"
 	"slices"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	executionModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/execution"
-	pipelineModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/pipeline"
-	stageModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/stage"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/pipeline/manager"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/pipeline/scheduler"
+	"github.com/easysoft/gitfox-community/app/constant"
+	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
+	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
+	"github.com/easysoft/gitfox-community/app/pipeline/manager"
+	"github.com/easysoft/gitfox-community/app/pipeline/scheduler"
 
-	pipelineSvc "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/pipeline"
-	executionStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/execution"
-	stageStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/stage"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/config"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database/dbtx"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	v1yaml "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/pipeline/spec"
-	normalize "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/pipeline/spec/parse/normalize"
-	specresolver "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/pipeline/spec/parse/resolver"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/runner/docker/engine2/inputs"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/runner/docker/engine2/script"
+	pipelineSvc "github.com/easysoft/gitfox-community/app/service/pipeline"
+	executionStore "github.com/easysoft/gitfox-community/app/store/execution"
+	stageStore "github.com/easysoft/gitfox-community/app/store/stage"
+	"github.com/easysoft/gitfox-community/pkg/config"
+	"github.com/easysoft/gitfox-community/pkg/database/dbtx"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	v1yaml "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
+	"github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse"
+	normalize "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/normalize"
+	specresolver "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/resolver"
+	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
+	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/script"
 )
 
 var _ Triggerer = (*triggerer)(nil)
@@ -70,10 +73,10 @@ type triggerer struct {
 	stageStore      stageStore.Interface
 	scheduler       scheduler.Scheduler
 	tx              dbtx.TxRunner
-	config          config.ServerConfig
+	config          *config.Config
 }
 
-func New(pipelineService pipelineSvc.Interface, executionStore executionStore.Interface, stageStore stageStore.Interface, scheduler scheduler.Scheduler, tx dbtx.TxRunner, cfg config.ServerConfig) Triggerer {
+func New(pipelineService pipelineSvc.Interface, executionStore executionStore.Interface, stageStore stageStore.Interface, scheduler scheduler.Scheduler, tx dbtx.TxRunner, cfg *config.Config) Triggerer {
 	return &triggerer{
 		pipelineService: pipelineService,
 		executionStore:  executionStore,
@@ -116,9 +119,12 @@ func (t *triggerer) Trigger(
 	if base.Params == nil {
 		base.Params = make(map[string]string)
 	}
-	base.Params["PLUGIN_GITFOX_SERVER_HOST"] = t.config.ServerHost
-	base.Params["PLUGIN_GITFOX_SERVER_PORT"] = fmt.Sprintf("%d", t.config.Port)
-	base.Params["PLUGIN_GITFOX_SERVER_PROTO"] = t.config.Proto
+	base.Params["PLUGIN_GITFOX_SERVER_HOST"] = t.config.Server.ServerHost
+	base.Params["PLUGIN_GITFOX_SERVER_PORT"] = fmt.Sprintf("%d", t.config.Server.Port)
+	base.Params["PLUGIN_GITFOX_SERVER_PROTO"] = t.config.Server.Proto
+	// 注入插件调用 gitfox API 所需的环境变量（与 scan pipeline 注入保持一致）
+	base.Params["PLUGIN_TOKEN"] = t.config.PipelineAuth.Password
+	base.Params["GITFOX_API_ENDPOINT"] = t.config.URL.Base + "/api/v2"
 
 	tigger := string(base.Action)
 	if tigger == "" {
@@ -209,7 +215,7 @@ func parseV1Stages(
 			return nil, err
 		}
 		// Convert pipelineModel.Yaml to v1yaml.Config via JSON
-		return ConvertToV1Config(yamlConfig)
+		return parse.ToConfig(yamlConfig)
 	}
 
 	if err := specresolver.Resolve(config, lookupFunc); err != nil {
@@ -364,24 +370,6 @@ func validateV1Step(step *v1yaml.Step) error {
 		}
 	}
 	return nil
-}
-
-// convertToV1Config converts pipelineModel.Yaml to v1yaml.Config via JSON serialization.
-func ConvertToV1Config(src *pipelineModel.Yaml) (*v1yaml.Config, error) {
-	if src == nil {
-		return nil, fmt.Errorf("source yaml config is nil")
-	}
-	// Marshal pipelineModel.Yaml to JSON
-	data, err := json.Marshal(src)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal yaml config: %w", err)
-	}
-	// Unmarshal JSON to v1yaml.Config
-	dst := &v1yaml.Config{}
-	if err := json.Unmarshal(data, dst); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal to v1yaml.Config: %w", err)
-	}
-	return dst, nil
 }
 
 // createExecutionWithStages writes an execution along with its stages in a single transaction.

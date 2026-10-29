@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package command
 
 import "io"
@@ -41,6 +45,17 @@ func WithEnv(keyValPairs ...string) CmdOptionFunc {
 			k, v := keyValPairs[i], keyValPairs[i+1]
 			c.Envs[k] = v
 		}
+	}
+}
+
+// WithTLS sets the TLS trust settings injected into svn/svnsync commands.
+// authorityFiles is a semicolon-separated list of single-certificate CA files;
+// trustServerCertFailures is a comma-separated list of certificate failure types
+// to ignore. Only svn and svnsync consume these settings; svnadmin ignores them.
+func WithTLS(authorityFiles, trustServerCertFailures string) CmdOptionFunc {
+	return func(c *Command) {
+		c.SSLAuthorityFiles = authorityFiles
+		c.TrustServerCertFailures = trustServerCertFailures
 	}
 }
 

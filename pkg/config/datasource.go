@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      caiyan <caiyan@chandao.com>
+
 package config
 
 import (
@@ -63,7 +67,20 @@ func (dmDatasourceComposer) Compose(db DatabaseConfig) string {
 	return dsn
 }
 
+type gaussdbDatasourceComposer struct{}
+
+// Compose 拼接 GaussDB（openGauss 兼容 PostgreSQL 协议）DSN，使用 key=value 形式。
+func (gaussdbDatasourceComposer) Compose(db DatabaseConfig) string {
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		db.Host,
+		db.Port,
+		db.User,
+		db.Password,
+		db.Name)
+}
+
 func init() {
 	registerDatasourceComposer("mysql", mysqlDatasourceComposer{})
 	registerDatasourceComposer("dm", dmDatasourceComposer{})
+	registerDatasourceComposer("gaussdb", gaussdbDatasourceComposer{})
 }

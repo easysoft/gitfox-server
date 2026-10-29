@@ -1,19 +1,23 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      caiyan <caiyan@chandao.com>
+
 package space
 
 import (
 	"context"
 	"fmt"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	spaceModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/space"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/sse"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/repo"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/space"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/model/auth"
+	spaceModel "github.com/easysoft/gitfox-community/app/model/space"
+	"github.com/easysoft/gitfox-community/app/service/sse"
+	"github.com/easysoft/gitfox-community/app/store/repo"
+	"github.com/easysoft/gitfox-community/app/store/space"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/auth/authz"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/auth/authz"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/errors"
 )
 
 type Service struct {

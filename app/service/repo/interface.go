@@ -1,14 +1,18 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package repo
 
 import (
 	"context"
 	"io"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	svnModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/svn"
-	gitAPI "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/api"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/model/auth"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	svnModel "github.com/easysoft/gitfox-community/app/model/svn"
+	gitAPI "github.com/easysoft/gitfox-community/pkg/git/api"
 )
 
 type Interface interface {

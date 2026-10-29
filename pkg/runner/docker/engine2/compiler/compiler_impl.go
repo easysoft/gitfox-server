@@ -10,13 +10,13 @@ import (
 	"fmt"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/pipeline"
-	harness "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/pipeline/spec"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/runner/docker/engine2/engine"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/runner/docker/engine2/inputs"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/runner/docker/internal/docker/image"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/runner/extend"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/service/pipeline"
+	harness "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
+	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/engine"
+	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
+	"github.com/easysoft/gitfox-community/pkg/runner/docker/internal/docker/image"
+	"github.com/easysoft/gitfox-community/pkg/runner/extend"
 
 	"github.com/dchest/uniuri"
 	"github.com/drone/drone-go/drone"
@@ -86,6 +86,15 @@ type CompilerImpl struct {
 	// Volumes provides a set of volumes that should be
 	// mounted to each pipeline container.
 	Volumes map[string]string
+
+	// DockerSocket lists image name patterns (substring match) whose step
+	// containers additionally get the host docker socket mounted.
+	// Empty means the socket is never mounted.
+	DockerSocket []string
+
+	// DockerSocketPath is the host path of the docker socket mounted into
+	// matching containers. Empty falls back to /var/run/docker.sock.
+	DockerSocketPath string
 
 	// ExtraHosts provides a set of hostname mappings that
 	// should be setup for each pipeline container.
@@ -560,6 +569,33 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 				Labels:    stageLabels,
 			}
 			spec.Volumes = append(spec.Volumes, src)
+		}
+	}
+
+	// mount the host docker socket into matching step containers only.
+	// This grants the container host-root-equivalent access to the docker
+	// daemon, so it is scoped to an explicit image list.
+	if len(c.DockerSocket) > 0 {
+		socketPath := c.DockerSocketPath
+		if socketPath == "" {
+			socketPath = "/var/run/docker.sock"
+		}
+		id := random()
+		spec.Volumes = append(spec.Volumes, &engine.Volume{
+			HostPath: &engine.VolumeHostPath{
+				ID:   id,
+				Name: "_docker_socket",
+				Path: socketPath,
+			},
+		})
+		for _, step := range spec.Steps {
+			if !image.MatchAny(step.Image, c.DockerSocket) {
+				continue
+			}
+			step.Volumes = append(step.Volumes, &engine.VolumeMount{
+				Name: "_docker_socket",
+				Path: socketPath,
+			})
 		}
 	}
 

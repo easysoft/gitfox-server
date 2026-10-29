@@ -1,17 +1,21 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package scan
 
 import (
 	"context"
 	"fmt"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	authModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	scanModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/scan"
-	repoStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/repo"
-	scanStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/scan"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/app/constant"
+	authModel "github.com/easysoft/gitfox-community/app/model/auth"
+	scanModel "github.com/easysoft/gitfox-community/app/model/scan"
+	repoStore "github.com/easysoft/gitfox-community/app/store/repo"
+	scanStore "github.com/easysoft/gitfox-community/app/store/scan"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
 	"github.com/gorhill/cronexpr"
 )
 
@@ -57,7 +61,7 @@ func (s *ScanTriggerService) Create(ctx context.Context, session *authModel.Sess
 		CronBranch: req.CronBranch,
 		Keywords:   req.Keywords,
 		Actions:    scanStore.JoinActions(deduplicateActions(req.Actions)),
-		Disabled:   req.Disabled,
+		Disabled:   database.BoolToUint8(req.Disabled),
 		CreatedBy:  session.User.Account,
 		EditedBy:   session.User.Account,
 	}
@@ -136,7 +140,7 @@ func (s *ScanTriggerService) Update(ctx context.Context, session *authModel.Sess
 		trigger.ScanType = string(req.ScanType)
 	}
 	if req.Disabled != nil {
-		trigger.Disabled = *req.Disabled
+		trigger.Disabled = database.BoolToUint8(*req.Disabled)
 	}
 
 	if err := s.triggerStore.Update(ctx, trigger); err != nil {

@@ -28,7 +28,7 @@ ENV GITFOX_WORKSPACE_ROOT_DIR=/data/gitfox-community
 ENV GITFOX_DB_HOST=127.0.0.1
 ENV GITFOX_DB_PORT=3306
 ENV GITFOX_DB_USER=root
-ENV GITFOX_DB_PASSWORD=123456
+ENV GITFOX_DB_PASSWORD=please_change
 ENV GITFOX_DB_NAME=zentao
 ENV GITFOX_DB_TIMEZONE=Asia/Shanghai
 # GaussDB 连接示例（openGauss 兼容 PostgreSQL 协议）
@@ -37,7 +37,7 @@ ENV GITFOX_DB_DRIVER=mysql
 
 #ENV GITFOX_SERVER_PROTO=http
 # 对外域名/ip
-#ENV GITFOX_SERVER_HOST=gitfox.oop.cc
+#ENV GITFOX_SERVER_HOST=example.com
 
 # 代码库地址是否暴露端口
 #ENV GITFOX_REPO_URL_EXPOSE_PORT=true
@@ -55,7 +55,7 @@ ENV GITFOX_SSH_PORT=3322
 ENV GITFOX_LOG_LEVEL=0
 ENV GITFOX_DOCKER_HOST=unix:///var/run/docker.sock
 
-ENV GITFOX_CI_PLUGINS_ZIP_URL=https://pkg.zentao.net/gitfox/2.0_beta1/plugins.tar.gz
+ENV GITFOX_CI_PLUGINS_ZIP_URL=/app/ciPlugins/plugins.tar.gz
 
 COPY bin/linux-${TARGETARCH}/gitfox /app/gitfox
 COPY configs/prod.env /app/prod.env

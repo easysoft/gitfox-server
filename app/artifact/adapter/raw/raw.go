@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package raw
 
 import (
@@ -6,15 +10,16 @@ import (
 	"io"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/artifact/adapter"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/artifact/adapter/request"
-	model "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/artifact"
-	artifactStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/artifact"
-	pkgErrors "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage"
+	"github.com/easysoft/gitfox-community/app/artifact/adapter"
+	"github.com/easysoft/gitfox-community/app/artifact/adapter/request"
+	model "github.com/easysoft/gitfox-community/app/model/artifact"
+	artifactStore "github.com/easysoft/gitfox-community/app/store/artifact"
+	pkgErrors "github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/storage"
 )
 
 const (
@@ -66,6 +71,9 @@ func (h *uploader) Serve(ctx context.Context, req *http.Request) (int64, error) 
 	if fileName == "" {
 		fileName = fh.Filename
 	}
+	h.descriptor.Overwrite, _ = strconv.ParseBool(req.FormValue("overwrite"))
+	h.descriptor.Rename, _ = strconv.ParseBool(req.FormValue("rename"))
+
 	h.descriptor.MainAsset.Path = fileName
 	h.descriptor.MainAsset.Size = size
 	h.descriptor.MainAsset.Hash = hash

@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      liyang <liyang@easycorp.ltd>
+
 package utils
 
 import (
@@ -10,10 +14,12 @@ import (
 func TestSubmitCodeReview(t *testing.T) {
 	var requestMethod string
 	var requestPath string
+	var requestQuery map[string][]string
 	var authorization string
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		requestMethod = request.Method
 		requestPath = request.URL.Path
+		requestQuery = request.URL.Query()
 		authorization = request.Header.Get("Authorization")
 		writer.WriteHeader(http.StatusNoContent)
 	}))
@@ -27,8 +33,14 @@ func TestSubmitCodeReview(t *testing.T) {
 	if requestMethod != http.MethodGet {
 		t.Fatalf("request method = %q, want %q", requestMethod, http.MethodGet)
 	}
-	if requestPath != "/ppm/submitCodeReview/123" {
-		t.Fatalf("request path = %q, want %q", requestPath, "/ppm/submitCodeReview/123")
+	if requestPath != "/ppm/submitCodeReview" {
+		t.Fatalf("request path = %q, want %q", requestPath, "/ppm/submitCodeReview")
+	}
+	if got := requestQuery["id"]; len(got) != 1 || got[0] != "123" {
+		t.Fatalf("query id = %v, want [123]", got)
+	}
+	if got := requestQuery["createdBy"]; len(got) != 1 || got[0] != "admin" {
+		t.Fatalf("query createdBy = %v, want [admin]", got)
 	}
 	if authorization != "devops-token" {
 		t.Fatalf("authorization = %q, want %q", authorization, "devops-token")

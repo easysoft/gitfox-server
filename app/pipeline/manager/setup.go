@@ -1,20 +1,34 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package manager
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	eventModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/event"
-	executionModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/execution"
-	stageModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/stage"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/execution"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/pipeline"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/sse"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/stage"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/step"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	eventModel "github.com/easysoft/gitfox-community/app/model/event"
+	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
+	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
+	"github.com/easysoft/gitfox-community/app/service/execution"
+	"github.com/easysoft/gitfox-community/app/service/pipeline"
+	"github.com/easysoft/gitfox-community/app/service/sse"
+	"github.com/easysoft/gitfox-community/app/service/stage"
+	"github.com/easysoft/gitfox-community/app/service/step"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
+
+// ErrStageCancelled is returned when a stage is refused to start because
+// the execution was cancelled while the stage was in-flight from the
+// queue. The canceler has already written a terminal state (killed/
+// skipped) for the stage, so the runner must not overwrite it — the API
+// layer maps this sentinel to an HTTP 409 so remote agents recognise the
+// stage is no longer theirs.
+var ErrStageCancelled = errors.New("stage refused: execution was cancelled")
 
 type setup struct {
 	SSEStreamer  sse.Streamer
@@ -35,6 +49,21 @@ func (s *setup) do(ctx context.Context, stage *stageModel.StageWithSteps) error 
 		"execution.id", execution.ID,
 		"stage.id", stage.ID,
 	)
+
+	// do not start the stage if the execution was cancelled while the
+	// stage was in-flight from the queue. The canceler has already
+	// marked the stage as killed/skipped, so refuse to start and return
+	// an error to interrupt the runner.
+	if execution.Status == constant.CIStatusKilled {
+		log.Warnw("manager: execution was cancelled, refuse to start stage",
+			"stage.status", string(stage.Status),
+		)
+		stage.Status = constant.CIStatusSkipped
+		if err := s.StageSvc.Update(noContext, &stage.Stage); err != nil {
+			log.Errorw("manager: cannot update stage to skipped", "error", err)
+		}
+		return fmt.Errorf("%w: execution %d", ErrStageCancelled, execution.ID)
+	}
 
 	if len(stage.ErrorLog) > 500 {
 		stage.ErrorLog = stage.ErrorLog[:500]

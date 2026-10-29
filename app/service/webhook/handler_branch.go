@@ -1,18 +1,22 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package webhook
 
 import (
 	"context"
 	"fmt"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	gitevents "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/events/git"
-	commitModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/commit"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	webhookModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/webhook"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/events"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
-	gitenum "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/enum"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/app/constant"
+	gitevents "github.com/easysoft/gitfox-community/app/events/git"
+	commitModel "github.com/easysoft/gitfox-community/app/model/commit"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	webhookModel "github.com/easysoft/gitfox-community/app/model/webhook"
+	"github.com/easysoft/gitfox-community/pkg/events"
+	"github.com/easysoft/gitfox-community/pkg/git"
+	gitenum "github.com/easysoft/gitfox-community/pkg/git/enum"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 )
 
 const MaxWebhookCommitFileStats = 20

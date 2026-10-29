@@ -1,20 +1,24 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package pullrequest
 
 import (
 	"context"
 	"testing"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	principal "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/user"
-	gitMock "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/branch/mock"
-	repoSvcMock "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/repo/mock"
-	prStoreMock "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/pullrequest/mock"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/sha"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/model/auth"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	principal "github.com/easysoft/gitfox-community/app/model/user"
+	gitMock "github.com/easysoft/gitfox-community/app/service/branch/mock"
+	repoSvcMock "github.com/easysoft/gitfox-community/app/service/repo/mock"
+	prStoreMock "github.com/easysoft/gitfox-community/app/store/pullrequest/mock"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/git"
+	"github.com/easysoft/gitfox-community/pkg/git/sha"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
 
 	"github.com/gotidy/ptr"
 	"github.com/stretchr/testify/assert"
@@ -263,6 +267,9 @@ type GetDiffStatsTestCase struct {
 	expectedErr    error
 }
 
+// testMergeBaseSHA is the merge base SHA returned by the git mock in GetDiffStats tests.
+const testMergeBaseSHA = "aabbccddee0011223344556677889900aabbccdd"
+
 // TestGetDiffStats GetDiffStats 单测入口
 func TestGetDiffStats(t *testing.T) {
 	t.Parallel()
@@ -290,6 +297,8 @@ func TestGetDiffStats(t *testing.T) {
 					Deletions:    50,
 				}
 				m.EXPECT().DiffStats(gomock.Any(), gomock.Any()).Return(mockOutput, nil)
+				m.EXPECT().MergeBase(gomock.Any(), gomock.Any()).Return(
+					git.MergeBaseOutput{MergeBaseSHA: sha.Must(testMergeBaseSHA)}, nil)
 			},
 			inputRepoID:     100,
 			inputPathToPath: "main...feature",
@@ -298,6 +307,7 @@ func TestGetDiffStats(t *testing.T) {
 			},
 			expectedResult: &repoModel.DiffStats{
 				MergeSHA:     ptr.String(""),
+				MergeBaseSHA: testMergeBaseSHA,
 				Commits:      5,
 				FilesChanged: 10,
 				Additions:    100,
@@ -327,6 +337,8 @@ func TestGetDiffStats(t *testing.T) {
 					Deletions:    10,
 				}
 				m.EXPECT().DiffStats(gomock.Any(), gomock.Any()).Return(mockOutput, nil)
+				m.EXPECT().MergeBase(gomock.Any(), gomock.Any()).Return(
+					git.MergeBaseOutput{MergeBaseSHA: sha.Must(testMergeBaseSHA)}, nil)
 			},
 			inputRepoID:     100,
 			inputPathToPath: "main..feature",
@@ -335,6 +347,7 @@ func TestGetDiffStats(t *testing.T) {
 			},
 			expectedResult: &repoModel.DiffStats{
 				MergeSHA:     ptr.String(""),
+				MergeBaseSHA: testMergeBaseSHA,
 				Commits:      3,
 				FilesChanged: 5,
 				Additions:    30,

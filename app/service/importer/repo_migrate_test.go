@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mengyutong <mengyutong@chandao.com>
+
 package importer
 
 import (
@@ -10,20 +14,20 @@ import (
 	"testing"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	jobModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/jobs"
-	providerModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/provider"
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/encrypt"
-	jobsSvc "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/jobs"
-	jobsStoreMock "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/jobs/mock"
-	providerStoreMock "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/provider/mock"
-	repoStoreMock "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/repo/mock"
-	pkgErrors "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/lock"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/pubsub"
-	svnPkg "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/svn"
+	"github.com/easysoft/gitfox-community/app/constant"
+	jobModel "github.com/easysoft/gitfox-community/app/model/jobs"
+	providerModel "github.com/easysoft/gitfox-community/app/model/provider"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
+	"github.com/easysoft/gitfox-community/app/service/encrypt"
+	jobsSvc "github.com/easysoft/gitfox-community/app/service/jobs"
+	jobsStoreMock "github.com/easysoft/gitfox-community/app/store/jobs/mock"
+	providerStoreMock "github.com/easysoft/gitfox-community/app/store/provider/mock"
+	repoStoreMock "github.com/easysoft/gitfox-community/app/store/repo/mock"
+	pkgErrors "github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/lock"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/pubsub"
+	svnPkg "github.com/easysoft/gitfox-community/pkg/svn"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"

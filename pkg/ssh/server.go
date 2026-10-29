@@ -23,20 +23,19 @@ import (
 	"strings"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/api/controller/git"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/auth"
-	principal "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/user"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/service/publickey"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/git/api"
-
-	"github.com/easysoft/gitfox/errors"
+	"github.com/easysoft/gitfox-community/app/api/controller/git"
+	"github.com/easysoft/gitfox-community/app/constant"
+	"github.com/easysoft/gitfox-community/app/model/auth"
+	principal "github.com/easysoft/gitfox-community/app/model/user"
+	"github.com/easysoft/gitfox-community/app/service/publickey"
+	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/git/api"
 
 	"github.com/gliderlabs/ssh"
 	gossh "golang.org/x/crypto/ssh"
 	"golang.org/x/exp/slices"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 )
 
 type Server struct {
@@ -84,7 +83,7 @@ func (s *Server) sanitize() error {
 	}
 
 	if s.GitCtrl == nil {
-		return errors.InvalidArgument("git controller is needed to run git service pack commands")
+		return errors.InvalidArgument.New("git controller is needed to run git service pack commands")
 	}
 
 	return nil

@@ -1,3 +1,7 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package container
 
 import (
@@ -12,18 +16,18 @@ import (
 	"strconv"
 	"time"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/artifact/adapter"
-	ctnAdapter "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/artifact/adapter/container"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	model "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/artifact"
-	artifactStore "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/store/artifact"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/auth/authz"
-	pkgErrors "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/errors"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/i18n"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/logger"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage"
-	storagedriver "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/storage/driver"
-	urlPkg "gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/url"
+	"github.com/easysoft/gitfox-community/app/artifact/adapter"
+	ctnAdapter "github.com/easysoft/gitfox-community/app/artifact/adapter/container"
+	"github.com/easysoft/gitfox-community/app/constant"
+	model "github.com/easysoft/gitfox-community/app/model/artifact"
+	artifactStore "github.com/easysoft/gitfox-community/app/store/artifact"
+	"github.com/easysoft/gitfox-community/pkg/auth/authz"
+	pkgErrors "github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	"github.com/easysoft/gitfox-community/pkg/logger"
+	"github.com/easysoft/gitfox-community/pkg/storage"
+	storagedriver "github.com/easysoft/gitfox-community/pkg/storage/driver"
+	urlPkg "github.com/easysoft/gitfox-community/pkg/utils/url"
 
 	"github.com/opencontainers/go-digest"
 )

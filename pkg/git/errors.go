@@ -15,9 +15,9 @@
 package git
 
 import (
-	"github.com/easysoft/gitfox/errors"
+	"github.com/easysoft/gitfox-community/pkg/errors"
 )
 
 var (
-	ErrNoParamsProvided = errors.InvalidArgument("params not provided")
+	ErrNoParamsProvided = errors.InvalidArgument.New("params not provided")
 )

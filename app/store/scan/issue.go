@@ -1,13 +1,17 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
 package scan
 
 import (
 	"context"
 	"strings"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/app/constant"
-	scanModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/scan"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/database"
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
+	"github.com/easysoft/gitfox-community/app/constant"
+	scanModel "github.com/easysoft/gitfox-community/app/model/scan"
+	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 	"gorm.io/gorm"
 )
 
@@ -76,7 +80,7 @@ func (s *ScanIssueStore) Get(ctx context.Context, id uint) (*scanModel.ScanIssue
 		Select("i.id, i.issueKey, i.ruleID, r.name AS ruleName, r.ruleKey AS ruleKey, "+
 			"r.priority AS rulePriority, r.type AS ruleType, "+
 			"i.title, i.content, i.path, i.startLine, i.endLine, i.oldCode, i.newCode, i.category, i.severity, "+
-			"i.ppmID, i.repoID, i.repoBranch, "+
+			"i.ppmID, i.pipelineExecutionID, i.repoID, i.repoBranch, "+
 			"i.status, i.scanMethod, i.resolution, i.payload, i.createdByTaskID, i.updatedByTaskID, "+
 			"i.createdBy, i.editedBy, pp.title AS ppmTitle, "+
 			"t.planID, p.name AS planName, i.createdDate, i.resolvedDate, i.closedDate, i.ignoredDate, "+
@@ -85,7 +89,7 @@ func (s *ScanIssueStore) Get(ctx context.Context, id uint) (*scanModel.ScanIssue
 		Joins("LEFT JOIN ops_scan_tasks AS t ON i.updatedByTaskID = t.id").
 		Joins("LEFT JOIN ops_scan_plans AS p ON t.planID = p.id").
 		Joins("LEFT JOIN ops_ppm AS pp ON i.ppmID = pp.id").
-		Where("i.id = ? AND i.deleted = ?", id, false).
+		Where("i.id = ? AND i.deleted = ?", id, 0).
 		First(&item).Error; err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}
@@ -99,7 +103,7 @@ func (s *ScanIssueStore) List(ctx context.Context, filter scanModel.ScanIssueReq
 		Select("i.id, i.issueKey, i.ruleID, r.name AS ruleName, r.ruleKey AS ruleKey, "+
 			"r.priority AS rulePriority, r.type AS ruleType, "+
 			"i.title, i.content, i.path, i.startLine, i.endLine, i.oldCode, i.newCode, i.category, i.severity, "+
-			"i.ppmID, i.repoID, i.repoBranch, "+
+			"i.ppmID, i.pipelineExecutionID, i.repoID, i.repoBranch, "+
 			"i.status, i.scanMethod, i.resolution, i.payload, i.createdByTaskID, i.updatedByTaskID, "+
 			"i.createdBy, i.editedBy, pp.title AS ppmTitle, "+
 			"t.planID, p.name AS planName, i.createdDate, i.resolvedDate, i.closedDate, i.ignoredDate, "+
@@ -108,7 +112,7 @@ func (s *ScanIssueStore) List(ctx context.Context, filter scanModel.ScanIssueReq
 		Joins("LEFT JOIN ops_scan_tasks AS t ON i.updatedByTaskID = t.id").
 		Joins("LEFT JOIN ops_scan_plans AS p ON t.planID = p.id").
 		Joins("LEFT JOIN ops_ppm AS pp ON i.ppmID = pp.id").
-		Where("i.deleted = ?", false)
+		Where("i.deleted = ?", 0)
 
 	if filter.ID != 0 {
 		stmt = stmt.Where("i.id = ?", filter.ID)
@@ -214,14 +218,14 @@ func (s *ScanIssueStore) ListByIDs(ctx context.Context, ids []int64) ([]*scanMod
 		Select("i.id, i.issueKey, i.ruleID, r.name AS ruleName, r.ruleKey AS ruleKey, "+
 			"r.priority AS rulePriority, r.type AS ruleType, "+
 			"i.title, i.content, i.path, i.startLine, i.endLine, i.oldCode, i.newCode, i.category, i.severity, "+
-			"i.ppmID, i.repoID, i.repoBranch, "+
+			"i.ppmID, i.pipelineExecutionID, i.repoID, i.repoBranch, "+
 			"i.status, i.scanMethod, i.resolution, i.payload, i.createdByTaskID, i.updatedByTaskID, "+
 			"i.createdBy, i.editedBy, pp.title AS ppmTitle, i.resolvedDate, i.closedDate, i.ignoredDate, "+
 			"t.triggerID, t.triggerType").
 		Joins("LEFT JOIN ops_scan_rules AS r ON i.ruleID = r.id").
 		Joins("LEFT JOIN ops_scan_tasks AS t ON i.updatedByTaskID = t.id").
 		Joins("LEFT JOIN ops_ppm AS pp ON i.ppmID = pp.id").
-		Where("i.id IN ? AND i.deleted = ?", ids, false).
+		Where("i.id IN ? AND i.deleted = ?", ids, 0).
 		Find(&issues).Error; err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}
@@ -246,7 +250,7 @@ func (s *ScanIssueStore) UpdateResolution(ctx context.Context, ids []int64, reso
 		updates["editedBy"] = operator
 	}
 	if err := s.db.WithContext(ctx).Model(&ScanIssue{}).
-		Where("id IN ? AND deleted = ?", ids, false).
+		Where("id IN ? AND deleted = ?", ids, 0).
 		Updates(updates).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
@@ -263,7 +267,7 @@ func (s *ScanIssueStore) UpdateStatus(ctx context.Context, ids []int64, status c
 		updates["editedBy"] = operator
 	}
 	if err := s.db.WithContext(ctx).Model(&ScanIssue{}).
-		Where("id IN ? AND deleted = ?", ids, false).
+		Where("id IN ? AND deleted = ?", ids, 0).
 		Updates(updates).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
@@ -293,7 +297,7 @@ func (s *ScanIssueStore) UpdateTimestamps(ctx context.Context, in scanModel.Scan
 		fields["editedBy"] = operator
 	}
 	if err := s.db.WithContext(ctx).Model(&ScanIssue{}).
-		Where("id IN ? AND deleted = ?", in.IDs, false).
+		Where("id IN ? AND deleted = ?", in.IDs, 0).
 		Updates(fields).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
@@ -314,7 +318,7 @@ func (s *ScanIssueStore) ResetExpiredIgnore(ctx context.Context, ids []int64, op
 		updates["editedBy"] = operator
 	}
 	if err := s.db.WithContext(ctx).Model(&ScanIssue{}).
-		Where("id IN ? AND deleted = ?", ids, false).
+		Where("id IN ? AND deleted = ?", ids, 0).
 		Updates(updates).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
@@ -327,7 +331,7 @@ func (s *ScanIssueStore) ListKeysByTask(
 	var issues []*ScanIssue
 	if err := s.db.WithContext(ctx).
 		Select("id, issueKey, createdByTaskID, updatedByTaskID, status, ignoredDate").
-		Where("repoID = ? AND repoBranch = ? AND scanMethod = ? AND deleted = ?", repoID, branch, method, false).
+		Where("repoID = ? AND repoBranch = ? AND scanMethod = ? AND deleted = ?", repoID, branch, method, 0).
 		Find(&issues).Error; err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}
@@ -391,7 +395,7 @@ func (s *ScanIssueStore) DisappearedByTask(ctx context.Context, taskID uint, iss
 		updates["editedBy"] = operator
 	}
 	if err := s.db.WithContext(ctx).Model(&ScanIssue{}).
-		Where("id IN ? AND deleted = ?", issueIDs, false).
+		Where("id IN ? AND deleted = ?", issueIDs, 0).
 		Updates(updates).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
@@ -408,7 +412,7 @@ func (s *ScanIssueStore) CreateIssueBindByTaskID(ctx context.Context, taskID uin
 	var issues []*ScanIssue
 	if err := s.db.WithContext(ctx).
 		Select("id").
-		Where("issueKey IN ? AND deleted = ?", issueKeys, false).
+		Where("issueKey IN ? AND deleted = ?", issueKeys, 0).
 		Find(&issues).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
@@ -438,7 +442,7 @@ func (s *ScanIssueStore) ListByTaskID(ctx context.Context, taskID uint, filter s
 		Select("i.id, i.issueKey, i.ruleID, r.name AS ruleName, r.ruleKey AS ruleKey, "+
 			"r.priority AS rulePriority, r.type AS ruleType, "+
 			"i.title, i.content, i.path,  i.startLine, i.endLine, i.oldCode, i.newCode, i.category, i.severity, "+
-			"i.ppmID, i.repoID, i.repoBranch, "+
+			"i.ppmID, i.pipelineExecutionID, i.repoID, i.repoBranch, "+
 			"i.status, i.scanMethod, i.resolution, i.payload, i.createdByTaskID, i.updatedByTaskID, "+
 			"i.createdBy, i.editedBy, pp.title AS ppmTitle, "+
 			"t.planID, p.name AS planName, i.createdDate, i.resolvedDate, i.closedDate, i.ignoredDate, "+
@@ -448,7 +452,7 @@ func (s *ScanIssueStore) ListByTaskID(ctx context.Context, taskID uint, filter s
 		Joins("LEFT JOIN ops_scan_tasks AS t ON i.updatedByTaskID = t.id").
 		Joins("LEFT JOIN ops_scan_plans AS p ON t.planID = p.id").
 		Joins("LEFT JOIN ops_ppm AS pp ON i.ppmID = pp.id").
-		Where("bind.taskID = ? AND i.deleted = ?", taskID, false)
+		Where("bind.taskID = ? AND i.deleted = ?", taskID, 0)
 
 	if filter.ID != 0 {
 		stmt = stmt.Where("i.id = ?", filter.ID)
@@ -532,7 +536,7 @@ func (s *ScanIssueStore) ListByTaskForResult(ctx context.Context, taskID uint, p
 		Select("r.id, r.ruleKey, r.priority, r.type").
 		Joins("INNER JOIN ops_scan_issues AS i ON bind.issueID = i.id").
 		Joins("INNER JOIN ops_scan_rules AS r ON i.ruleID = r.id").
-		Where("bind.taskID = ? AND i.deleted = ?", taskID, false).
+		Where("bind.taskID = ? AND i.deleted = ?", taskID, 0).
 		Find(&rules).Error; err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}

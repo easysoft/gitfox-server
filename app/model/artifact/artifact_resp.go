@@ -1,11 +1,13 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      lidaogang <lidaogang@chandao.com>
+
 package artifact
 
 import (
 	"fmt"
 
-	"gitfox.zcorp.cc/git/Pangu/gitfox-community/pkg/utils/datetime"
-
-	"github.com/guregu/null"
+	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
 // ==================== 查询过滤条件 ====================
@@ -93,7 +95,7 @@ type ArtifactBlobRes struct {
 	CheckSumString string          `gorm:"column:checksum" json:"-"`
 	MetadataString string          `gorm:"column:metadata" json:"-"`
 	Created        *datetime.Local `gorm:"column:createdDate" json:"createdDate"`
-	Deleted        null.Int        `gorm:"column:deleted" json:"deleted"`
+	Deleted        uint8           `gorm:"column:deleted" json:"deleted"`
 
 	CheckSum *CheckSumRes      `gorm:"-" json:"checksum"`
 	Metadata map[string]string `gorm:"-" json:"metadata"`
