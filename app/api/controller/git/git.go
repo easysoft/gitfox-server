@@ -312,7 +312,7 @@ func (ctl *GitController) getRepoByIdentifier(ctx *gin.Context, session *auth.Se
 	repo, err := ctl.repoSvc.GetRepoCheckAccess(ctx, session, space.ID, identifier, []constant.Permission{permission})
 	if err != nil {
 		// 权限类错误已带专用 i18n key，仅对没有专用 key 的错误兜底为“查询仓库失败”
-		if errors.GetI18nKey(err) == i18n.ErrorDefault {
+		if key := errors.GetI18nKey(err); key == "" || key == i18n.ErrorDefault {
 			err = errors.WithI18nKey(err, i18n.RepoQueryError)
 		}
 		return nil, err
