@@ -74,7 +74,7 @@ const (
 	ArtifactRecycleListSuccess              I18nKey = "artifact.recycle_list_success"                // 制品回收站查询成功.
 	ArtifactRefreshTreeSuccess              I18nKey = "artifact.refresh_tree_success"                // 制品树刷新成功.
 	ArtifactRelocateSuccess                 I18nKey = "artifact.relocate_success"                    // 操作成功.
-	ArtifactRenameContainerNotSupported     I18nKey = "artifact.rename_container_not_supported"      // container 格式的镜像包/版本不支持重命名；镜像名称是推拉地址的一部分,重命名会导致客户端地址失效.
+	ArtifactRenameContainerNotSupported     I18nKey = "artifact.rename_container_not_supported"      // container 格式的镜像包/版本不支持重命名；镜像名称是推拉地址的一部分,重命名会导致客...
 	ArtifactRenameEntityTypeInvalid         I18nKey = "artifact.rename_entity_type_invalid"          // 不支持的重命名实体类型.
 	ArtifactRenameNewNameRequired           I18nKey = "artifact.rename_new_name_required"            // 重命名操作必须指定 newName.
 	ArtifactRenameSiblingConflict           I18nKey = "artifact.rename_sibling_conflict"             // 同级已存在同名实体.
@@ -506,14 +506,14 @@ const (
 	CliUpgradeErrNotRegistered           I18nKey = "cli.upgrade_err_not_registered"            // 未检测到 GitFox 系统服务注册,请先执行 install 完成首次部署.
 	CliUpgradeErrParseVersion            I18nKey = "cli.upgrade_err_parse_version"             // 解析旧二进制版本信息失败: %v
 	CliUpgradeErrPrepareEnv              I18nKey = "cli.upgrade_err_prepare_env"               // 准备 prod.env 升级配置失败: %v
-	CliUpgradeErrRestoreEnv              I18nKey = "cli.upgrade_err_restore_env"               // 恢复 prod.env 失败: %v
+	CliUpgradeErrRestoreEnv              I18nKey = "cli.upgrade_err_restore_env"               // 替换二进制失败后恢复 prod.env 失败: %v
 	CliUpgradeErrSelfOverwrite           I18nKey = "cli.upgrade_err_self_overwrite"            // 当前进程二进制 (%s) 已是系统注册位置,无需升级.
 	CliUpgradeErrStart                   I18nKey = "cli.upgrade_err_start"                     // 启动新版服务失败: %v
 	CliUpgradeErrStop                    I18nKey = "cli.upgrade_err_stop"                      // 停止服务失败: %v
 	CliUpgradeErrStopTimeout             I18nKey = "cli.upgrade_err_stop_timeout"              // 等待服务停止超时(30 秒),端口仍有响应.
 	CliUpgradeInfoNew                    I18nKey = "cli.upgrade_info_new"                      // 本进程版本: %s (构建于 %s)
 	CliUpgradeInfoOld                    I18nKey = "cli.upgrade_info_old"                      // 已安装版本: %s (构建于 %s)
-	CliUpgradeInfoPluginsURLDefaulted    I18nKey = "cli.upgrade_info_plugins_url_defaulted"    // 已备份原配置到 %s,并注释 GITFOX_CI_PLUGINS_ZIP_URL 以使用内置默认值.
+	CliUpgradeInfoPluginsUrlDefaulted    I18nKey = "cli.upgrade_info_plugins_url_defaulted"    // 已备份原配置到 %s,GITFOX_CI_PLUGINS_ZIP_URL 已修改为使用内置默认...
 	CliUpgradeSameVersion                I18nKey = "cli.upgrade_same_version"                  // 新旧版本一致 (%s @ %s),无需升级.
 	CliUpgradeServiceNotRunning          I18nKey = "cli.upgrade_service_not_running"           // 服务未运行,跳过停止步骤.
 	CliUpgradeStepApply                  I18nKey = "cli.upgrade_step_apply"                    // 正在替换二进制文件...
@@ -674,6 +674,7 @@ const (
 	GitMergeCheckBaseBranchNotFound I18nKey = "git.merge_check_base_branch_not_found" // 合并检查基础分支不能为空.
 	GitMergeCheckHeadBranchNotFound I18nKey = "git.merge_check_head_branch_not_found" // 合并检查头分支不能为空.
 	GitMergeCheckNoCommits          I18nKey = "git.merge_check_no_commits"            // 合并检查头分支没有新提交.
+	GitMergeCheckNoCommonAncestor   I18nKey = "git.merge_check_no_common_ancestor"    // 分支 {{.base_ref}} 与 {{.head_ref}} 没有共同祖先,无法合并.
 	GitMergeCheckRefTypeNotFound    I18nKey = "git.merge_check_ref_type_not_found"    // 合并检查引用类型不能为空.
 	GitMergeConflict                I18nKey = "git.merge_conflict"                    // 合并冲突.
 	GitMergeSourceOutOfDate         I18nKey = "git.merge_source_out_of_date"          // 源分支已有新提交,当前记录的提交版本已过期,请刷新后重试.
@@ -687,7 +688,7 @@ const (
 	GitTagAlreadyExists             I18nKey = "git.tag_already_exists"                // 标签已存在.
 	GitTagNotFound                  I18nKey = "git.tag_not_found"                     // 标签不存在
 	GitTimeout                      I18nKey = "git.timeout"                           // Git 操作超时.
-	GitUnrelatedHistories           I18nKey = "git.unrelated_histories"               // 不相关的历史记录.
+	GitUnrelatedHistories           I18nKey = "git.unrelated_histories"               // 两个分支没有共同祖先,提交历史不相关.
 	GitUnsupportedOption            I18nKey = "git.unsupported_option"                // 当前 git 版本不支持参数 %s,请升级 Git 版本.
 
 	// Issue 相关常量

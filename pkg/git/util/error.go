@@ -259,7 +259,9 @@ func isMergeConflictError(errMsg string) bool {
 // isUnrelatedHistoriesError 检查是否是不相关历史错误
 func isUnrelatedHistoriesError(errMsg string) bool {
 	return strings.Contains(errMsg, "no merge base") ||
-		strings.Contains(errMsg, "unrelated histories")
+		strings.Contains(errMsg, "unrelated histories") ||
+		strings.Contains(errMsg, "unrelated commit histories") ||
+		strings.Contains(errMsg, "entirely different commit histories")
 }
 
 // isPathNotFoundError 检查是否是路径不存在错误
