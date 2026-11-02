@@ -101,12 +101,28 @@ else
 fi
 
 case "$refname","$newrev_type" in
-%s	*)
+	refs/for/*,commit)
+		# branch
+		if [ "$oldrev" = "$zero" -a "$denycreatebranch" = "true" ]; then
+			echo "*** Creating a branch is not allowed in this repository" >&2
+			exit 1
+		fi
+		branch_number=$(echo $refname | sed 's!refs/for/!!')
+		new_branch="refs/heads/ztflow-$branch_number"
+		mail=$(get_mail)
+		[ ! -z "$mail" ] && new_branch="refs/heads/ztflow-$mail-$branch_number"
+		git update-ref $new_branch $newrev
+		if [ $? -ne 0 ]; then
+				echo "Error: Failed to create branch $new_branch."
+				exit 1
+		fi
+		;;
+	*)
 		exit 0
-	;;
+		;;
 esac
 exit 0
-`, enum.ScriptType, pushRequestHookCase),
+`, enum.ScriptType),
 
 		// for post-receive
 		fmt.Sprintf(`#!/usr/bin/env %s
