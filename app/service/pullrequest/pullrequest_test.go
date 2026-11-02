@@ -6,6 +6,7 @@ package pullrequest
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/easysoft/gitfox-community/app/constant"
@@ -17,6 +18,7 @@ import (
 	prStoreMock "github.com/easysoft/gitfox-community/app/store/pullrequest/mock"
 	"github.com/easysoft/gitfox-community/pkg/errors"
 	"github.com/easysoft/gitfox-community/pkg/git"
+	"github.com/easysoft/gitfox-community/pkg/git/api"
 	"github.com/easysoft/gitfox-community/pkg/git/sha"
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 
@@ -774,6 +776,22 @@ func TestProcessPullRequestMergeErrorOtherMethodFallsBack(t *testing.T) {
 
 	assert.Error(t, err)
 	assert.Equal(t, i18n.GitExecError, errors.GetI18nKey(err))
+}
+
+func TestProcessPullRequestMergeErrorUnrelatedHistories(t *testing.T) {
+	t.Parallel()
+
+	err := processPullRequestMergeError(
+		context.Background(),
+		repoModel.MergeMethodMerge,
+		fmt.Errorf("failed to get merge base: %w", &api.UnrelatedHistoriesError{
+			BaseRef: "main",
+			HeadRef: "feature",
+		}),
+	)
+
+	assert.Error(t, err)
+	assert.Equal(t, i18n.GitUnrelatedHistories, errors.GetI18nKey(err))
 }
 
 func TestProcessPullRequestMergeErrorNil(t *testing.T) {

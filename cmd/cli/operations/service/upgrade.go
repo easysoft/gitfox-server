@@ -223,7 +223,7 @@ func runUpgrade(_ *kingpin.ParseContext) error {
 		return nil
 	}
 	if pluginsURLChange != nil {
-		fmt.Println(doneStyle.Render("✓ " + fmt.Sprintf(t(i18n.CliUpgradeInfoPluginsURLDefaulted), pluginsURLChange.backupPath)))
+		fmt.Println(doneStyle.Render("✓ " + fmt.Sprintf(t(i18n.CliUpgradeInfoPluginsUrlDefaulted), pluginsURLChange.backupPath)))
 	}
 
 	// 双保险：显式 chmod +x，防御异常 umask

@@ -14,6 +14,7 @@ import (
 	commitModel "github.com/easysoft/gitfox-community/app/model/commit"
 	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
 	"github.com/easysoft/gitfox-community/pkg/errors"
+	"github.com/easysoft/gitfox-community/pkg/git/api"
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	"github.com/gin-gonic/gin"
 )
@@ -119,6 +120,23 @@ func (ctl *Controller) MergeCheck(ctx *gin.Context) {
 
 	data, err := ctl.pullrequestSvc.MergeCheck(ctx.Request.Context(), session, repoID, pathToPath)
 	if err != nil {
+		// 分支没有共同祖先属于可预期的合并检查结果，返回具体原因而不是笼统的 git 执行失败。
+		uErr := api.AsUnrelatedHistoriesError(err)
+		if uErr != nil || errors.GetI18nKey(err) == i18n.GitUnrelatedHistories {
+			if data == nil {
+				data = &repoModel.MergeCheck{}
+			}
+			data.Mergeable = false
+			var refs map[string]any
+			if uErr != nil {
+				refs = uErr.Map()
+			} else {
+				refs = compareRefsFromPath(pathToPath)
+			}
+			data.Message = i18n.TfGin(ctx, string(i18n.GitMergeCheckNoCommonAncestor), refs)
+			resp.OK(ctx, i18n.PullrequestMergeCheckSuccess, data)
+			return
+		}
 		if errors.GetI18nKey(err) == i18n.GitMergeCheckNoCommits {
 			resp.OK(ctx, i18n.PullrequestMergeCheckSuccess, &repoModel.MergeCheck{
 				Mergeable: false,
@@ -510,6 +528,18 @@ func GetReqQueryParamIDAndPath(ctx *gin.Context) (uint, string, error) {
 	}
 
 	return repoID, param.Target + "..." + param.Source, nil
+}
+
+// compareRefsFromPath 从 "target...source" 形式的比较路径中提取分支名。
+func compareRefsFromPath(path string) map[string]any {
+	baseRef, headRef, ok := strings.Cut(path, "...")
+	if !ok {
+		baseRef, headRef, _ = strings.Cut(path, "..")
+	}
+	return map[string]any{
+		"base_ref": baseRef,
+		"head_ref": headRef,
+	}
 }
 
 // GetFileDiffFromQuery 从查询参数中获取文件差异信息
