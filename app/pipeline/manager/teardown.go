@@ -18,7 +18,6 @@ import (
 	"github.com/easysoft/gitfox-community/pkg/livelog"
 	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 
-	eventModel "github.com/easysoft/gitfox-community/app/model/event"
 	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
 	stageModel "github.com/easysoft/gitfox-community/app/model/stage"
 	"github.com/easysoft/gitfox-community/app/pipeline/scheduler"
@@ -29,6 +28,7 @@ import (
 	"github.com/easysoft/gitfox-community/app/service/stage"
 	"github.com/easysoft/gitfox-community/app/service/step"
 	"github.com/easysoft/gitfox-community/pkg/logger"
+	v1yaml "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 )
 
 // ErrStageTerminal is returned when a stage update is refused because the
@@ -38,6 +38,14 @@ import (
 // state.
 var ErrStageTerminal = errors.New("stage already in terminal state")
 
+// executionReporter is the pipeline event reported once an execution is
+// complete. *events.Reporter implements it; the interface exists so that
+// callers that own only part of the dependency graph (the Finalizer and the
+// ExecutionFinalizer) can be unit tested without a running event producer.
+type executionReporter interface {
+	Executed(ctx context.Context, payload *events.ExecutedPayload)
+}
+
 type teardown struct {
 	PipelineSvc  pipeline.Interface
 	ExecutionSvc execution.Interface
@@ -46,7 +54,7 @@ type teardown struct {
 	PullReqSvc   pullrequest.Interface
 	Scheduler    scheduler.Scheduler
 	SSEStreamer  sse.Streamer
-	Reporter     events.Reporter
+	Reporter     executionReporter
 	PRReporter   *pullreqevents.Reporter
 	Logz         livelog.LogStream
 }
@@ -89,13 +97,20 @@ func (t *teardown) do(ctx context.Context, stage *stageModel.StageWithSteps) err
 		return fmt.Errorf("%w: stage %d status %s", ErrStageTerminal, stage.ID, existing.Status)
 	}
 
-	pipeline, err := t.PipelineSvc.GetPipelineByID(ctx, int64(execution.PipelineID))
-	if err != nil {
-		log.Errorw("manager: cannot find pipeline", "error", err)
-		return err
-	}
+	return t.complete(ctx, stage, execution)
+}
 
-	log = log.With(
+// complete persists the stage and its steps, releases the step log streams,
+// skips or schedules the downstream stages according to their run policy, and
+// finally rolls the execution up.
+//
+// Callers must establish that the state transition is legitimate: do guards it
+// with ErrStageTerminal, while the Finalizer uses it for stages that are never
+// dispatched. It is safe to re-run — a repeated call only recomputes the
+// rollup.
+func (t *teardown) complete(ctx context.Context, stage *stageModel.StageWithSteps, execution *executionModel.Execution) error {
+	log := logger.GetLogger(ctx).With(
+		"stage.id", stage.ID,
 		"execution.id", execution.ID,
 		"stage.status", string(stage.Status),
 	)
@@ -121,7 +136,7 @@ func (t *teardown) do(ctx context.Context, stage *stageModel.StageWithSteps) err
 		stage.ErrorLog = stage.ErrorLog[:500]
 	}
 
-	err = t.StageSvc.Update(noContext, &stage.Stage)
+	err := t.StageSvc.Update(noContext, &stage.Stage)
 	if err != nil {
 		log.Errorw("manager: cannot update the stage",
 			"error", err,
@@ -145,7 +160,7 @@ func (t *teardown) do(ctx context.Context, stage *stageModel.StageWithSteps) err
 		return err
 	}
 
-	err = t.cancelDownstream(ctx, stages)
+	err = t.cancelDownstream(ctx, execution, stages)
 	if err != nil {
 		log.Errorw("manager: cannot cancel downstream builds",
 			"error", err,
@@ -170,56 +185,37 @@ func (t *teardown) do(ctx context.Context, stage *stageModel.StageWithSteps) err
 
 	log.Info("manager: execution is finished, teardown")
 
-	execution.Status = constant.CIStatusSuccess
-	execution.FinishedDate = datetime.NowLocalTime()
+	// 从各阶段状态推导 execution 的最终状态。
+	status := constant.CIStatusSuccess
 	for _, sibling := range stages {
 		if sibling.Status == constant.CIStatusKilled {
-			execution.Status = constant.CIStatusKilled
+			status = constant.CIStatusKilled
 			break
 		}
 		if sibling.Status == constant.CIStatusFailure {
-			execution.Status = constant.CIStatusFailure
+			status = constant.CIStatusFailure
 			break
 		}
 		if sibling.Status == constant.CIStatusError {
-			execution.Status = constant.CIStatusError
+			status = constant.CIStatusError
 			break
 		}
 	}
-	if execution.StartedDate == nil {
-		execution.StartedDate = execution.FinishedDate
-	}
 
-	err = t.ExecutionSvc.Update(noContext, execution)
-	if err != nil {
-		log.Warnw("manager: cannot update the execution",
-			"error", err,
-		)
+	// 收尾动作（补时间、落库、同步流水线、发完成事件）与全跳过路径共用。
+	finalizer := ExecutionFinalizer{
+		ExecutionUpdater: t.ExecutionSvc,
+		StageLister:      t.StageSvc,
+		PipelineSvc:      t.PipelineSvc,
+		SSEStreamer:      t.SSEStreamer,
+		Reporter:         t.Reporter,
+	}
+	if err := finalizer.Finalize(ctx, execution, status); err != nil {
+		log.Warnw("manager: cannot finalize the execution", "error", err)
 		return err
 	}
-
-	pipeline.LastExec = execution.FinishedDate
-	pipeline.LastResult = string(execution.Status)
-	err = t.PipelineSvc.UpdatePipeline(noContext, pipeline)
-	if err != nil {
-		log.Warnw("manager: cannot update the pipeline",
-			"error", err,
-		)
-	}
-
-	executionDetail := executionModel.ExecutionWithStages{
-		Execution: *execution,
-		Stages:    stages,
-	}
-	err = t.SSEStreamer.Publish(noContext, pipeline.SpaceID, eventModel.SSETypeExecutionCompleted, executionDetail)
-	if err != nil {
-		log.Warnw("manager: could not publish execution completed event",
-			"error", err,
-		)
-	}
-
-	// send pipeline execution status
-	t.reportExecutionCompleted(ctx, execution)
+	// 事务提交之后再发通知。
+	finalizer.Publish(ctx, execution)
 
 	return nil
 }
@@ -231,6 +227,7 @@ func (t *teardown) do(ctx context.Context, stage *stageModel.StageWithSteps) err
 //nolint:gocognit // refactor if needed
 func (t *teardown) cancelDownstream(
 	ctx context.Context,
+	execution *executionModel.Execution,
 	stages []*stageModel.StageWithSteps,
 ) error {
 	failed := false
@@ -241,18 +238,31 @@ func (t *teardown) cancelDownstream(
 		}
 	}
 
+	var (
+		stepsByStage map[string][]*v1yaml.Step
+		stepsErr     error
+		stepsParsed  bool
+	)
+	parseStepsOnce := func() (map[string][]*v1yaml.Step, error) {
+		if !stepsParsed {
+			stepsParsed = true
+			stepsByStage, stepsErr = t.stageStepsFromYAML(ctx, execution)
+		}
+		return stepsByStage, stepsErr
+	}
+
 	var errs error
 	for _, s := range stages {
 		if s.Status != constant.CIStatusWaitingOnDeps {
 			continue
 		}
 
-		var skip bool
-		if failed && s.RunPolicy != string(constant.RunPolicyOnFailure) {
-			skip = true
-		}
-		if !failed && s.RunPolicy != string(constant.RunPolicyOnSuccess) {
-			skip = true
+		// 根据阶段运行策略决定是否跳过。
+		skip := failed
+		if s.RunPolicy == string(constant.RunPolicyAlways) {
+			skip = false
+		} else if s.RunPolicy == string(constant.RunPolicyOnFailure) {
+			skip = !failed
 		}
 		if !skip {
 			continue
@@ -269,9 +279,12 @@ func (t *teardown) cancelDownstream(
 			"stage.depends_on", strings.Join(s.Depends, ","),
 		)
 
-		log.Debug("manager: skipping step")
+		// when 条件推导出的运行策略与流水线当前状态不匹配时，该阶段被跳过。
+		skipMessage := fmt.Sprintf(v1yaml.RunPolicySkippedStageTmpl, s.RunPolicy)
 
 		s.Status = constant.CIStatusSkipped
+		// 跳过：状态记为 skipped，跳过原因写入 errorLog 返回给前端。
+		s.ErrorLog = skipMessage
 		s.Started = datetime.NowLocalTime()
 		s.Finished = datetime.NowLocalTime()
 		err := t.StageSvc.Update(noContext, &s.Stage)
@@ -281,8 +294,27 @@ func (t *teardown) cancelDownstream(
 			)
 			errs = multierror.Append(errs, err)
 		}
+		// 阶段被跳过时，阶段内的任务也记为 skipped。
+		steps, err := parseStepsOnce()
+		if err != nil {
+			log.Errorw("manager: cannot parse skipped steps", "error", err)
+			continue
+		}
+		records := SkippedStepRecords(steps[s.Code], s.ID, execution.ID)
+		if err := CreateSkippedSteps(ctx, t.StepSvc, records); err != nil {
+			log.Errorw("manager: cannot create skipped steps", "error", err)
+		}
 	}
 	return errs
+}
+
+// stageStepsFromYAML 读取流水线内容并解析出各阶段的任务定义。
+func (t *teardown) stageStepsFromYAML(ctx context.Context, execution *executionModel.Execution) (map[string][]*v1yaml.Step, error) {
+	file, err := t.PipelineSvc.GetPipelineContent(ctx, int64(execution.PipelineID))
+	if err != nil {
+		return nil, err
+	}
+	return StageStepsFromYAML(file.Data, PipelineLookupFunc(ctx, t.PipelineSvc))
 }
 
 func isexecutionComplete(stages []*stageModel.StageWithSteps) bool {
@@ -361,12 +393,18 @@ func (t *teardown) scheduleDownstream(
 			errs = multierror.Append(errs, err)
 		}
 
-		err = t.Scheduler.Schedule()
-		if err != nil {
-			log.Errorw("manager: cannot schedule stage",
-				"error", err,
-			)
-			errs = multierror.Append(errs, err)
+		// A teardown built by the Finalizer carries no scheduler: it is
+		// constructed upstream of the scheduler in the wire graph. The
+		// downstream stages are already flipped to pending, so they are
+		// picked up by the next queue signal instead.
+		if t.Scheduler != nil {
+			err = t.Scheduler.Schedule()
+			if err != nil {
+				log.Errorw("manager: cannot schedule stage",
+					"error", err,
+				)
+				errs = multierror.Append(errs, err)
+			}
 		}
 	}
 	return errs
@@ -387,11 +425,4 @@ func (t *teardown) resync(ctx context.Context, stage *stageModel.Stage) error {
 	stage.Started = updated.Started
 	stage.Finished = updated.Finished
 	return nil
-}
-
-func (t *teardown) reportExecutionCompleted(ctx context.Context, execution *executionModel.Execution) {
-	t.Reporter.Executed(ctx, &events.ExecutedPayload{
-		PipelineID:   execution.PipelineID,
-		ExecutionNum: execution.ID,
-	})
 }

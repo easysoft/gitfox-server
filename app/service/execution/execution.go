@@ -8,6 +8,7 @@ import (
 	"context"
 
 	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
+	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
 )
 
 // Create creates a new execution
@@ -39,8 +40,12 @@ func (s *Service) GetWithStages(ctx context.Context, id uint) (*executionModel.E
 		return nil, err
 	}
 
+	// 对外展示时脱敏：全局参数中的密文值替换成 ******。
+	display := *exec
+	display.Params = inputs.RedactGlobalParams(exec.Params)
+
 	return &executionModel.ExecutionWithStages{
-		Execution: *exec,
+		Execution: display,
 		Stages:    stages,
 	}, nil
 }

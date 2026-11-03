@@ -6,6 +6,32 @@ package util
 
 import "testing"
 
+func TestIsUnrelatedHistoriesError(t *testing.T) {
+	tests := []struct {
+		name   string
+		errMsg string
+		want   bool
+	}{
+		{name: "no merge base", errMsg: "fatal: no merge base", want: true},
+		{name: "unrelated histories", errMsg: "fatal: refusing to merge unrelated histories", want: true},
+		{name: "unrelated commit histories", errMsg: "unrelated commit histories error", want: true},
+		{
+			name:   "entirely different commit histories",
+			errMsg: "failed to get merge base: main and other have entirely different commit histories.",
+			want:   true,
+		},
+		{name: "other git error", errMsg: "fatal: bad object", want: false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isUnrelatedHistoriesError(tt.errMsg); got != tt.want {
+				t.Errorf("isUnrelatedHistoriesError(%q) = %v, want %v", tt.errMsg, got, tt.want)
+			}
+		})
+	}
+}
+
 func TestCheckGitVersionAtLeast(t *testing.T) {
 	type args struct {
 		atLeast string

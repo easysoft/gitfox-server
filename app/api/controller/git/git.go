@@ -249,7 +249,7 @@ func (ctl *GitController) InfoRefs(ctx *gin.Context) {
 	// 解析参数
 	session, _, gitProtocol, err := ctl.prepareRequest(ctx, &params)
 	if err != nil {
-		resp.BadRequest(ctx, err)
+		resp.GitError(ctx, err, http.StatusBadRequest, false)
 		return
 	}
 
@@ -257,7 +257,7 @@ func (ctl *GitController) InfoRefs(ctx *gin.Context) {
 	service := ctx.Query("service")
 	if service == "" {
 		err = errors.WithI18nKey(errors.New("service parameter is required"), i18n.RequestInvalidRequestBody)
-		resp.BadRequest(ctx, err)
+		resp.GitError(ctx, err, http.StatusBadRequest, false)
 		return
 	}
 
@@ -275,10 +275,14 @@ func (ctl *GitController) InfoRefs(ctx *gin.Context) {
 
 	logger.Infof("Parsed repoRef: %s, repoIdentifier: %s, service: %s, gitService: %s", params.RepoRef, repoIdentifier, service, gitService)
 
+	// 设置响应头（必须在权限校验前设置，保证错误响应也是 git 协议格式）
+	resp.NoCache(ctx.Writer)
+	ctx.Writer.Header().Set("Content-Type", fmt.Sprintf("application/x-git-%s-advertisement", gitService))
+
 	// 获取仓库信息
 	repo, err := ctl.getRepoByIdentifier(ctx, session, params.SpaceCode, repoIdentifier, constant.PermissionRepoView)
 	if err != nil {
-		resp.BadRequest(ctx, err)
+		resp.GitError(ctx, err, http.StatusBadRequest, false)
 		return
 	}
 
@@ -286,13 +290,9 @@ func (ctl *GitController) InfoRefs(ctx *gin.Context) {
 	data, err := ctl.gitSvc.GetInfoRefs(ctx, repo.GitUID, gitService, gitProtocol)
 	if err != nil {
 		logger.Errorf("GetInfoRefs failed: %v", err)
-		resp.InternalError(ctx, err)
+		resp.GitError(ctx, err, http.StatusInternalServerError, false)
 		return
 	}
-
-	// 设置响应头
-	resp.NoCache(ctx.Writer)
-	ctx.Writer.Header().Set("Content-Type", fmt.Sprintf("application/x-git-%s-advertisement", gitService))
 
 	// 写入响应
 	if _, err := ctx.Writer.Write(data); err != nil {
@@ -311,7 +311,11 @@ func (ctl *GitController) getRepoByIdentifier(ctx *gin.Context, session *auth.Se
 	// 通过 identifier 查询仓库
 	repo, err := ctl.repoSvc.GetRepoCheckAccess(ctx, session, space.ID, identifier, []constant.Permission{permission})
 	if err != nil {
-		return nil, errors.WithI18nKey(err, i18n.RepoQueryError)
+		// 权限类错误已带专用 i18n key，仅对没有专用 key 的错误兜底为“查询仓库失败”
+		if key := errors.GetI18nKey(err); key == "" || key == i18n.ErrorDefault {
+			err = errors.WithI18nKey(err, i18n.RepoQueryError)
+		}
+		return nil, err
 	}
 
 	return repo, nil

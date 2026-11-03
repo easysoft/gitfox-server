@@ -10,31 +10,41 @@ import (
 	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 )
 
+// StageApproval stage 审批配置（落库为 JSON）
+type StageApproval struct {
+	Approvers []string `json:"approvers"`
+	Mode      string   `json:"mode,omitempty"`
+	Timeout   string   `json:"timeout,omitempty"`
+	Percent   int      `json:"percent,omitempty"`
+}
+
 // Stage 流水线执行阶段
 type Stage struct {
-	ID           uint              `json:"id"`
-	RepoID       uint              `json:"repoID"`
-	ExecutionID  uint              `json:"executionID"`
-	Parent       uint              `json:"parent"`
-	Name         string            `json:"name"`
-	Code         string            `json:"code"`
-	SN           int               `json:"sn"`
-	Type         string            `json:"type"`
-	Host         string            `json:"host"`
-	OS           string            `json:"os"`
-	Arch         string            `json:"arch"`
-	Labels       map[string]string `json:"labels"`
-	Depends      []string          `json:"depends"`
-	RunPolicy    string            `json:"runPolicy"`
-	CustomPolicy string            `json:"customPolicy"`
-	FailPolicy   string            `json:"failPolicy"`
-	Started      *datetime.Local   `json:"started"`
-	Finished     *datetime.Local   `json:"finished"`
-	Duration     uint              `json:"duration"`
-	Status       constant.CIStatus `json:"status"`
-	ErrorType    string            `json:"errorType"`
-	ErrorCode    int               `json:"errorCode"`
-	ErrorLog     string            `json:"errorLog"`
+	ID             uint                         `json:"id"`
+	RepoID         uint                         `json:"repoID"`
+	ExecutionID    uint                         `json:"executionID"`
+	Parent         uint                         `json:"parent"`
+	Name           string                       `json:"name"`
+	Code           string                       `json:"code"`
+	SN             int                          `json:"sn"`
+	Type           string                       `json:"type"`
+	Host           string                       `json:"host"`
+	OS             string                       `json:"os"`
+	Arch           string                       `json:"arch"`
+	Labels         map[string]string            `json:"labels"`
+	Depends        []string                     `json:"depends"`
+	RunPolicy      string                       `json:"runPolicy"`
+	CustomPolicy   string                       `json:"customPolicy"`
+	FailPolicy     string                       `json:"failPolicy"`
+	Started        *datetime.Local              `json:"started"`
+	Finished       *datetime.Local              `json:"finished"`
+	Duration       uint                         `json:"duration"`
+	Status         constant.CIStatus            `json:"status"`
+	ApprovalConfig *StageApproval               `json:"approvalConfig,omitempty"`
+	ApprovalStatus constant.StageApprovalStatus `json:"approvalStatus,omitempty"`
+	ErrorType      string                       `json:"errorType"`
+	ErrorCode      int                          `json:"errorCode"`
+	ErrorLog       string                       `json:"errorLog"`
 }
 
 // StageWithSteps

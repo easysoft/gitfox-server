@@ -24,6 +24,20 @@ func Script(commands []string) string {
 	extend.IncludeShell(buf)
 	fmt.Fprintln(buf)
 	for _, command := range commands {
+		// 多行脚本（例如 run 步骤的 script: | 块）如果沿用 echo + 的方式，
+		// 整段命令会在执行前一次性写进日志，命令和它的输出就会错行。
+		// 这类脚本改用 shell 自带的 xtrace（set -x），由 shell 在每条命令
+		// 执行前输出，保证日志顺序与执行顺序一致。
+		if isMultiline(command) {
+			buf.WriteString(traceMultilineScript)
+			buf.WriteString(command)
+			if !strings.HasSuffix(command, "\n") {
+				buf.WriteString("\n")
+			}
+			buf.WriteString(endTraceMultilineScript)
+			continue
+		}
+
 		escaped := fmt.Sprintf("%q", command)
 		escaped = strings.Replace(escaped, "$", `\$`, -1)
 		buf.WriteString(fmt.Sprintf(
@@ -33,6 +47,12 @@ func Script(commands []string) string {
 		))
 	}
 	return buf.String()
+}
+
+// isMultiline reports whether the command contains internal line breaks.
+// A trailing newline does not make a single-line command multi-line.
+func isMultiline(command string) bool {
+	return strings.Contains(strings.TrimRight(command, " \t\r\n"), "\n")
 }
 
 // optionScript is a helper script this is added to the build
@@ -58,6 +78,15 @@ const traceScript = `
 echo + %s
 %s
 `
+
+// traceMultilineScript and endTraceMultilineScript enable the shell's
+// xtrace for a multi-line script so each command is written to the log
+// right before it runs. The redirection on `set +x` hides the trace of
+// the disable command itself.
+const (
+	traceMultilineScript    = "set -x\n"
+	endTraceMultilineScript = "{ set +x; } 2>/dev/null\n"
+)
 
 const tmateScript = `
 remote_debug() {

@@ -1,7 +1,3 @@
-// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
-// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
-// @author      lidaogang <lidaogang@chandao.com>
-
 package i18n
 
 // 此文件由 i18n-keygen 工具自动生成，请勿手动修改
@@ -78,7 +74,7 @@ const (
 	ArtifactRecycleListSuccess              I18nKey = "artifact.recycle_list_success"                // 制品回收站查询成功.
 	ArtifactRefreshTreeSuccess              I18nKey = "artifact.refresh_tree_success"                // 制品树刷新成功.
 	ArtifactRelocateSuccess                 I18nKey = "artifact.relocate_success"                    // 操作成功.
-	ArtifactRenameContainerNotSupported     I18nKey = "artifact.rename_container_not_supported"      // container 格式的镜像包/版本不支持重命名；镜像名称是推拉地址的一部分,重命名会导致客户端地址失效.
+	ArtifactRenameContainerNotSupported     I18nKey = "artifact.rename_container_not_supported"      // container 格式的镜像包/版本不支持重命名；镜像名称是推拉地址的一部分,重命名会导致客...
 	ArtifactRenameEntityTypeInvalid         I18nKey = "artifact.rename_entity_type_invalid"          // 不支持的重命名实体类型.
 	ArtifactRenameNewNameRequired           I18nKey = "artifact.rename_new_name_required"            // 重命名操作必须指定 newName.
 	ArtifactRenameSiblingConflict           I18nKey = "artifact.rename_sibling_conflict"             // 同级已存在同名实体.
@@ -510,14 +506,14 @@ const (
 	CliUpgradeErrNotRegistered           I18nKey = "cli.upgrade_err_not_registered"            // 未检测到 GitFox 系统服务注册,请先执行 install 完成首次部署.
 	CliUpgradeErrParseVersion            I18nKey = "cli.upgrade_err_parse_version"             // 解析旧二进制版本信息失败: %v
 	CliUpgradeErrPrepareEnv              I18nKey = "cli.upgrade_err_prepare_env"               // 准备 prod.env 升级配置失败: %v
-	CliUpgradeErrRestoreEnv              I18nKey = "cli.upgrade_err_restore_env"               // 恢复 prod.env 失败: %v
+	CliUpgradeErrRestoreEnv              I18nKey = "cli.upgrade_err_restore_env"               // 替换二进制失败后恢复 prod.env 失败: %v
 	CliUpgradeErrSelfOverwrite           I18nKey = "cli.upgrade_err_self_overwrite"            // 当前进程二进制 (%s) 已是系统注册位置,无需升级.
 	CliUpgradeErrStart                   I18nKey = "cli.upgrade_err_start"                     // 启动新版服务失败: %v
 	CliUpgradeErrStop                    I18nKey = "cli.upgrade_err_stop"                      // 停止服务失败: %v
 	CliUpgradeErrStopTimeout             I18nKey = "cli.upgrade_err_stop_timeout"              // 等待服务停止超时(30 秒),端口仍有响应.
 	CliUpgradeInfoNew                    I18nKey = "cli.upgrade_info_new"                      // 本进程版本: %s (构建于 %s)
 	CliUpgradeInfoOld                    I18nKey = "cli.upgrade_info_old"                      // 已安装版本: %s (构建于 %s)
-	CliUpgradeInfoPluginsURLDefaulted    I18nKey = "cli.upgrade_info_plugins_url_defaulted"    // 已备份原配置到 %s,并注释 GITFOX_CI_PLUGINS_ZIP_URL 以使用内置默认值.
+	CliUpgradeInfoPluginsUrlDefaulted    I18nKey = "cli.upgrade_info_plugins_url_defaulted"    // 已备份原配置到 %s,GITFOX_CI_PLUGINS_ZIP_URL 已修改为使用内置默认...
 	CliUpgradeSameVersion                I18nKey = "cli.upgrade_same_version"                  // 新旧版本一致 (%s @ %s),无需升级.
 	CliUpgradeServiceNotRunning          I18nKey = "cli.upgrade_service_not_running"           // 服务未运行,跳过停止步骤.
 	CliUpgradeStepApply                  I18nKey = "cli.upgrade_step_apply"                    // 正在替换二进制文件...
@@ -548,12 +544,34 @@ const (
 	CliVersionWelcome                    I18nKey = "cli.version_welcome"                       // gitfox版本信息
 
 	// CodeReview 相关常量
-	CodeReviewBodyParamError      I18nKey = "codeReview.body_param_error"      // 请求体参数解析失败.
-	CodeReviewConfigSuccess       I18nKey = "codeReview.config_success"        // AI 评审配置查询成功.
-	CodeReviewPathParamError      I18nKey = "codeReview.path_param_error"      // 路径参数解析失败.
-	CodeReviewReportUploadError   I18nKey = "codeReview.report_upload_error"   // 代码评审报告上传失败.
-	CodeReviewReportUploadSuccess I18nKey = "codeReview.report_upload_success" // 代码评审报告上传成功.
-	CodeReviewRuleListSuccess     I18nKey = "codeReview.rule_list_success"     // AI代码评审规则列表查询成功.
+	CodeReviewAcceptCommitError             I18nKey = "codeReview.accept_commit_error"               // 提交源分支上的文件失败,请稍后重试.
+	CodeReviewAcceptEndLineOutOfBounds      I18nKey = "codeReview.accept_end_line_out_of_bounds"     // 建议的结束行超出文件范围.
+	CodeReviewAcceptInvalidLineRange        I18nKey = "codeReview.accept_invalid_line_range"         // 建议的行范围无效.
+	CodeReviewAcceptIssueQueryError         I18nKey = "codeReview.accept_issue_query_error"          // 查询审查问题失败.
+	CodeReviewAcceptIssuesNotFound          I18nKey = "codeReview.accept_issues_not_found"           // 未找到指定的审查问题.
+	CodeReviewAcceptMarkSolvedError         I18nKey = "codeReview.accept_mark_solved_error"          // 代码已应用,但标记审查问题为已解决失败.
+	CodeReviewAcceptOldCodeMismatch         I18nKey = "codeReview.accept_old_code_mismatch"          // 源文件中的建议行代码已变化,无法应用该建议.
+	CodeReviewAcceptPullRequestQueryError   I18nKey = "codeReview.accept_pull_request_query_error"   // 查询 Pull Request 失败.
+	CodeReviewAcceptReadBlobError           I18nKey = "codeReview.accept_read_blob_error"            // 读取文件内容失败.
+	CodeReviewAcceptReadContentError        I18nKey = "codeReview.accept_read_content_error"         // 读取文件内容失败.
+	CodeReviewAcceptReadFileError           I18nKey = "codeReview.accept_read_file_error"            // 读取源分支上的文件失败.
+	CodeReviewAcceptSkipFileAlreadyResolved I18nKey = "codeReview.accept_skip_file_already_resolved" // 该文件已有已解决的 AI 审查问题,本次建议未重复应用.
+	CodeReviewAcceptSkipNoOldCode           I18nKey = "codeReview.accept_skip_no_old_code"           // 该问题缺少原代码,无法定位替换位置.
+	CodeReviewAcceptSkipNotAiIssue          I18nKey = "codeReview.accept_skip_not_ai_issue"          // 该问题不是 AI 审查问题.
+	CodeReviewAcceptSkipNotInPullRequest    I18nKey = "codeReview.accept_skip_not_in_pull_request"   // 该问题不属于当前 Pull Request.
+	CodeReviewAcceptSkipNotWaiting          I18nKey = "codeReview.accept_skip_not_waiting"           // 该问题当前不在待采纳状态.
+	CodeReviewAcceptSolvedCheckError        I18nKey = "codeReview.accept_solved_check_error"         // 检查文件 %s 的已解决问题失败,请稍后重试.
+	CodeReviewAcceptSourceRepoQueryError    I18nKey = "codeReview.accept_source_repo_query_error"    // 查询源仓库失败.
+	CodeReviewAcceptStartLineOutOfBounds    I18nKey = "codeReview.accept_start_line_out_of_bounds"   // 建议的起始行超出文件范围.
+	CodeReviewAcceptWriteParamsError        I18nKey = "codeReview.accept_write_params_error"         // 准备源分支写入参数失败.
+	CodeReviewApplyError                    I18nKey = "codeReview.apply_error"                       // 应用 AI 代码评审建议失败.
+	CodeReviewApplySuccess                  I18nKey = "codeReview.apply_success"                     // 应用 AI 代码评审建议成功.
+	CodeReviewBodyParamError                I18nKey = "codeReview.body_param_error"                  // 请求体参数解析失败.
+	CodeReviewConfigSuccess                 I18nKey = "codeReview.config_success"                    // AI 评审配置查询成功.
+	CodeReviewPathParamError                I18nKey = "codeReview.path_param_error"                  // 路径参数解析失败.
+	CodeReviewReportUploadError             I18nKey = "codeReview.report_upload_error"               // 代码评审报告上传失败.
+	CodeReviewReportUploadSuccess           I18nKey = "codeReview.report_upload_success"             // 代码评审报告上传成功.
+	CodeReviewRuleListSuccess               I18nKey = "codeReview.rule_list_success"                 // AI代码评审规则列表查询成功.
 
 	// Commit 相关常量
 	CommitActionDecodeError    I18nKey = "commit.action_decode_error"    // 解码提交文件内容时失败.
@@ -657,6 +675,7 @@ const (
 	GitMergeCheckBaseBranchNotFound I18nKey = "git.merge_check_base_branch_not_found" // 合并检查基础分支不能为空.
 	GitMergeCheckHeadBranchNotFound I18nKey = "git.merge_check_head_branch_not_found" // 合并检查头分支不能为空.
 	GitMergeCheckNoCommits          I18nKey = "git.merge_check_no_commits"            // 合并检查头分支没有新提交.
+	GitMergeCheckNoCommonAncestor   I18nKey = "git.merge_check_no_common_ancestor"    // 分支 {{.base_ref}} 与 {{.head_ref}} 没有共同祖先,无法合并.
 	GitMergeCheckRefTypeNotFound    I18nKey = "git.merge_check_ref_type_not_found"    // 合并检查引用类型不能为空.
 	GitMergeConflict                I18nKey = "git.merge_conflict"                    // 合并冲突.
 	GitMergeSourceOutOfDate         I18nKey = "git.merge_source_out_of_date"          // 源分支已有新提交,当前记录的提交版本已过期,请刷新后重试.
@@ -670,7 +689,7 @@ const (
 	GitTagAlreadyExists             I18nKey = "git.tag_already_exists"                // 标签已存在.
 	GitTagNotFound                  I18nKey = "git.tag_not_found"                     // 标签不存在
 	GitTimeout                      I18nKey = "git.timeout"                           // Git 操作超时.
-	GitUnrelatedHistories           I18nKey = "git.unrelated_histories"               // 不相关的历史记录.
+	GitUnrelatedHistories           I18nKey = "git.unrelated_histories"               // 两个分支没有共同祖先,提交历史不相关.
 	GitUnsupportedOption            I18nKey = "git.unsupported_option"                // 当前 git 版本不支持参数 %s,请升级 Git 版本.
 
 	// Issue 相关常量

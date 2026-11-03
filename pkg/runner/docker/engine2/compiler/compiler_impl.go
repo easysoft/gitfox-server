@@ -8,10 +8,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/easysoft/gitfox-community/app/constant"
 	"github.com/easysoft/gitfox-community/app/service/pipeline"
+	"github.com/easysoft/gitfox-community/pkg/logger"
 	harness "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/engine"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
@@ -314,8 +316,11 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 	// collate the input params
 	inputs := map[string]interface{}{
 		// "repo":   inputs.Repo(args.Repo),
-		"build":  inputs.Build(args.Build),
-		"inputs": inputs.Inputs(pipeline.Inputs, args.Build.Params),
+		"build": inputs.Build(args.Build),
+		// parameters 与运行期表达式上下文保持一致（流水线 inputs 默认值 + 触发参数）
+		"parameters": inputs.Inputs(pipeline.Inputs, args.Build.Params),
+		"inputs":     inputs.Inputs(pipeline.Inputs, args.Build.Params),
+		"global":     argsGlobalParams(args),
 		"secrets": map[string]interface{}{
 			"get": func(name string) string {
 				s, _ := c.findSecret(
@@ -359,22 +364,9 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 				step_.Privileged = c.isPrivileged(step_)
 				step_.ID = fmt.Sprintf("%s_%d", step_.ID, args.Build.ID)
 
-				// if src.When != nil {
-				// 	// 处理when.eval条件
-				// 	if when := src.When.Eval; when != "" {
-				// 		onSuccess, onFailure, _ := evalif(when, inputs)
-				// 		switch {
-				// 		case onSuccess && onFailure:
-				// 			step_.RunPolicy = engine.RunAlways
-				// 		case onSuccess:
-				// 			step_.RunPolicy = engine.RunOnSuccess
-				// 		case onFailure:
-				// 			step_.RunPolicy = engine.RunOnFailure
-				// 		default:
-				// 			step_.RunPolicy = engine.RunNever
-				// 		}
-				// 	}
-				// }
+				// 根据 step 级 when 条件计算运行策略；条件无法求值时该步骤失败。
+				applyStepRunPolicy(ctx, step_, src.When, inputs)
+
 				spec.Steps = append(spec.Steps, step_)
 			}
 		}
@@ -387,7 +379,7 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 		step.ExtraHosts = append(step.ExtraHosts, c.ExtraHosts...)
 		step.WorkingDir = "/gitfox"
 		step.Labels = stageLabels
-		step.Pull = engine.PullAlways
+		step.Pull = engine.PullIfNotExists
 		step.Volumes = append(step.Volumes, mount)
 		setupScript(step, "clean_stage", "linux")
 		spec.Steps = append(spec.Steps, step)
@@ -566,6 +558,57 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 	return spec, nil
 }
 
+// applyStepRunPolicy 根据 step 的 when 条件设置容器运行策略。
+//
+// 表达式无法求值时不让整份配置编译失败：把该步骤置为不执行（RunNever），失败原因写入
+// WhenError 交给运行时——运行时会把这步标记为失败，同一 stage 的其他步骤照常调度。
+func applyStepRunPolicy(ctx context.Context, step *engine.Step, when *harness.When, inputs map[string]interface{}) {
+	if when == nil {
+		return
+	}
+
+	code := strings.TrimSpace(when.Eval)
+	if code == "" {
+		return
+	}
+
+	// 记录原始 when 条件，运行时据此输出执行/跳过日志
+	step.WhenCondition = code
+
+	// 直接填写运行策略值（always/onSuccess/onFailure）时无需做表达式求值。
+	if slices.Contains(constant.RunPolicyList, code) {
+		switch constant.RunPolicy(code) {
+		case constant.RunPolicyAlways:
+			step.RunPolicy = engine.RunAlways
+		case constant.RunPolicyOnFailure:
+			step.RunPolicy = engine.RunOnFailure
+		case constant.RunPolicyOnSuccess:
+			step.RunPolicy = engine.RunOnSuccess
+		}
+		return
+	}
+
+	onSuccess, onFailure, err := evalif(code, inputs)
+	if err != nil {
+		logger.GetLogger(ctx).Errorf("[pipeline]: cannot evaluate step when condition %q: %v", code, err)
+		step.RunPolicy = engine.RunNever
+		step.WhenError = fmt.Sprintf(harness.WhenEvalFailedStepTmpl, code, err)
+		return
+	}
+
+	switch {
+	case onSuccess && onFailure:
+		step.RunPolicy = engine.RunAlways
+	case onSuccess:
+		step.RunPolicy = engine.RunOnSuccess
+	case onFailure:
+		step.RunPolicy = engine.RunOnFailure
+	default:
+		// (false, false)：条件不成立，跳过该 step
+		step.RunPolicy = engine.RunNever
+	}
+}
+
 // isPrivileged checks whether the privileged flag should be set to true for the step or not.
 func (c *CompilerImpl) isPrivileged(step *engine.Step) bool {
 	if step.Privileged {
@@ -597,6 +640,15 @@ func (c *CompilerImpl) isPrivileged(step *engine.Step) bool {
 		}
 	}
 	return false
+}
+
+// argsGlobalParams 返回供全局命名空间使用的全局参数，
+// 未提供时返回空 map，避免表达式求值取到 nil。
+func argsGlobalParams(args Args) map[string]interface{} {
+	if args.Global == nil {
+		return map[string]interface{}{}
+	}
+	return args.Global
 }
 
 // helper function attempts to find and return the named secret.

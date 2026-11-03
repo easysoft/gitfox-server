@@ -114,7 +114,9 @@ func Request(ctx context.Context, method string, url string, headers, cookies ma
 
 	// 检查 HTTP 状态码
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
-		return fmt.Errorf("unexpected status code: %d", response.StatusCode)
+		// 带上响应体，便于上游（如禅道 DevOps 接口）回传具体的失败原因
+		body, _ := io.ReadAll(io.LimitReader(response.Body, 4096))
+		return fmt.Errorf("unexpected status code: %d, body: %s", response.StatusCode, string(body))
 	}
 
 	// 如果不需要解析结果，直接返回

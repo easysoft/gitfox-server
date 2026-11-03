@@ -40,6 +40,8 @@ import (
 	"github.com/easysoft/gitfox-community/pkg/logger"
 	svnPkg "github.com/easysoft/gitfox-community/pkg/svn"
 	urlUtil "github.com/easysoft/gitfox-community/pkg/utils/url"
+
+	"github.com/drone/go-scm/scm"
 )
 
 const (
@@ -117,7 +119,7 @@ func (r *Repository) Create(ctx context.Context, session *auth.Session, req *rep
 		ACL:           req.ACL,
 		Mirror:        database.BoolToUint8(req.Mirror),
 		ProviderID:    req.ProviderID,
-		Connector:     req.Connector,
+		Connector:     string(req.Connector),
 	}
 
 	repoObj, err := r.repoStore.Create(ctx, repo)
@@ -357,6 +359,10 @@ func (r *Repository) Handle(ctx context.Context, data string, reportFn pkgJobs.P
 		if err != nil {
 			return "", fmt.Errorf("completed repository import, but failed to create mirror sync cron job: %w", err)
 		}
+		/* webhook 创建失败不影响导入结果，仅记录日志。 */
+		if err = r.createMirrorWebhook(ctx, repo, log); err != nil {
+			log.Errorf("failed to create mirror webhook: %v", err)
+		}
 	} else {
 		if err = r.createDefaultWebhook(ctx, repo, log); err != nil {
 			return "", fmt.Errorf("completed repository import, but failed to create webhook: %w", err)
@@ -399,6 +405,65 @@ func (r *Repository) createDefaultWebhook(ctx context.Context, repo *repoModel.R
 		log.Errorf("failed to create webhook: %v", err)
 		return err
 	}
+	return nil
+}
+
+// createMirrorWebhook 为镜像导入的 GitLab 代码库在上游项目创建 webhook，
+// 将提交事件回调到禅道，用于 commit 关联需求、任务和 Bug。
+func (r *Repository) createMirrorWebhook(ctx context.Context, repo *repoModel.Repo, log *logger.SugaredMateLogger) error {
+	provider, err := r.providerStore.GetByID(ctx, repo.ProviderID)
+	if err != nil {
+		return fmt.Errorf("failed to find provider for mirror webhook: %w", err)
+	}
+	/* 目前仅 GitLab 支持 webhook 事件回调。 */
+	if provider.Type != string(constant.RepoProviderTypeGitLab) {
+		return nil
+	}
+
+	connectInfo := repoModel.GitConnectInfo{}
+	if err := json.Unmarshal(repo.Connector, &connectInfo); err != nil {
+		return fmt.Errorf("failed to unmarshal repo connector: %w", err)
+	}
+	if connectInfo.Slug == "" || connectInfo.ProjectID == "" || repo.GitUID == "" {
+		log.Warnw("mirror webhook: repo connector or gitUID is empty, skipping creation", "repo.id", repo.ID)
+		return nil
+	}
+
+	providerInfo := repoModel.Provider{
+		Type:      constant.RepoProviderTypeGitLab,
+		Host:      provider.URL,
+		Token:     provider.Token,
+		ProjectID: connectInfo.ProjectID,
+		Slug:      connectInfo.Slug,
+	}
+	client, err := getScmClientWithTransport(providerInfo, connectInfo.Slug)
+	if err != nil {
+		return fmt.Errorf("failed to create scm client for mirror webhook: %w", err)
+	}
+
+	callbackURL := fmt.Sprintf("%s/gitlab/webhook?repoID=%d", strings.TrimRight(r.devopsConfig.URL, "/"), repo.ID)
+
+	hooks, _, err := client.Repositories.ListHooks(ctx, connectInfo.Slug, scm.ListOptions{Size: 100})
+	if err != nil {
+		return fmt.Errorf("failed to list webhooks for repository %s: %w", connectInfo.Slug, err)
+	}
+	for _, hook := range hooks {
+		if hook.Target == callbackURL {
+			log.Infof("mirror webhook %s already exists, skipping creation", callbackURL)
+			return nil
+		}
+	}
+
+	hook, _, err := client.Repositories.CreateHook(ctx, connectInfo.Slug, &scm.HookInput{
+		Target:     callbackURL,
+		Secret:     repo.GitUID,
+		Events:     scm.HookEvents{Push: true, Tag: true, PullRequest: true},
+		SkipVerify: true,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create mirror webhook: %w", err)
+	}
+	log.Infof("successfully created mirror webhook %s (id: %s)", callbackURL, hook.ID)
 	return nil
 }
 

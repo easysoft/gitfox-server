@@ -519,7 +519,7 @@ func (s *ScanTaskService) saveIssues(ctx context.Context, comp *scanModel.ScanIs
 				Resolution:      item.Resolution,
 				Category:        item.Category.String(),
 				Severity:        item.Severity.String(),
-				Payload:         item.Payload,
+				Payload:         string(item.Payload),
 				CreatedBy:       task.CreatedBy,
 				IgnoredDate:     &emptyIgnoredDate,
 			})
@@ -598,7 +598,7 @@ func (s *ScanTaskService) insertAIIssues(ctx context.Context, issues []*scanMode
 			ScanMethod:  item.ScanMethod,
 			Resolution:  &emptyResolution,
 			IgnoredDate: &emptyIgnoredDate,
-			Payload:     item.Payload,
+			Payload:     string(item.Payload),
 			CreatedBy:   createdBy,
 			Category:    string(item.Category),
 			Severity:    string(item.Severity),

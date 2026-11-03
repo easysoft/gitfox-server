@@ -163,7 +163,7 @@ type MetricConfig struct {
 
 // CiConfig CI配置
 type CiConfig struct {
-	PluginsZipUrl     string   `envconfig:"GITFOX_CI_PLUGINS_ZIP_URL" default:"https://pkg.zentao.net/qucheng/gitfox/community/4.3/plugin.tar.gz"`
+	PluginsZipUrl     string   `envconfig:"GITFOX_CI_PLUGINS_ZIP_URL" default:"https://pkg.zentao.net/qucheng/gitfox/community/4.4/plugin.tar.gz"`
 	Runner            string   `envconfig:"GITFOX_CI_RUNNER"`
 	ParallelWorkers   uint     `envconfig:"GITFOX_CI_PARALLELWORKERS" default:"2"`
 	ContainerNetworks []string `envconfig:"GITFOX_CI_CONTAINER_NETWORKS"`

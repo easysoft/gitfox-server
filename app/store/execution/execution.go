@@ -14,6 +14,7 @@ import (
 	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
 	"github.com/easysoft/gitfox-community/pkg/database"
 	"github.com/easysoft/gitfox-community/pkg/database/dbtx"
+	"github.com/easysoft/gitfox-community/pkg/sqladapter"
 )
 
 // Create creates a new execution
@@ -150,20 +151,10 @@ func populateDuration(execution *executionModel.Execution) {
 func (s *Store) ListByPr(ctx context.Context, filter executionModel.ExecutionInfoReqFilter) ([]*executionModel.ExecutionByPr, error) {
 	db := dbtx.GetOrmAccessor(ctx, s.db)
 
-	var results []*executionModel.ExecutionByPr
-	query := db.Table("ops_pipeline_executions e").
-		Select("e.id, e.PipelineID, p.name, e.trigger, e.commit, e.ref, e.status").
-		Joins("JOIN ops_pipeline p ON e.PipelineID = p.id").
-		Where("p.deleted = 0")
+	query, args := sqladapter.GetAdapterByDB(db).ListByPr(filter.Commit, filter.Ref)
 
-	if filter.Commit != "" {
-		query = query.Where("e.commit = ?", filter.Commit)
-	}
-	if filter.Ref != "" {
-		query = query.Where("e.ref = ?", filter.Ref)
-	}
-
-	if err := query.Find(&results).Error; err != nil {
+	results := make([]*executionModel.ExecutionByPr, 0)
+	if err := db.Raw(query, args...).Scan(&results).Error; err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}
 

@@ -25,7 +25,7 @@ vars:
     -X '{{.VERSION_PKG}}.BuildDate={{.BUILD_DATE}}' \
     -X '{{.VERSION_PKG}}.GitBranch={{.GIT_BRANCH}}' \
     -X '{{.VERSION_PKG}}.GitCommitHash={{.GIT_COMMIT}}'"
-  
+
   PLATFORMS_ARCHS:
   - os: linux
     arches: [amd64, arm64]  # Linux支持的架构
@@ -94,7 +94,7 @@ tasks:
         echo -e "\n========================================"
         echo "          📊 service 测试结果统计         "
         echo "========================================"
-        
+
         # 安装 xmllint（若缺失，仅 Linux 需要）
         if ! command -v xmllint &> /dev/null && [ "$(uname -s)" = "Linux" ]; then
           echo "⚠️ 未检测到 xmllint，开始自动安装（仅Linux）..."
@@ -153,7 +153,7 @@ tasks:
       - |
         # 初始化覆盖率为0
         TOTAL_COVERAGE="0.00%"
-        
+
         # 仅当覆盖率文件有效时计算
         if [ -f "{{.COVER_PROFILE_FILE}}" ] && [ -s "{{.COVER_PROFILE_FILE}}" ]; then
           # 精准提取total行 + 格式化数值（修复.6%→0.60%问题）
@@ -191,7 +191,7 @@ tasks:
     desc: 格式化代码
     cmds:
       - go fmt ./...
-      
+
   tidy:
     desc: 清理未使用的依赖
     cmds:
@@ -201,7 +201,7 @@ tasks:
     desc: 运行 go vet
     cmds:
       - go vet ./...
- 
+
   # 清理任务
   clean:
     desc: 清理构建文件
@@ -226,10 +226,10 @@ tasks:
     desc: 构建应用
     deps: [clean]  # 先执行清理
     cmds:
-      - go build -o "{{.BIN_DIR}}/gitfox_linux" -ldflags "{{.LDFLAGS}}" ./cmd/cli/main.go
+      - go build -o "{{.BIN_DIR}}/gitfox" -ldflags "{{.LDFLAGS}}" ./cmd/cli/main.go
       - cp "{{$.ROOT_DIR}}/configs/prod.env" "{{.BIN_DIR}}/"
       - cp "{{$.ROOT_DIR}}/configs/prod.yaml" "{{.BIN_DIR}}/"
-      - echo "本地构建完成，二进制文件位于 {{.BIN_DIR}}/gitfox_linux"
+      - echo "本地构建完成，二进制文件位于 {{.BIN_DIR}}/gitfox"
 
   cross-build:
     desc: 交叉编译应用
@@ -292,9 +292,9 @@ tasks:
       IMAGE:
         sh: |
           if [ "{{default "false" .FORMAL}}" = "true" ]; then
-            echo "hub.zentao.net/app/gitfox-community"
+            echo "hub.zentao.net/app/gitfox-server"
           else
-            echo "hub.zentao.net/test/gitfox-community"
+            echo "hub.zentao.net/test/gitfox-server"
           fi
       DOCKER_TAG_DATE:
         sh: date '+%Y%m%d'
@@ -324,11 +324,16 @@ tasks:
       - sh: test -f resources/ciPlugins/plugins.tar.gz
         msg: '缺少 resources/ciPlugins/plugins.tar.gz（执行 task download-ci-plugins 或去掉 SKIP_DEPS=true）'
     vars:
-      IMAGE: 'gitfox-community'
+      IMAGE: 'gitfox-server'
       DOCKER_TAG_DATE:
         sh: date '+%Y%m%d'
       TAG:
-        sh: echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
+        sh: |
+          if [ "{{.RELEASE}}" = "true" ]; then
+            echo "{{.BUILD_RELEASE}}" | tr '/' '-'
+          else
+            echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
+          fi
       PLATFORM: 'linux/amd64'
       DOCKERFILE: 'deploy/Dockerfile'
       BUILDER: 'multiarch'
@@ -391,7 +396,7 @@ tasks:
     dir: resources/scanrule
     cmds:
       - go run validator/validator.go validator/main.go -dir . -plugin {{.PLUGIN}}
-  
+
   download-ci-plugins:
     desc: download ci plugin（用法：task download-ci-plugins plugins=https://example.com/p.tar.gz）
     vars:
