@@ -25,7 +25,7 @@ WITH RECURSIVE art_group_ancestors(group_ancestor_id, group_ancestor_uid, group_
 	SELECT id, name, parentID, 0
 	FROM ops_artifact_groups
 	WHERE id = ?
-	UNION
+	UNION ALL
 	SELECT g.id, g.name, g.parentID, a.group_ancestor_depth + 1
 	FROM ops_artifact_groups g
 	JOIN art_group_ancestors a ON g.id = a.group_ancestor_parent_id

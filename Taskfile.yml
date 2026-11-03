@@ -328,7 +328,12 @@ tasks:
       DOCKER_TAG_DATE:
         sh: date '+%Y%m%d'
       TAG:
-        sh: echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
+        sh: |
+          if [ "{{.RELEASE}}" = "true" ]; then
+            echo "{{.BUILD_RELEASE}}" | tr '/' '-'
+          else
+            echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
+          fi
       PLATFORM: 'linux/amd64'
       DOCKERFILE: 'deploy/Dockerfile'
       BUILDER: 'multiarch'

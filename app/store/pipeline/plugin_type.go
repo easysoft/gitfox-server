@@ -14,10 +14,10 @@ type Plugin struct {
 	ID          int64           `gorm:"column:id;primaryKey;autoIncrement;comment:'插件ID，自增主键'"`
 	GroupID     int64           `gorm:"column:groupID"`
 	Name        string          `gorm:"column:name;uniqueIndex:uk_plugin_name"`
-	Desc        []byte          `gorm:"column:desc"`
-	Logo        []byte          `gorm:"column:logo"`
-	Yaml        []byte          `gorm:"column:yaml"`
-	Json        []byte          `gorm:"column:json"`
+	Desc        string          `gorm:"column:desc"`
+	Logo        string          `gorm:"column:logo"`
+	Yaml        string          `gorm:"column:yaml"`
+	Json        string          `gorm:"column:json"`
 	Type        string          `gorm:"column:type"`
 	Kind        string          `gorm:"column:kind"`
 	CreatedBy   string          `gorm:"column:createdBy"`

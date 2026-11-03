@@ -34,7 +34,7 @@ type ScanIssue struct {
 	Status          constant.ScanIssueStatus      `gorm:"column:status"`
 	ScanMethod      constant.ScanMethod           `gorm:"column:scanMethod"`
 	Resolution      *constant.ScanIssueResolution `gorm:"column:resolution;default:''"`
-	Payload         []byte                        `gorm:"column:payload"`
+	Payload         string                        `gorm:"column:payload"`
 	CreatedDate     *datetime.Local               `gorm:"column:createdDate"`
 	EditedDate      *datetime.Local               `gorm:"column:editedDate"`
 	Deleted         uint8                         `gorm:"column:deleted"`
@@ -95,7 +95,7 @@ type issueJoin struct {
 	Status          constant.ScanIssueStatus      `gorm:"column:status"`
 	ScanMethod      constant.ScanMethod           `gorm:"column:scanMethod"`
 	Resolution      *constant.ScanIssueResolution `gorm:"column:resolution"`
-	Payload         []byte                        `gorm:"column:payload"`
+	Payload         string                        `gorm:"column:payload"`
 	CreatedByTaskID int64                         `gorm:"column:createdByTaskID"`
 	UpdatedByTaskID int64                         `gorm:"column:updatedByTaskID"`
 	PlanID          int64                         `gorm:"column:planID"`

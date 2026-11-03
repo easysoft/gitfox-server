@@ -9,6 +9,7 @@ import (
 
 	pipelineModel "github.com/easysoft/gitfox-community/app/model/pipeline"
 	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/sqladapter"
 )
 
 // CreatePlugin 创建插件
@@ -123,10 +124,11 @@ type PluginWithGroupRow struct {
 func (s *Store) GetAllWithGroup(ctx context.Context) ([]*pipelineModel.PluginWithGroup, error) {
 	var rows []PluginWithGroupRow
 
-	// 使用 JOIN 关联查询插件和分组
-	err := s.db.WithContext(ctx).
-		Table("ops_plugins p").
-		Select("p.*, g.name as group_name, g.desc as group_desc").
+	// 使用 JOIN 关联查询插件和分组；desc 为达梦保留字，按方言引用
+	db := s.db.WithContext(ctx)
+	a := sqladapter.GetAdapterByDB(db)
+	err := db.Table("ops_plugins p").
+		Select("p.*, g.name as group_name, " + a.QuoteIdentifier("g.desc") + " as group_desc").
 		Joins("LEFT JOIN ops_plugin_group g ON p.groupID = g.id").
 		Where("p.deleted = 0 AND g.deleted = 0").
 		Find(&rows).Error
@@ -153,10 +155,10 @@ func mapPluginToModel(p Plugin) *pipelineModel.Plugin {
 		GroupID:     p.GroupID,
 		Name:        p.Name,
 		Kind:        p.Kind,
-		Desc:        string(p.Desc),
-		Logo:        string(p.Logo),
-		Yaml:        string(p.Yaml),
-		Json:        string(p.Json),
+		Desc:        p.Desc,
+		Logo:        p.Logo,
+		Yaml:        p.Yaml,
+		Json:        p.Json,
 		Type:        pipelineModel.PluginType(p.Type),
 		CreatedBy:   p.CreatedBy,
 		CreatedDate: p.CreatedDate,
@@ -171,10 +173,10 @@ func mapPluginToStore(p *pipelineModel.Plugin) *Plugin {
 		ID:          p.ID,
 		GroupID:     p.GroupID,
 		Name:        p.Name,
-		Desc:        []byte(p.Desc),
-		Logo:        []byte(p.Logo),
-		Yaml:        []byte(p.Yaml),
-		Json:        []byte(p.Json),
+		Desc:        p.Desc,
+		Logo:        p.Logo,
+		Yaml:        p.Yaml,
+		Json:        p.Json,
 		Type:        string(p.Type),
 		Kind:        p.Kind,
 		CreatedBy:   p.CreatedBy,

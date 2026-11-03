@@ -388,7 +388,7 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 		step.ExtraHosts = append(step.ExtraHosts, c.ExtraHosts...)
 		step.WorkingDir = "/gitfox"
 		step.Labels = stageLabels
-		step.Pull = engine.PullAlways
+		step.Pull = engine.PullIfNotExists
 		step.Volumes = append(step.Volumes, mount)
 		setupScript(step, "clean_stage", "linux")
 		spec.Steps = append(spec.Steps, step)
