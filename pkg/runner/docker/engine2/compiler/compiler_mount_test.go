@@ -134,6 +134,53 @@ func TestCompileStepMountOverridesWorkspace(t *testing.T) {
 	}
 }
 
+// 等价写法（末尾斜杠/..）归一化后同样视为挂到工作区路径，内置工作区挂载被跳过。
+func TestCompileStepMountOverridesWorkspaceWithEquivalentPath(t *testing.T) {
+	spec, err := compileStage(&harness.StageCI{
+		Volumes: []*harness.Volume{
+			{Name: "tmp", Type: "temp", Spec: &harness.VolumeTemp{}},
+		},
+		Steps: []*harness.Step{{
+			Id:   "step-1",
+			Name: "clone-to-tmp",
+			Type: "run",
+			Spec: &harness.StepRun{
+				Script: harness.Stringorslice{"echo hi"},
+				Mount:  []*harness.Mount{{Name: "tmp", Path: "/gitfox/"}},
+			},
+		}},
+	})
+	if err != nil {
+		t.Fatalf("Compile: %v", err)
+	}
+
+	step := findStep(t, spec, "clone-to-tmp")
+	if hasMount(step, "_workspace", "/gitfox") {
+		t.Fatalf("step volumes = %v, workspace mount should be skipped", step.Volumes)
+	}
+	if !hasMount(step, "tmp", "/gitfox") {
+		t.Fatalf("step volumes = %v, want normalized mount tmp:/gitfox", step.Volumes)
+	}
+}
+
+// appendWorkspaceMount 自身也按归一化路径比较，防止绕过校验时重复挂载。
+// Docker 解析挂载目标时会先做 filepath.Clean，因此以下写法都指向 /gitfox。
+func TestAppendWorkspaceMountComparesCleanedPaths(t *testing.T) {
+	for _, path := range []string{"/gitfox/", "//gitfox", "/gitfox/.", "/gitfox/src/.."} {
+		t.Run(path, func(t *testing.T) {
+			step := &engine.Step{
+				Name:    "test",
+				Volumes: []*engine.VolumeMount{{Name: "tmp", Path: path}},
+			}
+			appendWorkspaceMount(context.Background(), step, &engine.VolumeMount{Name: "_workspace", Path: "/gitfox"})
+
+			if len(step.Volumes) != 1 || step.Volumes[0].Name != "tmp" {
+				t.Fatalf("step volumes = %v, want only the user mount", step.Volumes)
+			}
+		})
+	}
+}
+
 // 挂载引用未声明的卷时编译直接失败。
 func TestCompileRejectsUndeclaredMountVolume(t *testing.T) {
 	_, err := compileStage(&harness.StageCI{

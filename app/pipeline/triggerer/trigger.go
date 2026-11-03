@@ -356,14 +356,9 @@ func parseV1Stages(
 
 	switch v := config.Spec.(type) {
 	case *v1yaml.Pipeline:
-		// 校验 yaml 关键字完整性，避免关键字拼写错误导致静默生成空流水线
+		// 校验 yaml 关键字完整性与卷挂载声明，避免关键字拼写错误导致静默生成
+		// 空流水线，或因卷名/路径/卷类型有误导致挂载在运行时被静默丢弃
 		if err := validateV1PipelineSpec(v); err != nil {
-			return nil, err
-		}
-
-		// 校验卷挂载声明（卷名是否存在、路径是否合法、卷类型是否支持），
-		// 在触发阶段就报错，而不是等到运行时静默丢弃挂载
-		if err := validateV1StageMounts(v); err != nil {
 			return nil, err
 		}
 
@@ -486,7 +481,9 @@ func parseV1Stages(
 }
 
 // validateV1PipelineSpec 校验 v1 yaml 解析结果的完整性，
-// 避免 stages/steps 等关键字拼写错误导致静默生成空流水线。
+// 避免 stages/steps 等关键字拼写错误导致静默生成空流水线；
+// 同时校验各阶段 step 上的卷挂载声明（需在插件/模板展开之后调用，
+// 才能覆盖展开后步骤继承的挂载）。
 func validateV1PipelineSpec(pipeline *v1yaml.Pipeline) error {
 	if len(pipeline.Stages) == 0 {
 		return fmt.Errorf("check 'stages' key in yaml")
@@ -495,17 +492,18 @@ func validateV1PipelineSpec(pipeline *v1yaml.Pipeline) error {
 		if err := validateV1Stage(stage); err != nil {
 			return err
 		}
+		if err := validateV1StageMounts(stage); err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
-// validateV1StageMounts 校验各阶段 step 上的卷挂载声明。
-// 需要在插件/模板展开之后调用，才能覆盖展开后步骤继承的挂载。
-func validateV1StageMounts(pipeline *v1yaml.Pipeline) error {
-	for _, stage := range pipeline.Stages {
-		if err := validate.ValidateStageMounts(stage); err != nil {
-			return err
-		}
+// validateV1StageMounts 校验单个 stage 内 step 上的卷挂载声明，
+// 错误补充 stage 上下文并保留原始原因（%w），方便定位到具体阶段。
+func validateV1StageMounts(stage *v1yaml.Stage) error {
+	if err := validate.ValidateStageMounts(stage); err != nil {
+		return fmt.Errorf("stage %q: %w", stage.Id, err)
 	}
 	return nil
 }

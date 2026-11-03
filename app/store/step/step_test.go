@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	stepModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/step"
+	stepModel "github.com/easysoft/gitfox-community/app/model/step"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

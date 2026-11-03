@@ -8,6 +8,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	stdpath "path"
 	"slices"
 	"strings"
 
@@ -197,7 +198,7 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 
 	// create the workspace mount
 	mount := &engine.VolumeMount{
-		Name: "_workspace",
+		Name: harness.VolumeNameWorkspace,
 		Path: "/gitfox", // FIXME: handle windows. c://gitfox
 	}
 
@@ -424,14 +425,14 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 		// with the pipeline containers.
 		for _, step := range append(spec.Steps, spec.Internal...) {
 			step.Volumes = append(step.Volumes, &engine.VolumeMount{
-				Name: "_addons",
+				Name: harness.VolumeNameAddons,
 				Path: "/usr/drone/bin",
 			})
 		}
 		spec.Volumes = append(spec.Volumes, &engine.Volume{
 			EmptyDir: &engine.VolumeEmptyDir{
 				ID:     random(),
-				Name:   "_addons",
+				Name:   harness.VolumeNameAddons,
 				Labels: stageLabels,
 			},
 		})
@@ -584,7 +585,7 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 		spec.Volumes = append(spec.Volumes, &engine.Volume{
 			HostPath: &engine.VolumeHostPath{
 				ID:   id,
-				Name: "_docker_socket",
+				Name: harness.VolumeNameDockerSocket,
 				Path: socketPath,
 			},
 		})
@@ -593,7 +594,7 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 				continue
 			}
 			step.Volumes = append(step.Volumes, &engine.VolumeMount{
-				Name: "_docker_socket",
+				Name: harness.VolumeNameDockerSocket,
 				Path: socketPath,
 			})
 		}
@@ -607,8 +608,9 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 // mount takes precedence over the workspace, which would otherwise make
 // Docker fail with a duplicate mount point error.
 func appendWorkspaceMount(ctx context.Context, step *engine.Step, workspace *engine.VolumeMount) {
+	workspacePath := stdpath.Clean(workspace.Path)
 	for _, v := range step.Volumes {
-		if v.Path == workspace.Path {
+		if stdpath.Clean(v.Path) == workspacePath {
 			logger.GetLogger(ctx).Warnf(
 				"step %q mounts volume %q at workspace path %q; workspace volume is skipped for this step",
 				step.Name, v.Name, v.Path)

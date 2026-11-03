@@ -8,6 +8,7 @@ package validate
 
 import (
 	"fmt"
+	"path"
 	"strings"
 
 	schema "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
@@ -15,11 +16,13 @@ import (
 
 // reservedVolumeNames are volume names used internally by the runner. A user
 // defined volume with one of these names would shadow or conflict with the
-// built-in volume of the same name.
+// built-in volume of the same name. Keep this in sync with the
+// schema.VolumeName* constants used by the compiler.
 var reservedVolumeNames = map[string]struct{}{
-	"_workspace":     {},
-	"_addons":        {},
-	"_docker_socket": {},
+	schema.VolumeNameWorkspace:    {},
+	schema.VolumeNameAddons:       {},
+	schema.VolumeNameDockerSocket: {},
+	schema.VolumeNameSocketDir:    {},
 }
 
 // ValidateStageMounts checks the volume and mount declarations of a stage.
@@ -38,12 +41,21 @@ func ValidateStageMounts(stage *schema.Stage) error {
 	}
 
 	volumes := make(map[string]*schema.Volume, len(stageCI.Volumes))
-	for _, volume := range stageCI.Volumes {
+	for i, volume := range stageCI.Volumes {
 		if volume == nil {
-			continue
+			return fmt.Errorf("stage volume #%d must not be empty", i+1)
+		}
+		if volume.Name == "" {
+			return fmt.Errorf("stage volume #%d: name must not be empty", i+1)
 		}
 		if _, ok := reservedVolumeNames[volume.Name]; ok {
 			return fmt.Errorf("stage volume name %q is reserved", volume.Name)
+		}
+		// The runtime resolves a volume by returning the first declaration
+		// with a matching name, so duplicated declarations would make the
+		// runtime use a different volume than the one validated here.
+		if _, ok := volumes[volume.Name]; ok {
+			return fmt.Errorf("stage volume %q is declared more than once", volume.Name)
 		}
 		switch volume.Spec.(type) {
 		case *schema.VolumeHost, *schema.VolumeTemp:
@@ -102,12 +114,19 @@ func validateStepMounts(step *schema.Step, volumes map[string]*schema.Volume) er
 		if mount.Path == "" || !strings.HasPrefix(mount.Path, "/") {
 			return fmt.Errorf("step %q: mount path must be absolute: %q", name, mount.Path)
 		}
-		if _, ok := paths[mount.Path]; ok {
-			return fmt.Errorf("step %q: duplicate mount path %q", name, mount.Path)
+		// Docker normalizes the mount target before it checks for duplicate
+		// mount points, so "/data/", "/a/../data" and "/data" are the same
+		// target. Normalize here and write the result back so that the
+		// duplicate check and all downstream consumers (the workspace mount
+		// conflict check in particular) use the same path Docker will use.
+		cleanPath := path.Clean(mount.Path)
+		if _, ok := paths[cleanPath]; ok {
+			return fmt.Errorf("step %q: duplicate mount path %q", name, cleanPath)
 		}
-		paths[mount.Path] = struct{}{}
+		paths[cleanPath] = struct{}{}
+		mount.Path = cleanPath
 		if mount.Name == "" {
-			return fmt.Errorf("step %q: mount path %q requires a volume name", name, mount.Path)
+			return fmt.Errorf("step %q: mount path %q requires a volume name", name, cleanPath)
 		}
 		if _, ok := volumes[mount.Name]; !ok {
 			return fmt.Errorf("step %q: mount volume %q is not declared in stage volumes", name, mount.Name)

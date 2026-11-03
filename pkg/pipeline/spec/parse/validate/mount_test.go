@@ -82,11 +82,64 @@ func TestValidateStageMounts(t *testing.T) {
 			wantErr: `duplicate mount path "/data"`,
 		},
 		{
+			name: "末尾斜杠等价路径视为重复",
+			stage: ciStage(
+				[]*schema.Volume{tempVolume("tmp"), tempVolume("other")},
+				runStep("build",
+					&schema.Mount{Name: "tmp", Path: "/data"},
+					&schema.Mount{Name: "other", Path: "/data/"},
+				),
+			),
+			wantErr: `duplicate mount path "/data"`,
+		},
+		{
+			name: "含 .. 的等价路径视为重复",
+			stage: ciStage(
+				[]*schema.Volume{tempVolume("tmp"), tempVolume("other")},
+				runStep("build",
+					&schema.Mount{Name: "tmp", Path: "/data"},
+					&schema.Mount{Name: "other", Path: "/a/../data"},
+				),
+			),
+			wantErr: `duplicate mount path "/data"`,
+		},
+		{
+			name: "卷名重复",
+			stage: ciStage(
+				[]*schema.Volume{
+					{Name: "cache", Type: "host", Spec: &schema.VolumeHost{Path: "/tmp"}},
+					{Name: "cache", Type: "temp", Spec: &schema.VolumeTemp{}},
+				},
+			),
+			wantErr: `stage volume "cache" is declared more than once`,
+		},
+		{
+			name: "卷名为空",
+			stage: ciStage(
+				[]*schema.Volume{{Type: "temp", Spec: &schema.VolumeTemp{}}},
+			),
+			wantErr: `stage volume #1: name must not be empty`,
+		},
+		{
+			name: "空卷声明",
+			stage: ciStage(
+				[]*schema.Volume{nil},
+			),
+			wantErr: `stage volume #1 must not be empty`,
+		},
+		{
 			name: "保留卷名",
 			stage: ciStage(
 				[]*schema.Volume{tempVolume("_workspace")},
 			),
 			wantErr: `stage volume name "_workspace" is reserved`,
+		},
+		{
+			name: "docker_build 内部卷名",
+			stage: ciStage(
+				[]*schema.Volume{tempVolume(schema.VolumeNameSocketDir)},
+			),
+			wantErr: `stage volume name "socketDir" is reserved`,
 		},
 		{
 			name: "不支持的卷类型",
@@ -148,6 +201,22 @@ func TestValidateStageMounts(t *testing.T) {
 				t.Fatalf("ValidateStageMounts error = %q, want it to contain %q", err, test.wantErr)
 			}
 		})
+	}
+}
+
+// 校验通过后挂载路径被归一化，下游（引擎、工作区冲突判断）使用与 Docker 一致的路径。
+func TestValidateStageMountsNormalizesPath(t *testing.T) {
+	mount := &schema.Mount{Name: "tmp", Path: "/a/../data/"}
+	stage := ciStage(
+		[]*schema.Volume{tempVolume("tmp")},
+		runStep("build", mount),
+	)
+
+	if err := ValidateStageMounts(stage); err != nil {
+		t.Fatalf("ValidateStageMounts: %v", err)
+	}
+	if mount.Path != "/data" {
+		t.Fatalf("mount path = %q, want /data", mount.Path)
 	}
 }
 
