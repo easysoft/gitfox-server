@@ -120,6 +120,7 @@ cli:
   version_welcome: "Display GitFox version information"
   version_json_flag: "Output version info in JSON format"
   version_version: "Version"
+  version_edition: "Edition"
   version_build_date: "Build Date"
   version_git_branch: "Git Branch"
   version_git_commit: "Commit"
