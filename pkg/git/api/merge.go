@@ -60,18 +60,18 @@ func (g *Git) GetMergeBase(
 		command.WithArg(base, head),
 	)
 
-	stdout, stderr := new(bytes.Buffer), new(bytes.Buffer)
+	stdout := new(bytes.Buffer)
 	err := cmd.Run(ctx,
 		command.WithDir(repoPath),
 		command.WithStdout(stdout),
-		command.WithStderr(stderr),
 	)
 	if err != nil {
-		// git merge-base rev1 rev2
-		// if there is unrelated history then stderr is empty with
-		// exit code 1. This cannot be handled in processGitErrorf because stderr is empty.
+		// git merge-base rev1 rev2 exits with code 1 when the two commits
+		// have no common ancestor. Do not inspect stderr here: git may emit
+		// warnings alongside the exit code, and the external stderr buffer
+		// used previously discarded the real message from command.Error.
 		cmdErr := command.AsError(err)
-		if cmdErr != nil && cmdErr.IsExitCode(1) && stderr.Len() == 0 {
+		if cmdErr != nil && cmdErr.IsExitCode(1) {
 			return sha.None, "", &UnrelatedHistoriesError{
 				BaseRef: base,
 				HeadRef: head,
