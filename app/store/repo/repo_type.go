@@ -23,7 +23,7 @@ type Repository struct {
 	ACL           string          `gorm:"column:acl;comment:'权限类型（private=私有，open=公开）'"`
 	Mirror        uint8           `gorm:"column:mirror;comment:'是否为镜像库（0=普通库，1=镜像库）'"`
 	ProviderID    uint            `gorm:"column:providerID;comment:'源代码库提供商ID'"`
-	Connector     []byte          `gorm:"column:connector;comment:'源代码库连接器信息'"`
+	Connector     string          `gorm:"column:connector;comment:'源代码库连接器信息'"`
 	Status        string          `gorm:"column:status;comment:'代码库状态（active,importing,archived）'"`
 	Synced        uint8           `gorm:"column:synced;comment:'同步标识'"`
 	SpaceCode     string          `gorm:"->;column:spaceCode;comment:'空间唯一标识(关联查询)'"`

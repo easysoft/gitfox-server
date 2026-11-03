@@ -292,9 +292,9 @@ tasks:
       IMAGE:
         sh: |
           if [ "{{default "false" .FORMAL}}" = "true" ]; then
-            echo "hub.zentao.net/app/gitfox-community"
+            echo "hub.zentao.net/app/gitfox-server"
           else
-            echo "hub.zentao.net/test/gitfox-community"
+            echo "hub.zentao.net/test/gitfox-server"
           fi
       DOCKER_TAG_DATE:
         sh: date '+%Y%m%d'
@@ -324,11 +324,16 @@ tasks:
       - sh: test -f resources/ciPlugins/plugins.tar.gz
         msg: '缺少 resources/ciPlugins/plugins.tar.gz（执行 task download-ci-plugins 或去掉 SKIP_DEPS=true）'
     vars:
-      IMAGE: 'gitfox-community'
+      IMAGE: 'gitfox-server'
       DOCKER_TAG_DATE:
         sh: date '+%Y%m%d'
       TAG:
-        sh: echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
+        sh: |
+          if [ "{{.RELEASE}}" = "true" ]; then
+            echo "{{.BUILD_RELEASE}}" | tr '/' '-'
+          else
+            echo "{{.BUILD_RELEASE}}-{{.DOCKER_TAG_DATE}}" | tr '/' '-'
+          fi
       PLATFORM: 'linux/amd64'
       DOCKERFILE: 'deploy/Dockerfile'
       BUILDER: 'multiarch'

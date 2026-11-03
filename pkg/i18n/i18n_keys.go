@@ -530,6 +530,7 @@ const (
 	CliUpgradeSummaryTitle               I18nKey = "cli.upgrade_summary_title"                 // GitFox · 升级摘要
 	CliUpgradeWarnUnknownVersion         I18nKey = "cli.upgrade_warn_unknown_version"          // 无法读取旧二进制版本信息(可能为旧版本,不支持 --json):%v；将跳过版本对比,直接执行升级.
 	CliVersionBuildDate                  I18nKey = "cli.version_build_date"                    // 构建时间
+	CliVersionEdition                    I18nKey = "cli.version_edition"                       // 发行版本
 	CliVersionGitBranch                  I18nKey = "cli.version_git_branch"                    // Git 分支
 	CliVersionGitCommit                  I18nKey = "cli.version_git_commit"                    // Commit
 	CliVersionJsonFlag                   I18nKey = "cli.version_json_flag"                     // 以 JSON 格式输出版本信息

@@ -11,7 +11,7 @@ ARG TARGETARCH
 ENV TZ=${TZ}
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
-    && apk --no-cache add git bash tzdata curl \
+    && apk --no-cache add git bash tzdata curl subversion \
     && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo ${TZ} > /etc/timezone \
     && date \

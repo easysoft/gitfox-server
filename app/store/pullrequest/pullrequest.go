@@ -109,6 +109,7 @@ func (s *Store) UpdateOptLock(
 
 	if err := s.db.WithContext(ctx).Model(&PullRequest{}).
 		Where("targetRepoID = ? AND id = ?", dup.TargetRepoID, dup.ID).
+		Omit("id").
 		Updates(storePR).Error; err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}

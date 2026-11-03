@@ -120,6 +120,7 @@ cli:
   version_welcome: "gitfox版本信息"
   version_json_flag: "以 JSON 格式输出版本信息"
   version_version: "版本"
+  version_edition: "发行版本"
   version_build_date: "构建时间"
   version_git_branch: "Git 分支"
   version_git_commit: "Commit"

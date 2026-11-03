@@ -12,6 +12,7 @@ import (
 	"github.com/easysoft/gitfox-community/app/constant"
 	scanModel "github.com/easysoft/gitfox-community/app/model/scan"
 	"github.com/easysoft/gitfox-community/pkg/database"
+	"github.com/easysoft/gitfox-community/pkg/sqladapter"
 	"gorm.io/gorm"
 )
 
@@ -56,12 +57,14 @@ func (s *ScanTaskStore) FindByExecID(ctx context.Context, execID uint) (*scanMod
 }
 
 func (s *ScanTaskStore) baseTaskInfoQuery(ctx context.Context) *gorm.DB {
-	return s.db.WithContext(ctx).Table("ops_scan_tasks").
+	db := s.db.WithContext(ctx)
+	a := sqladapter.GetAdapterByDB(db)
+	return db.Table("ops_scan_tasks").
 		Select("ops_scan_tasks.*, "+
 			"ops_scan_plans.name as planName, ops_scan_plans.repoID, "+
 			"ops_repo.name as repoName, "+
 			"t.name as triggerName, "+
-			"e.id as executionNumber, e.ref as executionRef, "+
+			"e.id as executionNumber, "+a.QuoteIdentifier("e.ref")+" as executionRef, "+
 			"e.status as executionStatus, e.startedDate as executionStarted, e.finishedDate as executionFinished").
 		Joins("INNER JOIN ops_scan_plans ON ops_scan_tasks.planID = ops_scan_plans.id").
 		Joins("INNER JOIN ops_repo ON ops_scan_plans.repoID = ops_repo.id").
@@ -341,7 +344,7 @@ func applyTaskQueryFilter(stmt *gorm.DB, filter scanModel.ScanTaskInfoReqFilter)
 		stmt = stmt.Where("ops_scan_tasks.triggerID = ?", filter.TriggerID)
 	}
 	if filter.Branch != "" {
-		stmt = stmt.Where("e.ref = ?", filter.Branch)
+		stmt = stmt.Where(sqladapter.GetAdapterByDB(stmt).QuoteIdentifier("e.ref")+" = ?", filter.Branch)
 	}
 	if filter.Status != "" {
 		switch filter.Status {

@@ -119,7 +119,7 @@ func (r *Repository) Create(ctx context.Context, session *auth.Session, req *rep
 		ACL:           req.ACL,
 		Mirror:        database.BoolToUint8(req.Mirror),
 		ProviderID:    req.ProviderID,
-		Connector:     req.Connector,
+		Connector:     string(req.Connector),
 	}
 
 	repoObj, err := r.repoStore.Create(ctx, repo)
