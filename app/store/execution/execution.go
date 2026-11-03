@@ -153,7 +153,7 @@ func (s *Store) ListByPr(ctx context.Context, filter executionModel.ExecutionInf
 
 	query, args := sqladapter.GetAdapterByDB(db).ListByPr(filter.Commit, filter.Ref)
 
-	var results []*executionModel.ExecutionByPr
+	results := make([]*executionModel.ExecutionByPr, 0)
 	if err := db.Raw(query, args...).Scan(&results).Error; err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err)
 	}
