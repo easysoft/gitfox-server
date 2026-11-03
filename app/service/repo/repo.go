@@ -318,8 +318,11 @@ func (s *Service) checkRepoPermissions(ctx context.Context, session *auth.Sessio
 
 		if !ok {
 			err := errors.NoType.Newf("insufficient permissions for repo %s : %v", repo.Identifier, permission)
-			if permission == constant.PermissionRepoPush {
+			switch permission {
+			case constant.PermissionRepoPush:
 				return errors.WithI18nKey(err, i18n.RepoPushPermissionError)
+			case constant.PermissionRepoView:
+				return errors.WithI18nKey(err, i18n.RepoGetContentPermissionError)
 			}
 			return err
 		}
