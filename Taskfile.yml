@@ -224,7 +224,7 @@ tasks:
 
   build:
     desc: 构建应用
-    deps: [clean, download-ci-plugins]  # 先执行清理和下载 CI 插件
+    deps: [clean]  # 先执行清理
     cmds:
       - go build -o "{{.BIN_DIR}}/gitfox" -ldflags "{{.LDFLAGS}}" ./cmd/cli/main.go
       - cp "{{$.ROOT_DIR}}/configs/prod.env" "{{.BIN_DIR}}/"
@@ -233,7 +233,7 @@ tasks:
 
   cross-build:
     desc: 交叉编译应用
-    deps: [clean, download-ci-plugins]  # 先执行清理
+    deps: [clean]  # 先执行清理
     cmds:
       - for: { var: PLATFORMS_ARCHS, as: item }
         cmd: |
@@ -270,11 +270,32 @@ tasks:
           {{end}}
     parallel: true
 
+  docker:skip-deps:
+    internal: true
+    silent: true
+    cmds:
+      - "true"
+
   docker:push:
-    desc: 构建多架构 Docker 镜像并推送至 hub.zentao.net（正式包传 FORMAL=true，tag 不带日期）
-    deps: [cross-build]
+    desc: 构建多架构 Docker 镜像并推送至 hub.zentao.net（FORMAL=true 为正式包；SKIP_DEPS=true 跳过构建依赖）
+    deps:
+      - '{{if ne (default "false" .SKIP_DEPS) "true"}}cross-build{{else}}docker:skip-deps{{end}}'
+      - '{{if ne (default "false" .SKIP_DEPS) "true"}}download-ci-plugins{{else}}docker:skip-deps{{end}}'
+    preconditions:
+      - sh: test -f bin/linux-amd64/gitfox
+        msg: '缺少 bin/linux-amd64/gitfox（执行 task cross-build 或去掉 SKIP_DEPS=true）'
+      - sh: test -f bin/linux-arm64/gitfox
+        msg: '缺少 bin/linux-arm64/gitfox（执行 task cross-build 或去掉 SKIP_DEPS=true）'
+      - sh: test -f resources/ciPlugins/plugins.tar.gz
+        msg: '缺少 resources/ciPlugins/plugins.tar.gz（执行 task download-ci-plugins 或去掉 SKIP_DEPS=true）'
     vars:
-      IMAGE: 'hub.zentao.net/app/gitfox-community'
+      IMAGE:
+        sh: |
+          if [ "{{default "false" .FORMAL}}" = "true" ]; then
+            echo "hub.zentao.net/app/gitfox-community"
+          else
+            echo "hub.zentao.net/test/gitfox-community"
+          fi
       DOCKER_TAG_DATE:
         sh: date '+%Y%m%d'
       TAG:
@@ -293,8 +314,15 @@ tasks:
       - echo "已推送 {{.IMAGE}}:{{.TAG}} ({{.PLATFORMS}})"
 
   docker:build:local:
-    desc: 本地构建 Docker 镜像（不推送，默认当前主机架构）
-    deps: [cross-build]
+    desc: 本地构建 Docker 镜像（不推送，默认当前主机架构；SKIP_DEPS=true 跳过构建依赖）
+    deps:
+      - '{{if ne (default "false" .SKIP_DEPS) "true"}}cross-build{{else}}docker:skip-deps{{end}}'
+      - '{{if ne (default "false" .SKIP_DEPS) "true"}}download-ci-plugins{{else}}docker:skip-deps{{end}}'
+    preconditions:
+      - sh: test -f bin/linux-amd64/gitfox
+        msg: '缺少 bin/linux-amd64/gitfox（执行 task cross-build 或去掉 SKIP_DEPS=true）'
+      - sh: test -f resources/ciPlugins/plugins.tar.gz
+        msg: '缺少 resources/ciPlugins/plugins.tar.gz（执行 task download-ci-plugins 或去掉 SKIP_DEPS=true）'
     vars:
       IMAGE: 'gitfox-community'
       DOCKER_TAG_DATE:
@@ -370,7 +398,16 @@ tasks:
       - go run validator/validator.go validator/main.go -dir . -plugin {{.PLUGIN}}
 
   download-ci-plugins:
-    desc: download ci plugin
+    desc: download ci plugin（用法：task download-ci-plugins plugins=https://example.com/p.tar.gz）
+    vars:
+      PLUGINS_DEFAULT:
+        sh: sed -n 's/.*PluginsZipUrl.*default:"\([^"]*\)".*/\1/p' "{{.ROOT_DIR}}/pkg/config/config.go" | head -n1
     cmds:
       - mkdir -p resources/ciPlugins
-      - wget -O resources/ciPlugins/plugins.tar.gz https://pkg.zentao.net/qucheng/gitfox/community/4.3/plugin.tar.gz
+      - |
+        PLUGINS="{{default .PLUGINS_DEFAULT .plugins}}"
+        if [ -z "$PLUGINS" ]; then
+          echo "❌ 无法确定 plugins 下载地址：请传入 plugins=... 或检查 pkg/config/config.go" >&2
+          exit 1
+        fi
+        wget -O resources/ciPlugins/plugins.tar.gz "$PLUGINS"
