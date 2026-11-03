@@ -9,7 +9,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -20,10 +19,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/easysoft/gitfox-community/pkg/i18n"
-	clii18n "github.com/easysoft/gitfox-community/pkg/i18n/cli"
 	"github.com/charmbracelet/huh/spinner"
 	"github.com/charmbracelet/lipgloss"
+	dockerclient "github.com/docker/docker/client"
+	"github.com/easysoft/gitfox-community/pkg/i18n"
+	clii18n "github.com/easysoft/gitfox-community/pkg/i18n/cli"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/hashicorp/go-version"
 	"github.com/joho/godotenv"
@@ -148,11 +148,10 @@ func CheckGit() (bool, string, error) {
 //   CheckDocker
 //     ├─ dockerHost()                         选 host 字符串
 //     │     └─ pickWindowsDockerNpipe()        Windows: 三候选命名管道探测
-//     ├─ newDockerHTTPClient(host)            构造 client + baseURL
-//     │     ├─ stripNpipePrefix(host)          npipe 短路（绕开 url.Parse 反斜杠雷）
-//     │     │     └─ newDockerHTTPClientNpipePath
-//     │     └─ url.Parse → unix / tcp / http(s) 分发
-//     └─ dockerPing(client, baseURL)          GET /_ping 探活
+//     ├─ dockerHostExists(host)               端点存在性判定（unix socket / npipe）
+//     └─ docker SDK Ping(host)                unix / npipe / tcp / https，自动读取
+//                                             DOCKER_TLS_VERIFY / DOCKER_CERT_PATH，
+//                                             并做 API 版本协商
 // 状态分类：
 //   ok=true,  err=nil  : daemon 健在
 //   ok=true,  err!=nil : 已安装但服务未运行（dial 失败 / ping 失败）
@@ -207,68 +206,6 @@ func stripNpipePrefix(host string) (string, bool) {
 	}
 }
 
-// newDockerHTTPClient 基于 host 构造仅用于 daemon 通信的 http.Client + baseURL。
-func newDockerHTTPClient(host string) (*http.Client, string, error) {
-	if p, ok := stripNpipePrefix(host); ok {
-		return newDockerHTTPClientNpipePath(p)
-	}
-
-	u, err := url.Parse(host)
-	if err != nil {
-		return nil, "", err
-	}
-
-	switch u.Scheme {
-	case "unix":
-		return newDockerHTTPClientUnix(u)
-	case "tcp", "http", "https":
-		scheme := "http"
-		if u.Scheme == "https" {
-			scheme = "https"
-		}
-		client := &http.Client{Timeout: dockerProbeTimeout, Transport: &http.Transport{}}
-		return client, scheme + "://" + u.Host, nil
-	default:
-		return nil, "", fmt.Errorf("unsupported docker host scheme: %s", u.Scheme)
-	}
-}
-
-// newDockerHTTPClientUnix 构造 unix socket 拨号 client。
-// 注意：这里不再校验 socket 文件存在性——"是否有 host"由 dockerHostExists 统一判定，
-// 本函数只负责构造 client，真正的可用性以 dockerPing 结果为准。
-func newDockerHTTPClientUnix(u *url.URL) (*http.Client, string, error) {
-	path := u.Path
-	if path == "" {
-		path = defaultDockerSocket
-	}
-	client := &http.Client{
-		Timeout: dockerProbeTimeout,
-		Transport: &http.Transport{
-			DialContext: func(ctx context.Context, _, _ string) (net.Conn, error) {
-				var d net.Dialer
-				d.Timeout = dockerProbeTimeout
-				return d.DialContext(ctx, "unix", path)
-			},
-		},
-	}
-	return client, "http://docker", nil
-}
-
-// dockerPing 调用 GET /_ping 判断 daemon 是否真的在响应。
-// unix socket / npipe / tcp 三种路径统一走此 HTTP 探活，是权威活体判定。
-func dockerPing(client *http.Client, baseURL string) error {
-	req, _ := http.NewRequest(http.MethodGet, baseURL+"/_ping", nil)
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("docker ping http %d", resp.StatusCode)
-	}
-	return nil
-}
-
 // CheckDocker 检查 docker daemon 是否可达。
 // 语义：
 //   - installed=false : host 端点不存在（socket / npipe 缺失）
@@ -286,20 +223,37 @@ func CheckDocker() (bool, error) {
 	// 解析 host 为实际拨号用形态 debug
 	parsed := describeParsedDockerHost(host)
 
-	// 构造 http.Client + baseURL
-	client, baseURL, err := newDockerHTTPClient(host)
+	ctx, cancel := context.WithTimeout(context.Background(), dockerProbeTimeout)
+	defer cancel()
+
+	// DOCKER_HOST 允许直接写 `\\.\pipe\...`，SDK 的 WithHost 只接受 scheme:// 形式，
+	// 这里统一还原成 npipe:// 再交给 SDK。
+	sdkHost := host
+	if p, ok := stripNpipePrefix(host); ok {
+		sdkHost = "npipe://" + p
+	}
+
+	// 交给 Docker SDK 构造 client：复用 DOCKER_TLS_VERIFY / DOCKER_CERT_PATH、
+	// unix / npipe / tcp / https 拨号以及 API 版本协商逻辑。
+	cli, err := dockerclient.NewClientWithOpts(
+		dockerclient.FromEnv,
+		dockerclient.WithHost(sdkHost),
+		dockerclient.WithAPIVersionNegotiation(),
+	)
+	baseErr := fmt.Errorf(t(i18n.CliCheckErrDaemonNotRunning), "docker")
 	if err != nil {
-		return true, decorateDockerErr(fmt.Errorf(t(i18n.CliCheckErrDaemonNotRunning), "docker"), host, parsed)
+		return true, decorateDockerErr(fmt.Errorf("%w: %v", baseErr, err), host, parsed)
 	}
 
 	// 检查 daemon 是否响应
-	if err := dockerPing(client, baseURL); err != nil {
-		return true, decorateDockerErr(fmt.Errorf(t(i18n.CliCheckErrDaemonNotRunning), "docker"), host, parsed)
+	if _, err := cli.Ping(ctx); err != nil {
+		return true, decorateDockerErr(fmt.Errorf("%w: %v", baseErr, err), host, parsed)
 	}
 	return true, nil
 }
 
-// dockerHost 解析 daemon 地址：优先 DOCKER_HOST，否则仅使用 Windows / Linux 平台默认值。
+// dockerHost 解析 daemon 地址：优先 DOCKER_HOST（GITFOX_DOCKER_HOST 已在配置加载时
+// 归一化到该变量），否则仅使用 Windows / Linux 平台默认值。
 func dockerHost() string {
 	if h := strings.TrimSpace(os.Getenv("DOCKER_HOST")); h != "" {
 		return h

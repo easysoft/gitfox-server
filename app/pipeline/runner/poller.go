@@ -7,9 +7,11 @@ package runner
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"os"
 	"runtime"
 	"runtime/debug"
+	"strings"
 
 	"github.com/easysoft/gitfox-community/app/constant"
 	runnerModel "github.com/easysoft/gitfox-community/app/model/runner"
@@ -87,6 +89,10 @@ func registerDefaultRunners(
 		hostname = "default"
 	}
 
+	// 容器实际运行在 DOCKER_HOST 指向的机器上，配置了远端 daemon 时
+	// runner 记录应展示那台机器的地址，而不是本机 IP。
+	ip := dockerRunnerIP()
+
 	tokens := make([]string, 0, n)
 	ctx := context.Background()
 
@@ -99,13 +105,14 @@ func registerDefaultRunners(
 		// Ensure the built-in runner stays online and enabled.
 		existing, err := runnerStore.GetByToken(ctx, token)
 		if err == nil && existing != nil && existing.Token == token {
-			if existing.Online != constant.RunnerOnline || existing.Status != constant.RunnerEnable {
-				gitfoxLogger.GetLogger(ctx).Infof("[poller] repairing default runner status, token=%s, online=%s, status=%s",
-					token, existing.Online, existing.Status)
+			if existing.Online != constant.RunnerOnline || existing.Status != constant.RunnerEnable || existing.IP != ip {
+				gitfoxLogger.GetLogger(ctx).Infof("[poller] repairing default runner, token=%s, online=%s, status=%s, ip=%s->%s",
+					token, existing.Online, existing.Status, existing.IP, ip)
 				if err := runnerStore.Update(ctx, &runnerModel.Runner{
 					ID:     existing.ID,
 					Online: constant.RunnerOnline,
 					Status: constant.RunnerEnable,
+					IP:     ip,
 				}); err != nil {
 					gitfoxLogger.GetLogger(ctx).WithError(err).Errorf("[poller] failed to repair default runner, token=%s", token)
 				}
@@ -117,7 +124,7 @@ func registerDefaultRunners(
 		runner := &runnerModel.Runner{
 			Name:      fmt.Sprintf("default-runner-%d", i),
 			Hostname:  hostname,
-			IP:        netutil.LocalIP(),
+			IP:        ip,
 			OS:        runtime.GOOS,
 			Arch:      runtime.GOARCH,
 			Runtime:   resource.Runtime,
@@ -139,4 +146,29 @@ func registerDefaultRunners(
 	if len(tokens) > 0 {
 		tokenInit.InitTokens(tokens)
 	}
+}
+
+// dockerRunnerIP 返回 CI 容器实际运行机器的地址。
+// 配置了远端 DOCKER_HOST（如 tcp://10.0.4.20:2375）时，容器跑在远端 daemon
+// 所在的机器上，runner 记录应展示该地址；未配置或使用本地 unix/npipe socket
+// 时回退到本机 IP。
+func dockerRunnerIP() string {
+	host := strings.TrimSpace(os.Getenv("DOCKER_HOST"))
+	if host == "" {
+		return netutil.LocalIP()
+	}
+
+	u, err := url.Parse(host)
+	if err != nil {
+		return netutil.LocalIP()
+	}
+
+	switch strings.ToLower(u.Scheme) {
+	case "tcp", "http", "https":
+		if h := u.Hostname(); h != "" {
+			return h
+		}
+	}
+
+	return netutil.LocalIP()
 }

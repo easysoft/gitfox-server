@@ -18,8 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net"
-	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -27,10 +25,10 @@ import (
 	"golang.org/x/sys/windows/svc"
 	"golang.org/x/sys/windows/svc/mgr"
 
+	"github.com/Microsoft/go-winio"
 	"github.com/easysoft/gitfox-community/cmd/cli/operations/server"
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	clii18n "github.com/easysoft/gitfox-community/pkg/i18n/cli"
-	"github.com/Microsoft/go-winio"
 	"github.com/quicklyon/kingpin/v2"
 	"golang.org/x/sys/windows"
 )
@@ -384,22 +382,6 @@ func extractWorkDirFromBinaryPath(binPath string) string {
 	return rest
 }
 
-// newDockerHTTPClientNpipePath 直接基于命名管道路径构造拨号 client。
-func newDockerHTTPClientNpipePath(path string) (*http.Client, string, error) {
-	if path == "" {
-		path = defaultDockerNpipe
-	}
-	client := &http.Client{
-		Timeout: dockerProbeTimeout,
-		Transport: &http.Transport{
-			DialContext: func(ctx context.Context, _, _ string) (net.Conn, error) {
-				return winio.DialPipeContext(ctx, path)
-			},
-		},
-	}
-	return client, "http://docker", nil
-}
-
 // dockerNpipeExists 判断 Windows named pipe 是否存在。
 // os.Stat 对命名管道并不可靠，使用 CreateFile（由 winio.DialPipeContext 封装）
 // 进行探测：找不到管道时返回 false；连接成功、管道忙或权限不足都说明管道端点存在。
@@ -418,7 +400,7 @@ func dockerNpipeExists(path string) bool {
 	}
 
 	// 这些错误明确表示 named pipe 端点不存在；其他错误（例如忙、超时、
-	// 权限不足）均视为端点存在，交由后续 dockerPing 判定服务是否可用。
+	// 权限不足）均视为端点存在，交由 CheckDocker 的 SDK Ping 判定服务是否可用。
 	return !errors.Is(err, windows.ERROR_FILE_NOT_FOUND) &&
 		!errors.Is(err, windows.ERROR_PATH_NOT_FOUND) &&
 		!errors.Is(err, windows.ERROR_INVALID_NAME)

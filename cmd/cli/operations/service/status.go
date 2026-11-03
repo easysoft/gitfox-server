@@ -7,10 +7,13 @@ package service
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
+	"github.com/charmbracelet/lipgloss"
+	"github.com/easysoft/gitfox-community/pkg/config"
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	clii18n "github.com/easysoft/gitfox-community/pkg/i18n/cli"
-	"github.com/charmbracelet/lipgloss"
+	"github.com/joho/godotenv"
 	"github.com/quicklyon/kingpin/v2"
 )
 
@@ -31,6 +34,14 @@ func runStatus(_ *kingpin.ParseContext) error {
 	errStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF4500"))
 	warnStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF8C00"))
 	headerStyle := lipgloss.NewStyle().Bold(true)
+
+	// 让依赖检查（尤其远端 Docker 连接）与服务读取同一份 prod.env。
+	// godotenv.Load 不覆盖进程已有环境变量，显式 export 的配置优先。
+	if workDir, err := WorkDir(); err == nil {
+		_ = godotenv.Load(filepath.Join(workDir, ProdEnvFileName))
+	}
+	// 预检与服务进程使用同一套归一化规则：GITFOX_DOCKER_* 优先于标准 DOCKER_*。
+	config.NormalizeDockerEnv()
 
 	// ========== 阶段 0：环境依赖检查 ==========
 	missing := Check(headerStyle, okStyle, errStyle, warnStyle)
