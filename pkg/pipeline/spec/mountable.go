@@ -1,0 +1,13 @@
+// @copyright   Copyright 2009-2026 渠成极客软件（青岛）有限公司(Qucheng Geek Software (Qingdao) Co., Ltd. www.gitfox.net)
+// @license     ZPL(http://zpl.pub/page/zplv12.html) or AGPL(https://www.gnu.org/licenses/agpl-3.0.en.html)
+// @author      mazhiyuan <mazhiyuan@gitfox.com>
+
+package yaml
+
+// Mountable is implemented by step specs that support volume mounts.
+// The resolver uses it to carry mounts declared on a plugin step over to
+// the concrete step spec produced by expanding the plugin definition.
+type Mountable interface {
+	GetMounts() []*Mount
+	SetMounts(mounts []*Mount)
+}

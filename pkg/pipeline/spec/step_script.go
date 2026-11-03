@@ -23,3 +23,13 @@ type StepScript struct {
 	Resources  *Resources        `json:"resources,omitempty"`
 	Mount      []*Mount          `json:"mount,omitempty"`
 }
+
+// GetMounts returns the mounts declared on the step.
+func (s *StepScript) GetMounts() []*Mount {
+	return s.Mount
+}
+
+// SetMounts replaces the mounts declared on the step.
+func (s *StepScript) SetMounts(mounts []*Mount) {
+	s.Mount = mounts
+}

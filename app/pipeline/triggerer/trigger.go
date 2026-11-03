@@ -33,6 +33,7 @@ import (
 	v1yaml "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 	normalize "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/normalize"
 	specresolver "github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/resolver"
+	"github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/validate"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/script"
 	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
@@ -360,6 +361,12 @@ func parseV1Stages(
 			return nil, err
 		}
 
+		// 校验卷挂载声明（卷名是否存在、路径是否合法、卷类型是否支持），
+		// 在触发阶段就报错，而不是等到运行时静默丢弃挂载
+		if err := validateV1StageMounts(v); err != nil {
+			return nil, err
+		}
+
 		// Expand expressions in strings and matrices
 		script.ExpandConfig(config, inputParams)
 
@@ -486,6 +493,17 @@ func validateV1PipelineSpec(pipeline *v1yaml.Pipeline) error {
 	}
 	for _, stage := range pipeline.Stages {
 		if err := validateV1Stage(stage); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// validateV1StageMounts 校验各阶段 step 上的卷挂载声明。
+// 需要在插件/模板展开之后调用，才能覆盖展开后步骤继承的挂载。
+func validateV1StageMounts(pipeline *v1yaml.Pipeline) error {
+	for _, stage := range pipeline.Stages {
+		if err := validate.ValidateStageMounts(stage); err != nil {
 			return err
 		}
 	}

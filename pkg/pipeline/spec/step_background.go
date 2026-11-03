@@ -22,3 +22,13 @@ type StepBackground struct {
 	Resources  *Resources        `json:"resources,omitempty"`
 	Workdir    string            `json:"workdir,omitempty"`
 }
+
+// GetMounts returns the mounts declared on the step.
+func (s *StepBackground) GetMounts() []*Mount {
+	return s.Mount
+}
+
+// SetMounts replaces the mounts declared on the step.
+func (s *StepBackground) SetMounts(mounts []*Mount) {
+	s.Mount = mounts
+}

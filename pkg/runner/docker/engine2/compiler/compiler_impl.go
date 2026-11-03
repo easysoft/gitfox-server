@@ -15,6 +15,7 @@ import (
 	"github.com/easysoft/gitfox-community/app/service/pipeline"
 	"github.com/easysoft/gitfox-community/pkg/logger"
 	harness "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
+	"github.com/easysoft/gitfox-community/pkg/pipeline/spec/parse/validate"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/engine"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/inputs"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/internal/docker/image"
@@ -148,6 +149,13 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 	stageSpec, ok := stage.Spec.(*harness.StageCI)
 	if !ok {
 		return nil, errors.New("ci stage resource not found")
+	}
+
+	// validate the volume mounts before compiling so that invalid
+	// declarations fail with a readable error instead of being
+	// silently dropped by the runner.
+	if err := validate.ValidateStageMounts(stage); err != nil {
+		return nil, err
 	}
 
 	// extract the pipeline stage platform
@@ -367,7 +375,7 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 				}
 
 				step_.Envs = environ.Combine(envs, step_.Envs)
-				step_.Volumes = append(step_.Volumes, mount)
+				appendWorkspaceMount(ctx, step_, mount)
 				step_.Labels = stageLabels
 				step_.ExtraHosts = append(step_.ExtraHosts, c.ExtraHosts...)
 				step_.Privileged = c.isPrivileged(step_)
@@ -592,6 +600,22 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 	}
 
 	return spec, nil
+}
+
+// appendWorkspaceMount appends the built-in workspace mount to the step
+// unless the step already mounts a volume at the same path. An explicit user
+// mount takes precedence over the workspace, which would otherwise make
+// Docker fail with a duplicate mount point error.
+func appendWorkspaceMount(ctx context.Context, step *engine.Step, workspace *engine.VolumeMount) {
+	for _, v := range step.Volumes {
+		if v.Path == workspace.Path {
+			logger.GetLogger(ctx).Warnf(
+				"step %q mounts volume %q at workspace path %q; workspace volume is skipped for this step",
+				step.Name, v.Name, v.Path)
+			return
+		}
+	}
+	step.Volumes = append(step.Volumes, workspace)
 }
 
 // applyStepRunPolicy 根据 step 的 when 条件设置容器运行策略。

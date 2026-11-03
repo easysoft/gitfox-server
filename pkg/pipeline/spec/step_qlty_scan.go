@@ -12,3 +12,13 @@ type StepQltyScan struct {
 	Outputs    []string          `json:"outputs,omitempty"`
 	Mount      []*Mount          `json:"mount,omitempty"`
 }
+
+// GetMounts returns the mounts declared on the step.
+func (s *StepQltyScan) GetMounts() []*Mount {
+	return s.Mount
+}
+
+// SetMounts replaces the mounts declared on the step.
+func (s *StepQltyScan) SetMounts(mounts []*Mount) {
+	s.Mount = mounts
+}
