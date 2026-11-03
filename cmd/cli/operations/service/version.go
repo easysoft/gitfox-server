@@ -57,6 +57,7 @@ func runVersion(args *versionArgs) error {
 	}
 
 	printRow(t(i18n.CliVersionVersion), info.Version)
+	printRow(t(i18n.CliVersionEdition), info.Edition)
 	printRow(t(i18n.CliVersionBuildDate), info.BuildDate)
 	printRow(t(i18n.CliVersionGitBranch), info.GitBranch)
 	printRow(t(i18n.CliVersionGitCommit), info.GitCommitHash)
