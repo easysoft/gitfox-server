@@ -61,16 +61,23 @@ ENV GITFOX_LOG_LEVEL=0
 ENV GITFOX_CI_PLUGINS_ZIP_URL=/app/ciPlugins/plugins.tar.gz
 
 COPY bin/linux-${TARGETARCH}/gitfox /app/gitfox
-COPY configs/prod.env /app/prod.env
-COPY configs/prod.yaml /app/prod.yaml
+
+# 默认配置模板：仅用于运行期播种到 /data
+COPY bin/linux-${TARGETARCH}/prod.env /app/defaults/prod.env
+COPY bin/linux-${TARGETARCH}/prod.yaml /app/defaults/prod.yaml
+
 COPY resources/ciPlugins/plugins.tar.gz /app/ciPlugins/plugins.tar.gz
 
 
 
 COPY --from=cert-image /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
+COPY deploy/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 3000
 EXPOSE 22
 EXPOSE 3322
 
-CMD [ "/app/gitfox", "server", "prod" ]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["server", "/data/gitfox-community/prod"]
