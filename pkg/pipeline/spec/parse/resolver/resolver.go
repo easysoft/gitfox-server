@@ -16,6 +16,8 @@ package resolver
 
 import (
 	"errors"
+	"fmt"
+	"path"
 
 	schema "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 )
@@ -117,6 +119,13 @@ func resolveStep(step *schema.Step, fn LookupFunc) error {
 			}
 			step.Spec = vv.Step.Spec
 			step.Type = vv.Step.Type
+			stepName := step.Name
+			if stepName == "" {
+				stepName = step.Id
+			}
+			if err := inheritMounts(stepName, step.Type, step.Spec, v.Mount); err != nil {
+				return err
+			}
 			step.Inputs = map[string]interface{}{}
 			for k, v := range vv.Inputs {
 				if v != nil {
@@ -133,4 +142,45 @@ func resolveStep(step *schema.Step, fn LookupFunc) error {
 	}
 
 	return nil
+}
+
+// inheritMounts merges the mounts declared on a plugin step into the spec of
+// the concrete step produced by expanding the plugin definition.
+func inheritMounts(stepName, stepType string, dst any, mounts []*schema.Mount) error {
+	if len(mounts) == 0 {
+		return nil
+	}
+	m, ok := dst.(schema.Mountable)
+	if !ok {
+		return fmt.Errorf("step %q: resolved plugin step type %q does not support mount", stepName, stepType)
+	}
+	m.SetMounts(mergeMounts(m.GetMounts(), mounts))
+	return nil
+}
+
+// mergeMounts merges the mounts from the plugin definition (base) with the
+// mounts declared on the plugin step (override). An override mount replaces a
+// base mount with the same path; mounts with the same name but different
+// paths are kept.
+func mergeMounts(base, override []*schema.Mount) []*schema.Mount {
+	// Compare normalized paths: the validator later deduplicates with
+	// path.Clean, so "/data" and "/data/" (or "/a/../data") refer to the same
+	// mount point. Without normalization an override would not replace the
+	// base mount and validation would report a confusing duplicate path.
+	overridden := make(map[string]struct{}, len(override))
+	for _, m := range override {
+		if m != nil {
+			overridden[path.Clean(m.Path)] = struct{}{}
+		}
+	}
+	out := make([]*schema.Mount, 0, len(base)+len(override))
+	for _, m := range base {
+		if m == nil {
+			continue
+		}
+		if _, ok := overridden[path.Clean(m.Path)]; !ok {
+			out = append(out, m)
+		}
+	}
+	return append(out, override...)
 }

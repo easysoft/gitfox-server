@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	pipelineModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/pipeline"
+	pipelineModel "github.com/easysoft/gitfox-community/app/model/pipeline"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

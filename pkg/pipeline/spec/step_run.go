@@ -14,3 +14,13 @@ type StepRun struct {
 	Mount      []*Mount          `json:"mount,omitempty"`
 	Privileged bool              `json:"privileged,omitempty"`
 }
+
+// GetMounts returns the mounts declared on the step.
+func (s *StepRun) GetMounts() []*Mount {
+	return s.Mount
+}
+
+// SetMounts replaces the mounts declared on the step.
+func (s *StepRun) SetMounts(mounts []*Mount) {
+	s.Mount = mounts
+}
