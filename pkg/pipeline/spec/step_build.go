@@ -17,3 +17,13 @@ type StepBuild struct {
 	PostActions []string          `json:"postActions,omitempty"`
 	BuildEnv    string            `json:"buildEnv,omitempty"`
 }
+
+// GetMounts returns the mounts declared on the step.
+func (s *StepBuild) GetMounts() []*Mount {
+	return s.Mount
+}
+
+// SetMounts replaces the mounts declared on the step.
+func (s *StepBuild) SetMounts(mounts []*Mount) {
+	s.Mount = mounts
+}

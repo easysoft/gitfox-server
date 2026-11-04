@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	repoModel "gitfox.zcorp.cc/git/Pangu/gitfox-community/app/model/repo"
+	repoModel "github.com/easysoft/gitfox-community/app/model/repo"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
