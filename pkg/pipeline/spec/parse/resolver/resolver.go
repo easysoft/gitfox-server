@@ -17,6 +17,7 @@ package resolver
 import (
 	"errors"
 	"fmt"
+	"path"
 
 	schema "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 )
@@ -162,10 +163,14 @@ func inheritMounts(stepName, stepType string, dst any, mounts []*schema.Mount) e
 // base mount with the same path; mounts with the same name but different
 // paths are kept.
 func mergeMounts(base, override []*schema.Mount) []*schema.Mount {
+	// Compare normalized paths: the validator later deduplicates with
+	// path.Clean, so "/data" and "/data/" (or "/a/../data") refer to the same
+	// mount point. Without normalization an override would not replace the
+	// base mount and validation would report a confusing duplicate path.
 	overridden := make(map[string]struct{}, len(override))
 	for _, m := range override {
 		if m != nil {
-			overridden[m.Path] = struct{}{}
+			overridden[path.Clean(m.Path)] = struct{}{}
 		}
 	}
 	out := make([]*schema.Mount, 0, len(base)+len(override))
@@ -173,7 +178,7 @@ func mergeMounts(base, override []*schema.Mount) []*schema.Mount {
 		if m == nil {
 			continue
 		}
-		if _, ok := overridden[m.Path]; !ok {
+		if _, ok := overridden[path.Clean(m.Path)]; !ok {
 			out = append(out, m)
 		}
 	}

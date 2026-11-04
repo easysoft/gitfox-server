@@ -104,6 +104,22 @@ func TestValidateStageMounts(t *testing.T) {
 			wantErr: `duplicate mount path "/data"`,
 		},
 		{
+			name: "挂载路径为根路径",
+			stage: ciStage(
+				[]*schema.Volume{tempVolume("tmp")},
+				runStep("build", &schema.Mount{Name: "tmp", Path: "/"}),
+			),
+			wantErr: `mount path must not be the container root: "/"`,
+		},
+		{
+			name: "含 .. 折叠到根路径",
+			stage: ciStage(
+				[]*schema.Volume{tempVolume("tmp")},
+				runStep("build", &schema.Mount{Name: "tmp", Path: "/a/../.."}),
+			),
+			wantErr: `mount path must not be the container root: "/a/../.."`,
+		},
+		{
 			name: "卷名重复",
 			stage: ciStage(
 				[]*schema.Volume{
@@ -147,6 +163,20 @@ func TestValidateStageMounts(t *testing.T) {
 				[]*schema.Volume{{Name: "cache", Type: "claim", Spec: &schema.VolumeClaim{}}},
 			),
 			wantErr: `stage volume "cache": volume type "claim" is not supported`,
+		},
+		{
+			name: "host 卷 path 为空",
+			stage: ciStage(
+				[]*schema.Volume{{Name: "cache", Type: "host", Spec: &schema.VolumeHost{}}},
+			),
+			wantErr: `stage volume "cache": host path must not be empty`,
+		},
+		{
+			name: "合法 host 卷",
+			stage: ciStage(
+				[]*schema.Volume{{Name: "cache", Type: "host", Spec: &schema.VolumeHost{Path: "/data"}}},
+				runStep("build", &schema.Mount{Name: "cache", Path: "/cache"}),
+			),
 		},
 		{
 			name: "递归校验 group 内的步骤",

@@ -57,8 +57,15 @@ func ValidateStageMounts(stage *schema.Stage) error {
 		if _, ok := volumes[volume.Name]; ok {
 			return fmt.Errorf("stage volume %q is declared more than once", volume.Name)
 		}
-		switch volume.Spec.(type) {
-		case *schema.VolumeHost, *schema.VolumeTemp:
+		switch vv := volume.Spec.(type) {
+		case *schema.VolumeHost:
+			// An empty host path is compiled into an empty bind source, which
+			// Docker only rejects when the container is created. Reject it here
+			// so the error names the offending stage volume.
+			if vv.Path == "" {
+				return fmt.Errorf("stage volume %q: host path must not be empty", volume.Name)
+			}
+		case *schema.VolumeTemp:
 		default:
 			return fmt.Errorf("stage volume %q: volume type %q is not supported", volume.Name, volume.Type)
 		}
@@ -120,6 +127,14 @@ func validateStepMounts(step *schema.Step, volumes map[string]*schema.Volume) er
 		// duplicate check and all downstream consumers (the workspace mount
 		// conflict check in particular) use the same path Docker will use.
 		cleanPath := path.Clean(mount.Path)
+		// path.Clean collapses paths that climb above the root ("/..",
+		// "/a/../..") to "/", which is absolute and would otherwise pass
+		// validation. Mounting a volume at the container root is rejected by
+		// Docker only at container creation time, with an error that no longer
+		// mentions the step, so reject it here.
+		if cleanPath == "/" {
+			return fmt.Errorf("step %q: mount path must not be the container root: %q", name, mount.Path)
+		}
 		if _, ok := paths[cleanPath]; ok {
 			return fmt.Errorf("step %q: duplicate mount path %q", name, cleanPath)
 		}

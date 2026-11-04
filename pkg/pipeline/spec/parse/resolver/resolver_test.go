@@ -169,3 +169,46 @@ func TestMergeMountsKeepsDuplicateOverridePaths(t *testing.T) {
 	got := mergeMounts(base, override)
 	assertMounts(t, got, override)
 }
+
+// 归一化后相同的路径也应视为覆盖，而不是保留两条后被校验器报重复。
+func TestMergeMountsNormalizesPaths(t *testing.T) {
+	tests := []struct {
+		name     string
+		base     string
+		override string
+	}{
+		{name: "末尾斜杠", base: "/data", override: "/data/"},
+		{name: "点段折叠", base: "/data", override: "/a/../data"},
+		{name: "反向等价", base: "/data/", override: "/data"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			base := []*schema.Mount{{Name: "base", Path: test.base}}
+			override := []*schema.Mount{{Name: "override", Path: test.override}}
+
+			got := mergeMounts(base, override)
+			assertMounts(t, got, override)
+		})
+	}
+}
+
+// 插件定义与用户挂载的路径写法不同但归一化后相同时，用户挂载覆盖插件定义。
+func TestResolvePluginStepOverrideNormalizedPath(t *testing.T) {
+	config := pluginPipeline("build", []*schema.Mount{{Name: "tmp", Path: "/cache/"}})
+	lookup := stepPluginLookup(&schema.Step{
+		Type: "script",
+		Spec: &schema.StepScript{
+			Image: "alpine",
+			Mount: []*schema.Mount{{Name: "cache", Path: "/cache"}},
+		},
+	})
+
+	if err := Resolve(config, lookup); err != nil {
+		t.Fatalf("Resolve: %v", err)
+	}
+
+	step := resolvedStep(t, config)
+	spec := step.Spec.(*schema.StepScript)
+	assertMounts(t, spec.Mount, []*schema.Mount{{Name: "tmp", Path: "/cache/"}})
+}
