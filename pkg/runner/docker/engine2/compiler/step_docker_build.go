@@ -41,7 +41,7 @@ func createDockerBuildSteps(stage *harness.Stage, src *harness.Step,
 func createDockerBuildDindStep(stage *harness.Stage, src *harness.Step, spec *harness.StepBuildAndPushDockerImage,
 	args Args, svc *pipeline.Service) []*engine.Step {
 	volPath := "/var/run"
-	volName := "socketDir"
+	volName := harness.VolumeNameSocketDir
 
 	stageSpec, ok := stage.Spec.(*harness.StageCI)
 	if !ok {

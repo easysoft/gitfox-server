@@ -15,3 +15,13 @@ type StepBuildCommon struct {
 	Version   string            `json:"version,omitempty"`
 	BuildEnv  string            `json:"buildEnv,omitempty"`
 }
+
+// GetMounts returns the mounts declared on the step.
+func (s *StepBuildCommon) GetMounts() []*Mount {
+	return s.Mount
+}
+
+// SetMounts replaces the mounts declared on the step.
+func (s *StepBuildCommon) SetMounts(mounts []*Mount) {
+	s.Mount = mounts
+}
