@@ -1,40 +1,82 @@
 services:
-  gitfox:
-    image: hub.zentao.net/app/gitfox-community:2.1-20260904
-    container_name: gitfox
-    restart: unless-stopped
+  zentao-db:
+    image: hub.zentao.net/app/mysql:8.0.36-debian
+    container_name: zentao-db
     ports:
-      - "3000:3000"
-      - "3322:3322"
-    environment:
-      GITFOX_SERVER_PROTO: http
-      GITFOX_SERVER_HOST: example.com
-      GITFOX_REPO_URL_EXPOSE_PORT: true
-      GITFOX_HTTP_PORT: 3000
-      GITFOX_SSH_PORT: 3322
-      GITFOX_DEVOPS_URL: http://example.com/api.php/v1
-      # GITFOX_DB_DATASOURCE: user:password@tcp(mysql:3306)/gitfox-community?parseTime=true&loc=Local
-
-      GITFOX_DB_DRIVER: mysql
-      GITFOX_DB_HOST: mysql
-      GITFOX_DB_PORT: 3306
-      GITFOX_DB_USER: gitfox
-      GITFOX_DB_PASSWORD: please_change
-      GITFOX_DB_NAME: gitfox
-      GITFOX_DB_TIMEZONE: Asia/Shanghai
+      - '3306:3306'
     volumes:
-      - gitfox-data:/data
+      - /data/zentao-mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass4Zentao
+      - MYSQL_DATABASE=zentao
+    networks:
+      - zentao-net
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost:3000/public/health"]
+      test: ["CMD-SHELL", "mysqladmin ping -h127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+  zentao:
+    image: hub.zentao.net/test/gitfox-front:4.4
+    container_name: zentao
+    ports:
+      - '80:80'
+    volumes:
+      - /data/zentao-file:/data
+    depends_on:
+      zentao-db:
+        condition: service_healthy
+    environment:
+      - ZT_MYSQL_HOST=zentao-db
+      - ZT_MYSQL_PORT=3306
+      - ZT_MYSQL_USER=root
+      - ZT_MYSQL_PASSWORD=pass4Zentao
+      - ZT_MYSQL_DB=zentao
+      - PHP_MAX_EXECUTION_TIME=120
+      - PHP_MEMORY_LIMIT=512M
+      - PHP_POST_MAX_SIZE=128M
+      - PHP_UPLOAD_MAX_FILESIZE=128M
+      - ZT_GITFOX_PORT=3000
+      - ZT_GITFOX_URL=3000
+      - ZT_GITFOX_URL=3000
+      - IS_CONTAINER=true
+    networks:
+      - zentao-net
+  gitfox:
+    image: gitfox-server:4.4-20261104
+    container_name: gitfox
+    ports:
+      - '3000:3000'
+      - '3322:3322'
+    volumes:
+      - /data/zentao-file:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      zentao-db:
+        condition: service_healthy
+    environment:
+      - GITFOX_SERVER_PROTO=http
+      - GITFOX_SERVER_HOST=example.com  #当前服务器地址 
+      - GITFOX_REPO_URL_EXPOSE_PORT=true
+      - GITFOX_HTTP_PORT=3000
+      - GITFOX_SSH_PORT=3322
+      - GITFOX_DEVOPS_URL=http://example.com/api.php/v1 #禅道服务器地址 
+      - GITFOX_DB_DRIVER=mysql
+      - GITFOX_DB_HOST=zentao-db
+      - GITFOX_DB_PORT=3306
+      - GITFOX_DB_USER=root
+      - GITFOX_DB_PASSWORD=pass4Zentao
+      - GITFOX_DB_NAME=zentao
+      - GITFOX_DB_TIMEZONE=Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:3000/public/health"]
       interval: 5s
       timeout: 1s
       retries: 1
       start_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: "1.0"
-          memory: 1g
-
-volumes:
-  gitfox-data:
+    networks:
+      - zentao-net
+networks:
+  zentao-net:
+    driver: bridge
