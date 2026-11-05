@@ -70,6 +70,12 @@ unset GITFOX_NETRC_PASSWORD
 unset GITFOX_NETRC_FILE
 
 set -e
+
+# Merge stderr into stdout. The docker log stream does not preserve the
+# relative order of the two streams, so traces and command output would
+# otherwise be reordered in the log. The runner writes both streams to the
+# same log writer anyway.
+exec 2>&1
 `
 
 // traceScript is a helper script that is added to

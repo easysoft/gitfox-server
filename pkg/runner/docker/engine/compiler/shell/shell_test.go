@@ -5,6 +5,7 @@
 package shell
 
 import (
+	"bytes"
 	"os/exec"
 	"strings"
 	"testing"
@@ -68,5 +69,34 @@ func TestScriptMultilineTraceOrder(t *testing.T) {
 	want := "+ echo ONE\nONE\n+ echo TWO\nTWO\n"
 	if !strings.Contains(string(out), want) {
 		t.Errorf("commands and output are not interleaved, got:\n%s", out)
+	}
+}
+
+// Docker 的日志流不保证 stdout/stderr 的先后顺序；脚本需要把 stderr
+// 合并到 stdout，保证命令、trace 和输出在日志中按执行顺序出现。
+func TestScriptMergesStderrIntoStdout(t *testing.T) {
+	if _, err := exec.LookPath("sh"); err != nil {
+		t.Skip("sh not available")
+	}
+
+	script := Script([]string{"echo OUT1; echo ERR1 >&2; echo OUT2; echo ERR2 >&2"})
+	if !strings.Contains(script, "exec 2>&1") {
+		t.Fatalf("script should merge stderr into stdout, got:\n%s", script)
+	}
+
+	cmd := exec.Command("sh")
+	cmd.Stdin = strings.NewReader(script)
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		t.Fatalf("cannot execute script: %v", err)
+	}
+
+	if stderr.Len() != 0 {
+		t.Errorf("stderr should be merged into stdout, got stderr:\n%s", stderr.String())
+	}
+	if want := "OUT1\nERR1\nOUT2\nERR2\n"; !strings.Contains(stdout.String(), want) {
+		t.Errorf("stdout does not preserve command order, got:\n%s", stdout.String())
 	}
 }
