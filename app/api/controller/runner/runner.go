@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/drone/runner-go/client"
 	"github.com/easysoft/gitfox-community/app/api/utils/req"
 	"github.com/easysoft/gitfox-community/app/api/utils/resp"
 	"github.com/easysoft/gitfox-community/app/constant"
@@ -24,7 +25,6 @@ import (
 	"github.com/easysoft/gitfox-community/pkg/i18n"
 	"github.com/easysoft/gitfox-community/pkg/livelog"
 	urlprovider "github.com/easysoft/gitfox-community/pkg/utils/url"
-	"github.com/drone/runner-go/client"
 	"github.com/gin-gonic/gin"
 )
 
@@ -374,6 +374,7 @@ func (ctl *Controller) Register(c *gin.Context) {
 	}
 	runner := &runnerModel.Runner{
 		Name:      reqData.Name,
+		Code:      reqData.Code,
 		Desc:      reqData.Desc,
 		Version:   reqData.Version,
 		Hostname:  reqData.Hostname,
@@ -386,8 +387,7 @@ func (ctl *Controller) Register(c *gin.Context) {
 		EditedBy:  account,
 	}
 
-	// 创建 runner
-	err = ctl.runnerSvc.Create(c.Request.Context(), runner, runnerToken, clientIP)
+	err = ctl.runnerSvc.Create(c.Request.Context(), runner, runnerToken, clientIP, reqData.HostID)
 	if err != nil {
 		err = errors.WithI18nKey(err, i18n.RunnerRegisterError)
 		resp.InternalError(c, err)
