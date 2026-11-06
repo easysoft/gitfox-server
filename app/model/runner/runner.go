@@ -13,6 +13,8 @@ import (
 type Runner struct {
 	ID          uint                        `json:"id"`
 	Name        string                      `json:"name"`
+	HostID      uint                        `json:"hostID"`
+	Code        string                      `json:"code"`
 	Desc        string                      `json:"desc"`
 	Version     string                      `json:"version"`
 	Hostname    string                      `json:"hostname"`
@@ -58,7 +60,9 @@ type ReqForUpdateStatus struct {
 
 // ReqForRegisterRunner 注册 runner 请求
 type RegisterRunnerReq struct {
+	HostID   uint              `json:"hostID"`
 	Name     string            `json:"name" binding:"required"`
+	Code     string            `json:"code"`
 	Desc     string            `json:"desc"`
 	Version  string            `json:"version"`
 	Hostname string            `json:"hostname"`

@@ -28,6 +28,8 @@ func (s *Store) Create(ctx context.Context, runner *runnerModel.Runner) error {
 
 	dbRunner := &Runner{
 		Name:      runner.Name,
+		HostID:    runner.HostID,
+		Code:      runner.Code,
 		Desc:      runner.Desc,
 		Version:   runner.Version,
 		Hostname:  runner.Hostname,
@@ -70,6 +72,8 @@ func (s *Store) Update(ctx context.Context, runner *runnerModel.Runner) error {
 
 	dbRunner := &Runner{
 		Name:      runner.Name,
+		HostID:    runner.HostID,
+		Code:      runner.Code,
 		Desc:      runner.Desc,
 		Version:   runner.Version,
 		Hostname:  runner.Hostname,
@@ -205,6 +209,8 @@ func mapToModel(r *Runner) *runnerModel.Runner {
 	return &runnerModel.Runner{
 		ID:          r.ID,
 		Name:        r.Name,
+		HostID:      r.HostID,
+		Code:        r.Code,
 		Desc:        r.Desc,
 		Version:     r.Version,
 		Hostname:    r.Hostname,
