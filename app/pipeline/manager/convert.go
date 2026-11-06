@@ -5,6 +5,7 @@
 package manager
 
 import (
+	"strconv"
 	"strings"
 	"time"
 
@@ -139,14 +140,44 @@ func runnerStepName(code, name string) string {
 	return code + "::" + name
 }
 
-// splitRunnerStepName decodes a runner wire name. SplitN keeps any "::"
-// inside the display name intact.
-func splitRunnerStepName(name string) (code, display string) {
-	parts := strings.SplitN(name, "::", 2)
-	if len(parts) == 2 {
-		return parts[0], parts[1]
+// isRunnerStepCode reports whether code looks like an engine2 step ID:
+//   - built-in clone/clean: "drone-" + 20 alphanumeric characters;
+//   - user/derived steps: "<slug>_<buildID>" (the compiler appends the
+//     execution id to every user-facing step).
+//
+// Legacy YAML step names are plain display names and may contain "::", so
+// they must not be decoded as code::name unless the prefix really is an
+// engine ID.
+func isRunnerStepCode(code string, buildID int64) bool {
+	if code == "" {
+		return false
 	}
-	return "", name
+	if strings.HasPrefix(code, "drone-") {
+		suffix := code[len("drone-"):]
+		if len(suffix) != 20 {
+			return false
+		}
+		for _, r := range suffix {
+			if !(r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z' || r >= '0' && r <= '9') {
+				return false
+			}
+		}
+		return true
+	}
+	if buildID > 0 && strings.HasSuffix(code, "_"+strconv.FormatInt(buildID, 10)) {
+		return true
+	}
+	return false
+}
+
+// splitRunnerStepName decodes an engine2 wire name. Legacy display names
+// (including names that contain "::") are returned unchanged.
+func splitRunnerStepName(name string, buildID int64) (code, display string) {
+	parts := strings.SplitN(name, "::", 2)
+	if len(parts) != 2 || !isRunnerStepCode(parts[0], buildID) {
+		return "", name
+	}
+	return parts[0], parts[1]
 }
 
 func ConvertToDroneStep(step *stepModel.Step) *drone.Step {
@@ -183,13 +214,15 @@ func ConvertToDroneNetrc(netrc *Netrc) *drone.Netrc {
 }
 
 func ConvertFromDroneStep(step *drone.Step) *stepModel.Step {
-	code, name := splitRunnerStepName(step.Name)
+	// Step updates never create rows, and the wire name is ambiguous for
+	// legacy YAML (a display name may contain "::"). Leave Name untouched;
+	// updater.do restores Name/Code from the existing row, which is
+	// authoritative and immutable after creation.
 	return &stepModel.Step{
 		ID:       uint(step.ID),
 		StageID:  uint(step.StageID),
 		SN:       step.Number,
-		Code:     code,
-		Name:     name,
+		Name:     step.Name,
 		Status:   constant.ParseCIStatus(step.Status),
 		ErrorLog: step.Error,
 		Started:  toLocal(step.Started),
@@ -199,10 +232,10 @@ func ConvertFromDroneStep(step *drone.Step) *stepModel.Step {
 	}
 }
 
-func ConvertFromDroneSteps(steps []*drone.Step) []*stepModel.Step {
+func ConvertFromDroneSteps(steps []*drone.Step, buildID int64) []*stepModel.Step {
 	typesSteps := make([]*stepModel.Step, len(steps))
 	for i, step := range steps {
-		code, name := splitRunnerStepName(step.Name)
+		code, name := splitRunnerStepName(step.Name, buildID)
 		typesSteps[i] = &stepModel.Step{
 			ID:       uint(step.ID),
 			StageID:  uint(step.StageID),
@@ -250,7 +283,7 @@ func ConvertFromDroneStage(stage *drone.Stage) *stageModel.StageWithSteps {
 			Depends:     stage.DependsOn,
 			Labels:      stage.Labels,
 		},
-		Steps: ConvertFromDroneSteps(stage.Steps),
+		Steps: ConvertFromDroneSteps(stage.Steps, stage.BuildID),
 	}
 }
 
