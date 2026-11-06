@@ -62,6 +62,13 @@ func (u *updater) do(ctx context.Context, step *stepModel.Step) error {
 		return fmt.Errorf("%w: step %d status %s", ErrStepTerminal, step.ID, existing.Status)
 	}
 
+	// The wire name is an execution identity, not the stored display name.
+	// For legacy YAML it is a plain name that may contain "::"; for engine2
+	// it is "code::name". Name and Code are immutable after creation, so the
+	// existing row is authoritative.
+	step.Name = existing.Name
+	step.Code = existing.Code
+
 	if len(step.ErrorLog) > 500 {
 		step.ErrorLog = step.ErrorLog[:500]
 	}

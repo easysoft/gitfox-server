@@ -5,9 +5,12 @@
 package manager
 
 import (
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/drone/drone-go/drone"
+	"github.com/drone/runner-go/client"
 	"github.com/easysoft/gitfox-community/app/constant"
 	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
 	pipelineModel "github.com/easysoft/gitfox-community/app/model/pipeline"
@@ -15,8 +18,6 @@ import (
 	stepModel "github.com/easysoft/gitfox-community/app/model/step"
 	"github.com/easysoft/gitfox-community/pkg/livelog"
 	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/client"
 )
 
 // toUnix converts *datetime.Local to Unix seconds, returns 0 if nil.
@@ -129,12 +130,62 @@ func ConvertToDroneSteps(steps []*stepModel.Step) []*drone.Step {
 	return droneSteps
 }
 
+// runnerStepName encodes the step identity into the runner wire name.
+// code is the engine step ID and name is the display name. Legacy steps
+// have no code and keep the plain display name.
+func runnerStepName(code, name string) string {
+	if code == "" {
+		return name
+	}
+	return code + "::" + name
+}
+
+// isRunnerStepCode reports whether code looks like an engine2 step ID:
+//   - built-in clone/clean: "drone-" + 20 alphanumeric characters;
+//   - user/derived steps: "<slug>_<buildID>" (the compiler appends the
+//     execution id to every user-facing step).
+//
+// Legacy YAML step names are plain display names and may contain "::", so
+// they must not be decoded as code::name unless the prefix really is an
+// engine ID.
+func isRunnerStepCode(code string, buildID int64) bool {
+	if code == "" {
+		return false
+	}
+	if strings.HasPrefix(code, "drone-") {
+		suffix := code[len("drone-"):]
+		if len(suffix) != 20 {
+			return false
+		}
+		for _, r := range suffix {
+			if !(r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z' || r >= '0' && r <= '9') {
+				return false
+			}
+		}
+		return true
+	}
+	if buildID > 0 && strings.HasSuffix(code, "_"+strconv.FormatInt(buildID, 10)) {
+		return true
+	}
+	return false
+}
+
+// splitRunnerStepName decodes an engine2 wire name. Legacy display names
+// (including names that contain "::") are returned unchanged.
+func splitRunnerStepName(name string, buildID int64) (code, display string) {
+	parts := strings.SplitN(name, "::", 2)
+	if len(parts) != 2 || !isRunnerStepCode(parts[0], buildID) {
+		return "", name
+	}
+	return parts[0], parts[1]
+}
+
 func ConvertToDroneStep(step *stepModel.Step) *drone.Step {
 	return &drone.Step{
 		ID:        int64(step.ID),
 		StageID:   int64(step.StageID),
 		Number:    step.SN,
-		Name:      step.Name,
+		Name:      runnerStepName(step.Code, step.Name),
 		Status:    string(step.Status),
 		Error:     step.ErrorLog,
 		Started:   toUnix(step.Started),
@@ -163,6 +214,10 @@ func ConvertToDroneNetrc(netrc *Netrc) *drone.Netrc {
 }
 
 func ConvertFromDroneStep(step *drone.Step) *stepModel.Step {
+	// Step updates never create rows, and the wire name is ambiguous for
+	// legacy YAML (a display name may contain "::"). Leave Name untouched;
+	// updater.do restores Name/Code from the existing row, which is
+	// authoritative and immutable after creation.
 	return &stepModel.Step{
 		ID:       uint(step.ID),
 		StageID:  uint(step.StageID),
@@ -177,22 +232,16 @@ func ConvertFromDroneStep(step *drone.Step) *stepModel.Step {
 	}
 }
 
-func ConvertFromDroneSteps(steps []*drone.Step) []*stepModel.Step {
+func ConvertFromDroneSteps(steps []*drone.Step, buildID int64) []*stepModel.Step {
 	typesSteps := make([]*stepModel.Step, len(steps))
 	for i, step := range steps {
-		stepCode := ""
-		stepName := step.Name
-		stepBaseInfo := strings.Split(step.Name, "::")
-		if len(stepBaseInfo) > 1 {
-			stepCode = stepBaseInfo[0]
-			stepName = stepBaseInfo[1]
-		}
+		code, name := splitRunnerStepName(step.Name, buildID)
 		typesSteps[i] = &stepModel.Step{
 			ID:       uint(step.ID),
 			StageID:  uint(step.StageID),
 			SN:       step.Number,
-			Code:     stepCode,
-			Name:     stepName,
+			Code:     code,
+			Name:     name,
 			Status:   constant.ParseCIStatus(step.Status),
 			ErrorLog: step.Error,
 			Started:  toLocal(step.Started),
@@ -234,7 +283,7 @@ func ConvertFromDroneStage(stage *drone.Stage) *stageModel.StageWithSteps {
 			Depends:     stage.DependsOn,
 			Labels:      stage.Labels,
 		},
-		Steps: ConvertFromDroneSteps(stage.Steps),
+		Steps: ConvertFromDroneSteps(stage.Steps, stage.BuildID),
 	}
 }
 

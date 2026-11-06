@@ -55,6 +55,22 @@ func NewExecer(
 	return exec
 }
 
+// stepKey returns the runtime identity of a step. It must match the wire
+// name built in runner.go and the name returned by the server; otherwise
+// pipeline.State cannot find the step.
+func stepKey(step *engine.Step) string {
+	return step.ID + "::" + step.Name
+}
+
+// stepDisplayName returns the user-facing name of a step. Display is empty
+// for internal steps (clone/clean), in which case Name is the display name.
+func stepDisplayName(step *engine.Step) string {
+	if step.Display != "" {
+		return step.Display
+	}
+	return step.Name
+}
+
 // Exec executes the intermediate representation of the pipeline
 // and returns an error if execution fails.
 func (e *Execer) Exec(ctx context.Context, spec *engine.Spec, state *pipeline.State) error {
@@ -95,7 +111,7 @@ func (e *Execer) Exec(ctx context.Context, spec *engine.Spec, state *pipeline.St
 			// pipeline, and if the step returned a non-zero
 			// exit code, cancel the entire pipeline.
 			if step_.ErrPolicy == engine.ErrFailFast {
-				step := state.Find(step_.Name)
+				step := state.Find(stepKey(step_))
 				// reading data from the step is not thread
 				// safe so we need to acquire a lock.
 				state.Lock()
@@ -207,18 +223,18 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 		break
 	case step.RunPolicy == engine.RunOnFailure && state.Failed() == false:
 		e.skipStepByWhen(state, step, log)
-		return e.reporter.ReportStep(noContext, state, step.Name)
+		return e.reporter.ReportStep(noContext, state, stepKey(step))
 	case step.RunPolicy == engine.RunOnSuccess && state.Failed():
 		e.skipStepByWhen(state, step, log)
-		return e.reporter.ReportStep(noContext, state, step.Name)
-	case state.Finished(step.Name):
+		return e.reporter.ReportStep(noContext, state, stepKey(step))
+	case state.Finished(stepKey(step)):
 		// skip if the step if already in a finished state,
 		// for example, if the step is marked as skipped.
 		return nil
 	}
 
-	state.Start(step.Name)
-	err := e.reporter.ReportStep(noContext, state, step.Name)
+	state.Start(stepKey(step))
+	err := e.reporter.ReportStep(noContext, state, stepKey(step))
 	if err != nil {
 		return err
 	}
@@ -235,12 +251,12 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 		copy.Envs,
 		environ.Build(state.Build),
 		environ.Stage(state.Stage),
-		environ.Step(findStep(state, step.Name)),
+		environ.StepArgs(stepDisplayName(step), int64(findStep(state, stepKey(step)).Number)),
 	)
 	state.Unlock()
 
 	// writer used to stream build logs.
-	wc := e.streamer.Stream(noContext, state, step.Name)
+	wc := e.streamer.Stream(noContext, state, stepKey(step))
 	replaceSecrets := extend.FromSecretContext(ctx)
 	wc = newReplacer(wc, mapToSecrets(replaceSecrets))
 
@@ -273,7 +289,7 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 	// upload card if exists
 	card, ok := ext.File()
 	if ok {
-		err = e.uploader.UploadCard(ctx, card, state, step.Name)
+		err = e.uploader.UploadCard(ctx, card, state, stepKey(step))
 		if err != nil {
 			log.Warnln("cannot upload card")
 		}
@@ -291,12 +307,12 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 	if exited != nil {
 		if exited.OOMKilled {
 			log.Debugln("received oom kill.")
-			state.Finish(step.Name, 137)
+			state.Finish(stepKey(step), 137)
 		} else {
 			log.Debugf("received exit code %d", exited.ExitCode)
-			state.Finish(step.Name, exited.ExitCode)
+			state.Finish(stepKey(step), exited.ExitCode)
 		}
-		err := e.reporter.ReportStep(noContext, state, step.Name)
+		err := e.reporter.ReportStep(noContext, state, stepKey(step))
 		if err != nil {
 			log.Warnln("cannot report step status.")
 			result = multierror.Append(result, err)
@@ -318,8 +334,8 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 
 	// if the step failed with an internal error (as opposed to a
 	// runtime error) the step is failed.
-	state.Fail(step.Name, err)
-	err = e.reporter.ReportStep(noContext, state, step.Name)
+	state.Fail(stepKey(step), err)
+	err = e.reporter.ReportStep(noContext, state, stepKey(step))
 	if err != nil {
 		log.Warnln("cannot report step failure.")
 		result = multierror.Append(result, err)
@@ -331,7 +347,7 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec *engine.S
 // 把步骤状态置为 skipped；跳过原因写入 step.Error，随上报落库为 errorLog。
 func (e *Execer) skipStepByWhen(state *pipeline.State, step *engine.Step, log *logger.SugaredMateLogger) {
 	if step.WhenCondition != "" {
-		wc := e.streamer.Stream(noContext, state, step.Name)
+		wc := e.streamer.Stream(noContext, state, stepKey(step))
 		if _, err := fmt.Fprintf(wc, harness.WhenSkippedStepTmpl+"\n", step.WhenCondition); err != nil {
 			log.Warnln("cannot write skip log.")
 		}
@@ -340,9 +356,9 @@ func (e *Execer) skipStepByWhen(state *pipeline.State, step *engine.Step, log *l
 		}
 	}
 
-	state.Skip(step.Name)
+	state.Skip(stepKey(step))
 	if step.WhenCondition != "" {
-		target := state.Find(step.Name)
+		target := state.Find(stepKey(step))
 		target.Error = fmt.Sprintf(harness.WhenSkippedStepTmpl, step.WhenCondition)
 	}
 }
