@@ -327,7 +327,7 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 
 	for _, src := range spec.Steps {
 		step := &drone.Step{
-			Name:      fmt.Sprintf("%s::%s", src.ID, src.Name),
+			Name:      stepKey(src),
 			Number:    len(stage.Steps) + 1,
 			StageID:   stage.ID,
 			Status:    drone.StatusPending,
