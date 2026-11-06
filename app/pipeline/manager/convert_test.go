@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/drone/drone-go/drone"
+	stepModel "github.com/easysoft/gitfox-community/app/model/step"
 )
 
 func TestResolveLineTimestamp(t *testing.T) {
@@ -66,5 +67,94 @@ func TestConvertFromDroneLine(t *testing.T) {
 	}
 	if want := int64(1789004680); got.Timestamp != want {
 		t.Fatalf("Timestamp = %d, want %d", got.Timestamp, want)
+	}
+}
+
+func TestRunnerStepName(t *testing.T) {
+	tests := []struct {
+		name string
+		code string
+		want string
+	}{
+		{name: "正常拼接", code: "test1_42", want: "test1_42::测试"},
+		{name: "legacy 无 code 退化", code: "", want: "测试"},
+		{name: "空显示名", code: "test1_42", want: "test1_42::"},
+		{name: "显示名含分隔符", code: "test1_42", want: "test1_42::a::b"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			display := "测试"
+			switch tt.name {
+			case "空显示名":
+				display = ""
+			case "显示名含分隔符":
+				display = "a::b"
+			}
+			if got := runnerStepName(tt.code, display); got != tt.want {
+				t.Fatalf("runnerStepName(%q, %q) = %q, want %q", tt.code, display, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSplitRunnerStepName(t *testing.T) {
+	tests := []struct {
+		input    string
+		wantCode string
+		wantName string
+	}{
+		{input: "test1_42::测试", wantCode: "test1_42", wantName: "测试"},
+		{input: "测试", wantCode: "", wantName: "测试"},
+		{input: "a::b::c", wantCode: "a", wantName: "b::c"},
+		{input: "test1_42::", wantCode: "test1_42", wantName: ""},
+		{input: "", wantCode: "", wantName: ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			code, name := splitRunnerStepName(tt.input)
+			if code != tt.wantCode || name != tt.wantName {
+				t.Fatalf("splitRunnerStepName(%q) = (%q, %q), want (%q, %q)", tt.input, code, name, tt.wantCode, tt.wantName)
+			}
+		})
+	}
+}
+
+func TestConvertStepIdentityRoundTrip(t *testing.T) {
+	tests := []struct {
+		name string
+		code string
+		text string
+	}{
+		{name: "普通 step", code: "test1_42", text: "测试"},
+		{name: "legacy 无 code", code: "", text: "构建"},
+		{name: "显示名含分隔符", code: "frontend_42", text: "构建::前端"},
+		{name: "空显示名", code: "deploy_42", text: ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			model := &stepModel.Step{
+				ID:      1,
+				StageID: 2,
+				SN:      3,
+				Code:    tt.code,
+				Name:    tt.text,
+			}
+
+			// 单数：UpdateStep 走这条
+			wire := ConvertToDroneStep(model)
+			back := ConvertFromDroneStep(wire)
+			if back.Code != tt.code || back.Name != tt.text {
+				t.Fatalf("single round-trip = (%q, %q), want (%q, %q)", back.Code, back.Name, tt.code, tt.text)
+			}
+
+			// 复数：UpdateStage 走这条
+			backSteps := ConvertFromDroneSteps(ConvertToDroneSteps([]*stepModel.Step{model}))
+			if len(backSteps) != 1 || backSteps[0].Code != tt.code || backSteps[0].Name != tt.text {
+				t.Fatalf("plural round-trip = %+v, want code=%q name=%q", backSteps, tt.code, tt.text)
+			}
+		})
 	}
 }

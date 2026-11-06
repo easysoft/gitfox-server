@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/drone/drone-go/drone"
+	"github.com/drone/runner-go/client"
 	"github.com/easysoft/gitfox-community/app/constant"
 	executionModel "github.com/easysoft/gitfox-community/app/model/execution"
 	pipelineModel "github.com/easysoft/gitfox-community/app/model/pipeline"
@@ -15,8 +17,6 @@ import (
 	stepModel "github.com/easysoft/gitfox-community/app/model/step"
 	"github.com/easysoft/gitfox-community/pkg/livelog"
 	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/client"
 )
 
 // toUnix converts *datetime.Local to Unix seconds, returns 0 if nil.
@@ -129,12 +129,32 @@ func ConvertToDroneSteps(steps []*stepModel.Step) []*drone.Step {
 	return droneSteps
 }
 
+// runnerStepName encodes the step identity into the runner wire name.
+// code is the engine step ID and name is the display name. Legacy steps
+// have no code and keep the plain display name.
+func runnerStepName(code, name string) string {
+	if code == "" {
+		return name
+	}
+	return code + "::" + name
+}
+
+// splitRunnerStepName decodes a runner wire name. SplitN keeps any "::"
+// inside the display name intact.
+func splitRunnerStepName(name string) (code, display string) {
+	parts := strings.SplitN(name, "::", 2)
+	if len(parts) == 2 {
+		return parts[0], parts[1]
+	}
+	return "", name
+}
+
 func ConvertToDroneStep(step *stepModel.Step) *drone.Step {
 	return &drone.Step{
 		ID:        int64(step.ID),
 		StageID:   int64(step.StageID),
 		Number:    step.SN,
-		Name:      step.Name,
+		Name:      runnerStepName(step.Code, step.Name),
 		Status:    string(step.Status),
 		Error:     step.ErrorLog,
 		Started:   toUnix(step.Started),
@@ -163,11 +183,13 @@ func ConvertToDroneNetrc(netrc *Netrc) *drone.Netrc {
 }
 
 func ConvertFromDroneStep(step *drone.Step) *stepModel.Step {
+	code, name := splitRunnerStepName(step.Name)
 	return &stepModel.Step{
 		ID:       uint(step.ID),
 		StageID:  uint(step.StageID),
 		SN:       step.Number,
-		Name:     step.Name,
+		Code:     code,
+		Name:     name,
 		Status:   constant.ParseCIStatus(step.Status),
 		ErrorLog: step.Error,
 		Started:  toLocal(step.Started),
@@ -180,19 +202,13 @@ func ConvertFromDroneStep(step *drone.Step) *stepModel.Step {
 func ConvertFromDroneSteps(steps []*drone.Step) []*stepModel.Step {
 	typesSteps := make([]*stepModel.Step, len(steps))
 	for i, step := range steps {
-		stepCode := ""
-		stepName := step.Name
-		stepBaseInfo := strings.Split(step.Name, "::")
-		if len(stepBaseInfo) > 1 {
-			stepCode = stepBaseInfo[0]
-			stepName = stepBaseInfo[1]
-		}
+		code, name := splitRunnerStepName(step.Name)
 		typesSteps[i] = &stepModel.Step{
 			ID:       uint(step.ID),
 			StageID:  uint(step.StageID),
 			SN:       step.Number,
-			Code:     stepCode,
-			Name:     stepName,
+			Code:     code,
+			Name:     name,
 			Status:   constant.ParseCIStatus(step.Status),
 			ErrorLog: step.Error,
 			Started:  toLocal(step.Started),
