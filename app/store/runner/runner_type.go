@@ -13,6 +13,8 @@ import (
 type Runner struct {
 	ID          uint            `gorm:"column:id;primaryKey;autoIncrement"`
 	Name        string          `gorm:"column:name;not null"`
+	HostID      uint            `gorm:"column:hostID;not null;default:0"`
+	Code        string          `gorm:"column:code;not null;default:'gitfox'"`
 	Desc        string          `gorm:"column:desc;not null;default:''"`
 	Version     string          `gorm:"column:version;not null;default:''"`
 	Hostname    string          `gorm:"column:hostname;not null;default:''"`

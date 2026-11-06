@@ -13,7 +13,7 @@ import (
 
 type Interface interface {
 	// Create creates a new runner
-	Create(ctx context.Context, runner *runnerModel.Runner, runnerToken, runnerIP string) error
+	Create(ctx context.Context, runner *runnerModel.Runner, runnerToken, runnerIP string, hostID uint) error
 	// Update updates a runner
 	Update(ctx context.Context, runner *runnerModel.Runner) error
 	// GetByID gets runner by ID

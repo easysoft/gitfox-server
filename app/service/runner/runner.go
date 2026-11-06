@@ -34,18 +34,21 @@ func NewService(runnerStore runner.Interface) *Service {
 }
 
 // Create creates a new runner
-func (s *Service) Create(ctx context.Context, runner *runnerModel.Runner, runnerToken, runnerIP string) error {
+func (s *Service) Create(ctx context.Context, runner *runnerModel.Runner, runnerToken, runnerIP string, hostID uint) error {
+	prepareRunnerForCreate(runner, runnerToken, runnerIP, hostID)
+	return s.runnerStore.Create(ctx, runner)
+}
 
+func prepareRunnerForCreate(runner *runnerModel.Runner, runnerToken, runnerIP string, hostID uint) {
 	// Set default data
 	now := int(time.Now().Unix())
 	runner.Token = runnerToken
 	runner.Name = fmt.Sprintf("%s-%s", runner.Name, runnerIP)
 	runner.IP = runnerIP
+	runner.HostID = hostID
 	runner.Online = "online"
 	runner.Status = "enable"
 	runner.HeartBeat = now
-
-	return s.runnerStore.Create(ctx, runner)
 }
 
 // Update 更新 runner
