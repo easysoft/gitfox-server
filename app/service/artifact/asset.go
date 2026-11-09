@@ -212,9 +212,21 @@ func (s *Service) ListAssetPage(ctx context.Context, req *model.ListAssetReq) (*
 		return nil, pkgErrors.WithI18nKey(err, i18n.ArtifactAssetListError)
 	}
 
+	currentGroupPath := ""
+	if splitEntityID.Kind == constant.ArtifactEntityKindGroup {
+		group, err := s.artStore.Groups().GetEndpointById(ctx, splitEntityID.ID)
+		if err != nil {
+			return nil, pkgErrors.WithI18nKey(err, i18n.ArtifactGroupQueryError)
+		}
+		currentGroupPath = group.GroupPath()
+	}
+
 	results := make([]*model.ArtifactAssetInfo, 0, len(pageResult.Data))
 	for _, a := range pageResult.Data {
 		if info := s.toActiveAssetNodeInfo(ctx, a.Id); info != nil {
+			if info.Metadata != nil && currentGroupPath != "" {
+				info.Metadata.Group = relativeListGroupPath(info.Metadata.Group, currentGroupPath)
+			}
 			results = append(results, info)
 		}
 	}
@@ -226,6 +238,25 @@ func (s *Service) ListAssetPage(ctx context.Context, req *model.ListAssetReq) (*
 		PageSize:  pageResult.PageSize,
 		TotalPage: pageResult.TotalPage,
 	}, nil
+}
+
+// relativeListGroupPath 返回当前目录以下的子目录路径。
+func relativeListGroupPath(groupPath, currentGroupPath string) string {
+	group := strings.Trim(strings.ReplaceAll(groupPath, "\\", "/"), "/")
+	current := strings.Trim(strings.ReplaceAll(currentGroupPath, "\\", "/"), "/")
+	if group == "" {
+		return "/"
+	}
+	if current == "" {
+		return group
+	}
+	if group == current {
+		return "/"
+	}
+	if strings.HasPrefix(group, current+"/") {
+		return strings.TrimPrefix(group, current+"/")
+	}
+	return group
 }
 
 func (s *Service) toActiveAssetNodeInfo(ctx context.Context, assetID int64) *model.ArtifactAssetInfo {
