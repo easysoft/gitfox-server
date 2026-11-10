@@ -48,14 +48,14 @@ type compileContext struct {
 func (c *CompilerImpl) compileNode(
 	cc *compileContext,
 	src *harness.Step,
-	parentWhen *harness.When,
+	parentWhens []*harness.When,
 ) (*compiledNode, error) {
 	switch v := src.Spec.(type) {
 	case *harness.StepGroup:
-		when := combineWhen(parentWhen, src.When)
+		whens := appendWhen(parentWhens, src.When)
 		node := &compiledNode{kind: nodeSerial}
 		for _, child := range v.Steps {
-			n, err := c.compileNode(cc, child, when)
+			n, err := c.compileNode(cc, child, whens)
 			if err != nil {
 				return nil, err
 			}
@@ -64,10 +64,10 @@ func (c *CompilerImpl) compileNode(
 		return node, nil
 
 	case *harness.StepParallel:
-		when := combineWhen(parentWhen, src.When)
+		whens := appendWhen(parentWhens, src.When)
 		node := &compiledNode{kind: nodeParallel}
 		for _, child := range v.Steps {
-			n, err := c.compileNode(cc, child, when)
+			n, err := c.compileNode(cc, child, whens)
 			if err != nil {
 				return nil, err
 			}
@@ -80,7 +80,7 @@ func (c *CompilerImpl) compileNode(
 		if err != nil {
 			return nil, err
 		}
-		c.prepareSteps(cc, steps, src, parentWhen)
+		c.prepareSteps(cc, steps, src, parentWhens)
 		// Preserve YAML depth-first order for the DB SN / UI display.
 		cc.spec.Steps = append(cc.spec.Steps, steps...)
 		return &compiledNode{kind: nodeLeaf, steps: steps}, nil
@@ -94,14 +94,15 @@ func (c *CompilerImpl) prepareSteps(
 	cc *compileContext,
 	steps []*engine.Step,
 	src *harness.Step,
-	parentWhen *harness.When,
+	parentWhens []*harness.When,
 ) {
+	whens := appendWhen(parentWhens, src.When)
 	for _, step := range steps {
 		// Register secrets accessed by this step's expressions so they are
 		// masked in the logs.
 		cc.inputs["secrets"] = map[string]interface{}{
 			"get": func(name string) string {
-				s, ok := c.findSecret(context.Background(), cc.args, name)
+				s, ok := c.findSecret(cc.ctx, cc.args, name)
 				if ok {
 					step.Secrets = append(step.Secrets, &engine.Secret{
 						Name: name,
@@ -120,8 +121,8 @@ func (c *CompilerImpl) prepareSteps(
 		step.Privileged = c.isPrivileged(step)
 		step.ID = fmt.Sprintf("%s_%d", step.ID, cc.args.Build.ID)
 
-		// 父级 group/parallel 的 when 与叶子自身的 when 合并后求值。
-		applyStepRunPolicy(cc.ctx, step, combineWhen(parentWhen, src.When), cc.inputs)
+		// 父级 group/parallel 的 when 与叶子自身的 when 逐条求值后按 AND 合成。
+		applyStepRunPolicy(cc.ctx, step, whens, cc.inputs)
 	}
 }
 

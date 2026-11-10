@@ -63,6 +63,8 @@ spec:
 				t.Fatal("expected matrix strategy to be rejected")
 			} else if !strings.Contains(err.Error(), "matrix strategy is not supported") {
 				t.Fatalf("unexpected error: %v", err)
+			} else if !strings.Contains(err.Error(), "step of type: parallel") {
+				t.Fatalf("error should point to step type: parallel, got: %v", err)
 			}
 		})
 	}

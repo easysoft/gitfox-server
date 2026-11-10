@@ -50,80 +50,79 @@ func whenExpr(w *harness.When) string {
 	return s
 }
 
+// runPolicyPair 表示一个 when 条件在流水线“成功/失败”两种状态下的求值结果：
+// onSuccess / onFailure 为 true 表示对应状态下步骤需要执行。
+type runPolicyPair struct {
+	onSuccess bool
+	onFailure bool
+}
+
+// runPolicyAlways 不限制步骤的执行状态（always 或没有 when 条件），是 AND 合成中的中性元。
+var runPolicyAlways = runPolicyPair{onSuccess: true, onFailure: true}
+
+// and 按 AND 语义合成两个 when 条件：只有两种状态下都成立时步骤才执行。
+func (p runPolicyPair) and(q runPolicyPair) runPolicyPair {
+	return runPolicyPair{
+		onSuccess: p.onSuccess && q.onSuccess,
+		onFailure: p.onFailure && q.onFailure,
+	}
+}
+
+// enginePolicy 把 when 求值结果转换为引擎的运行策略。
+func (p runPolicyPair) enginePolicy() engine.RunPolicy {
+	switch {
+	case p.onSuccess && p.onFailure:
+		return engine.RunAlways
+	case p.onSuccess:
+		return engine.RunOnSuccess
+	case p.onFailure:
+		return engine.RunOnFailure
+	default:
+		return engine.RunNever
+	}
+}
+
 // directRunPolicy maps the supported direct policy spellings to a policy.
 // success()/failure()/always() are included so a standalone expression can
 // participate in the same AND merge as their direct forms.
-func directRunPolicy(s string) (constant.RunPolicy, bool) {
+func directRunPolicy(s string) (runPolicyPair, bool) {
 	switch s {
 	case string(constant.RunPolicyAlways), "always()":
-		return constant.RunPolicyAlways, true
+		return runPolicyAlways, true
 	case string(constant.RunPolicyOnSuccess), "success()":
-		return constant.RunPolicyOnSuccess, true
+		return runPolicyPair{onSuccess: true}, true
 	case string(constant.RunPolicyOnFailure), "failure()":
-		return constant.RunPolicyOnFailure, true
+		return runPolicyPair{onFailure: true}, true
 	}
-	return "", false
+	return runPolicyPair{}, false
 }
 
-// mergeRunPolicy implements AND semantics for direct policies. always is
-// neutral; onSuccess + onFailure is never. ok=false means Never.
-func mergeRunPolicy(a, b constant.RunPolicy) (constant.RunPolicy, bool) {
-	if a == constant.RunPolicyAlways {
-		return b, true
+// evalWhen 对单条 when 条件求值。直接策略值不是合法表达式，先按字面量识别；
+// 空条件在 AND 合成中是中性元。
+func evalWhen(w *harness.When, inputs map[string]interface{}) (runPolicyPair, error) {
+	code := whenExpr(w)
+	if code == "" {
+		return runPolicyAlways, nil
 	}
-	if b == constant.RunPolicyAlways {
-		return a, true
+	if policy, ok := directRunPolicy(code); ok {
+		return policy, nil
 	}
-	if a == b {
-		return a, true
+	onSuccess, onFailure, err := evalif(code, inputs)
+	if err != nil {
+		return runPolicyPair{}, err
 	}
-	return "", false
+	return runPolicyPair{onSuccess: onSuccess, onFailure: onFailure}, nil
 }
 
-// combineWhen merges a parent group/parallel when with a child when.
-// always is neutral and cannot loosen a stricter parent policy.
-func combineWhen(parent, child *harness.When) *harness.When {
-	p := whenExpr(parent)
-	c := whenExpr(child)
-	switch {
-	case p == "":
-		return child
-	case c == "":
-		return parent
-	case p == c:
-		return &harness.When{Eval: p}
+// appendWhen 返回追加了 w 的 when 链。分配新切片，避免并行分支之间共用底层数组。
+func appendWhen(parents []*harness.When, w *harness.When) []*harness.When {
+	if whenExpr(w) == "" {
+		return parents
 	}
-
-	pp, pok := directRunPolicy(p)
-	cp, cok := directRunPolicy(c)
-	switch {
-	case pok && cok:
-		if merged, ok := mergeRunPolicy(pp, cp); ok {
-			return &harness.When{Eval: string(merged)}
-		}
-		return &harness.When{Eval: "false"}
-	case pok:
-		switch pp {
-		case constant.RunPolicyAlways:
-			return &harness.When{Eval: c}
-		case constant.RunPolicyOnSuccess:
-			return &harness.When{Eval: "success() && (" + c + ")"}
-		case constant.RunPolicyOnFailure:
-			return &harness.When{Eval: "failure() && (" + c + ")"}
-		}
-	case cok:
-		switch cp {
-		case constant.RunPolicyAlways:
-			return &harness.When{Eval: p}
-		case constant.RunPolicyOnSuccess:
-			return &harness.When{Eval: "(" + p + ") && success()"}
-		case constant.RunPolicyOnFailure:
-			return &harness.When{Eval: "(" + p + ") && failure()"}
-		}
-	default:
-		return &harness.When{Eval: "(" + p + ") && (" + c + ")"}
-	}
-	return child
+	out := make([]*harness.When, len(parents)+1)
+	copy(out, parents)
+	out[len(parents)] = w
+	return out
 }
 
 // helper function converts the environment variables to a map,

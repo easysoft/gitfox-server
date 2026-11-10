@@ -33,6 +33,11 @@ func runStep(id, name string, when *harness.When) *harness.Step {
 
 func compileGraph(t *testing.T, steps []*harness.Step, buildID int64) *engine.Spec {
 	t.Helper()
+	return compileGraphWithBuild(t, steps, &drone.Build{ID: buildID})
+}
+
+func compileGraphWithBuild(t *testing.T, steps []*harness.Step, build *drone.Build) *engine.Spec {
+	t.Helper()
 	config := &harness.Config{
 		Kind: "pipeline",
 		Spec: &harness.Pipeline{
@@ -53,7 +58,7 @@ func compileGraph(t *testing.T, steps []*harness.Step, buildID int64) *engine.Sp
 	}
 	spec, err := impl.Compile(context.Background(), Args{
 		Config: config,
-		Build:  &drone.Build{ID: buildID},
+		Build:  build,
 		Stage:  &drone.Stage{Name: "build"},
 		Repo:   &drone.Repo{},
 		System: &drone.System{},
@@ -198,6 +203,64 @@ func TestCompileParallelWhenInheritance(t *testing.T) {
 	}
 	if got := graphStep(t, spec, "c_42").RunPolicy; got != engine.RunOnSuccess {
 		t.Fatalf("c_42 RunPolicy = %v, want RunOnSuccess", got)
+	}
+}
+
+// 复合表达式里的 always() 不能放宽祖先 group/parallel 的 when 约束（fail-open 回归）。
+func TestCompileParallelCompositeAlwaysWhen(t *testing.T) {
+	spec := compileGraphWithBuild(t, []*harness.Step{
+		{
+			Id:   "failure-parallel",
+			Name: "onFailure",
+			Type: "parallel",
+			When: &harness.When{Eval: "onFailure"},
+			Spec: &harness.StepParallel{Steps: []*harness.Step{
+				runStep("a", "A", &harness.When{Eval: `${{ always() && build.event == 'push' }}`}),
+			}},
+		},
+		{
+			Id:   "always-parallel",
+			Name: "always",
+			Type: "parallel",
+			When: &harness.When{Eval: `${{ always() && build.event == 'push' }}`},
+			Spec: &harness.StepParallel{Steps: []*harness.Step{
+				runStep("b", "B", &harness.When{Eval: "onSuccess"}),
+			}},
+		},
+	}, &drone.Build{ID: 42, Event: "push"})
+
+	if got := graphStep(t, spec, "a_42").RunPolicy; got != engine.RunOnFailure {
+		t.Fatalf("a_42 RunPolicy = %v, want RunOnFailure", got)
+	}
+	if got := graphStep(t, spec, "b_42").RunPolicy; got != engine.RunOnSuccess {
+		t.Fatalf("b_42 RunPolicy = %v, want RunOnSuccess", got)
+	}
+}
+
+// 多层 group/parallel 的 when 逐层按 AND 合成。
+func TestCompileNestedWhenInheritance(t *testing.T) {
+	spec := compileGraph(t, []*harness.Step{
+		{
+			Id:   "outer",
+			Name: "outer",
+			Type: "parallel",
+			When: &harness.When{Eval: "onSuccess"},
+			Spec: &harness.StepParallel{Steps: []*harness.Step{
+				{
+					Id:   "inner",
+					Name: "inner",
+					Type: "group",
+					When: &harness.When{Eval: "onFailure"},
+					Spec: &harness.StepGroup{Steps: []*harness.Step{
+						runStep("a", "A", nil),
+					}},
+				},
+			}},
+		},
+	}, 42)
+
+	if got := graphStep(t, spec, "a_42").RunPolicy; got != engine.RunNever {
+		t.Fatalf("a_42 RunPolicy = %v, want RunNever", got)
 	}
 }
 
