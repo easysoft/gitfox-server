@@ -227,7 +227,7 @@ func (t *triggerer) Trigger(
 	}
 
 	// 被 when 条件跳过的阶段，阶段内的任务也要落库为 skipped。
-	skippedSteps, err := t.skippedStageSteps(ctx, file.Data, stages)
+	skippedSteps, err := t.skippedStageSteps(ctx, file.Data, stages, execution)
 	if err != nil {
 		return nil, errors.WithI18nKey(
 			fmt.Errorf("could not parse skipped steps: %w", err),
@@ -279,7 +279,7 @@ func allStagesSkipped(stages []*stageModel.Stage) bool {
 }
 
 // skippedStageSteps 预解析流水线 YAML，取出各阶段的任务定义（键为阶段 code）。
-func (t *triggerer) skippedStageSteps(ctx context.Context, data []byte, stages []*stageModel.Stage) (map[string][]*v1yaml.Step, error) {
+func (t *triggerer) skippedStageSteps(ctx context.Context, data []byte, stages []*stageModel.Stage, execution *executionModel.Execution) (map[string][]*v1yaml.Step, error) {
 	hasSkipped := false
 	for _, stage := range stages {
 		if stage.Status == constant.CIStatusSkipped {
@@ -290,7 +290,7 @@ func (t *triggerer) skippedStageSteps(ctx context.Context, data []byte, stages [
 	if !hasSkipped {
 		return nil, nil
 	}
-	return manager.StageStepsFromYAML(data, manager.PipelineLookupFunc(ctx, t.pipelineService))
+	return manager.StageStepsFromYAML(data, manager.PipelineLookupFunc(ctx, t.pipelineService), execution)
 }
 
 // createSkippedStageSteps 把被 when 条件跳过的阶段内的任务也标记为 skipped。
@@ -325,6 +325,14 @@ func parseV1Stages(
 	config, err := v1yaml.ParseBytes(data)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse v1 yaml: %w", err)
+	}
+
+	// stage/step 的 id、name 不支持表达式，必须在 normalize 之前校验：
+	// normalize 会对 id 做 slug 化，把 "${{ ... }}" 的语法抹掉，之后就识别不出来了。
+	if pipeline, ok := config.Spec.(*v1yaml.Pipeline); ok {
+		if err := validateV1StaticNames(pipeline); err != nil {
+			return nil, err
+		}
 	}
 
 	// Normalize the config to make sure stage names and step names are unique
@@ -488,12 +496,74 @@ func validateV1PipelineSpec(pipeline *v1yaml.Pipeline) error {
 	if len(pipeline.Stages) == 0 {
 		return fmt.Errorf("check 'stages' key in yaml")
 	}
+	// 插件/模板展开后可能注入新的 step，这里再校验一次；
+	// 用户自己编写的 id 此时已被 normalize slug 化，表达式由 parse 阶段的前置校验拦截。
+	if err := validateV1StaticNames(pipeline); err != nil {
+		return err
+	}
 	for _, stage := range pipeline.Stages {
 		if err := validateV1Stage(stage); err != nil {
 			return err
 		}
 		if err := validateV1StageMounts(stage); err != nil {
 			return err
+		}
+	}
+	return nil
+}
+
+// validateV1StaticNames 校验 stage/step 的 id、name 不允许使用 ${{ }} 表达式。
+//
+// 服务端与 runner 编译期的表达式上下文不一致：服务端拿不到明文 secrets，
+// env 也只覆盖普通参数。一旦 id/name 里出现表达式，被跳过阶段落库的任务名/Code
+// 就会和 runner 实际编译结果不一致；stage name 还可能因为两边展开结果不同导致
+// runner 匹配不到阶段。
+//
+// 注意：对用户 YAML 必须在 normalize 之前调用，normalize 会把 id slug 化，
+// 表达式语法会被抹掉；插件/模板展开后再调用一次，用于覆盖注入的 step。
+func validateV1StaticNames(pipeline *v1yaml.Pipeline) error {
+	for _, stage := range pipeline.Stages {
+		if strings.Contains(stage.Id, "${{") {
+			return fmt.Errorf("stage id %q does not support expressions", stage.Id)
+		}
+		if strings.Contains(stage.Name, "${{") {
+			return fmt.Errorf("stage name %q does not support expressions", stage.Name)
+		}
+
+		stageCI, ok := stage.Spec.(*v1yaml.StageCI)
+		if !ok {
+			continue
+		}
+		for _, step := range stageCI.Steps {
+			if err := validateV1StepStaticNames(step); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// validateV1StepStaticNames 递归校验 step 及其 group/parallel 子任务的 id、name。
+func validateV1StepStaticNames(step *v1yaml.Step) error {
+	if strings.Contains(step.Id, "${{") {
+		return fmt.Errorf("step id %q does not support expressions", step.Id)
+	}
+	if strings.Contains(step.Name, "${{") {
+		return fmt.Errorf("step name %q does not support expressions", step.Name)
+	}
+
+	switch spec := step.Spec.(type) {
+	case *v1yaml.StepGroup:
+		for _, child := range spec.Steps {
+			if err := validateV1StepStaticNames(child); err != nil {
+				return err
+			}
+		}
+	case *v1yaml.StepParallel:
+		for _, child := range spec.Steps {
+			if err := validateV1StepStaticNames(child); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

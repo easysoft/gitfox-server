@@ -314,7 +314,7 @@ func (t *teardown) stageStepsFromYAML(ctx context.Context, execution *executionM
 	if err != nil {
 		return nil, err
 	}
-	return StageStepsFromYAML(file.Data, PipelineLookupFunc(ctx, t.PipelineSvc))
+	return StageStepsFromYAML(file.Data, PipelineLookupFunc(ctx, t.PipelineSvc), execution)
 }
 
 func isexecutionComplete(stages []*stageModel.StageWithSteps) bool {

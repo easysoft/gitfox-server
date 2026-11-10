@@ -93,7 +93,9 @@ func newDockerRunner(
 		return nil, err
 	}
 
-	exec2 := runtime2.NewExecer(tracer, remote, upload, engine2, int64(config.Ci.ParallelWorkers))
+	// step 并发使用独立配置，避免为了并行调大 ParallelWorkers 时同时放大
+	// stage 并发和默认 runner 数量。
+	exec2 := runtime2.NewExecer(tracer, remote, upload, engine2, int64(config.Ci.MaxParallelStepsOrDefault()))
 
 	compiler2 := &compiler2.CompilerImpl{
 		Environ:     provider.Combine(provider.Static(map[string]string{}), stageEnvProvider),

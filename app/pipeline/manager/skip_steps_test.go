@@ -60,7 +60,7 @@ func unexpectedLookup(name, kind, typ, version string) (*v1yaml.Config, error) {
 }
 
 func TestStageStepsFromYAML(t *testing.T) {
-	steps, err := StageStepsFromYAML([]byte(skipStepsDoc), unexpectedLookup)
+	steps, err := StageStepsFromYAML([]byte(skipStepsDoc), unexpectedLookup, nil)
 	if err != nil {
 		t.Fatalf("StageStepsFromYAML: %v", err)
 	}
@@ -72,9 +72,60 @@ func TestStageStepsFromYAML(t *testing.T) {
 	}
 }
 
+const skipStepsExpandDoc = `
+kind: pipeline
+spec:
+  stages:
+    - id: prepare
+      name: prepare
+      type: ci
+      spec:
+        steps:
+          - id: build
+            name: 构建 ${{ parameters.target }}
+            type: run
+            spec:
+              script:
+                - echo ${{ parameters.target }}
+`
+
+// 被跳过阶段的任务也要按 runner 的解析链展开 ${{ }}，否则名称/脚本与编译结果不一致。
+func TestStageStepsFromYAMLExpandsExpressions(t *testing.T) {
+	execution := &executionModel.Execution{
+		Params: map[string]string{"target": "linux"},
+	}
+	steps, err := StageStepsFromYAML([]byte(skipStepsExpandDoc), unexpectedLookup, execution)
+	if err != nil {
+		t.Fatalf("StageStepsFromYAML: %v", err)
+	}
+	if len(steps["prepare"]) != 1 {
+		t.Fatalf("prepare 任务数 = %d, want 1", len(steps["prepare"]))
+	}
+
+	step := steps["prepare"][0]
+	if step.Name != "构建 linux" {
+		t.Errorf("step.Name = %q, want %q", step.Name, "构建 linux")
+	}
+	run, ok := step.Spec.(*v1yaml.StepRun)
+	if !ok {
+		t.Fatalf("step.Spec = %T, want *StepRun", step.Spec)
+	}
+	if len(run.Script) != 1 || run.Script[0] != "echo linux" {
+		t.Errorf("script = %v, want [echo linux]", run.Script)
+	}
+
+	records := SkippedStepRecords(steps["prepare"], 11, 7)
+	if len(records) != 1 {
+		t.Fatalf("任务记录数 = %d, want 1", len(records))
+	}
+	if records[0].Code != "build_7" || records[0].Name != "构建 linux" {
+		t.Errorf("record = %q/%q, want build_7/构建 linux", records[0].Code, records[0].Name)
+	}
+}
+
 // 阶段被跳过后，阶段内的任务需要落库为 skipped；分组任务只落库其中的子任务。
 func TestSkippedStepRecords(t *testing.T) {
-	steps, err := StageStepsFromYAML([]byte(skipStepsDoc), unexpectedLookup)
+	steps, err := StageStepsFromYAML([]byte(skipStepsDoc), unexpectedLookup, nil)
 	if err != nil {
 		t.Fatalf("StageStepsFromYAML: %v", err)
 	}
