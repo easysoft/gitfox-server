@@ -7,6 +7,8 @@ package compiler
 import (
 	"strings"
 
+	"github.com/easysoft/gitfox-community/app/constant"
+	harness "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine/resource"
 	"github.com/easysoft/gitfox-community/pkg/runner/docker/engine2/engine"
 
@@ -35,27 +37,93 @@ func isRunOnFailure(step *resource.Step) bool {
 	return step.When.Status.Match(drone.StatusFailing)
 }
 
-// helper function returns true if the pipeline specification
-// manually defines an execution graph.
-func isGraph(spec *engine.Spec) bool {
-	for _, step := range spec.Steps {
-		if len(step.DependsOn) > 0 {
-			return true
-		}
+// whenExpr returns the normalized expression of a when clause. Direct policy
+// values (always/onSuccess/onFailure) are returned as-is.
+func whenExpr(w *harness.When) string {
+	if w == nil {
+		return ""
 	}
-	return false
+	s := strings.TrimSpace(w.Eval)
+	if strings.HasPrefix(s, "${{") && strings.HasSuffix(s, "}}") {
+		s = strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(s, "${{"), "}}"))
+	}
+	return s
 }
 
-// helper function creates the dependency graph for serial
-// pipeline execution.
-func configureSerial(spec *engine.Spec) {
-	var prev *engine.Step
-	for _, step := range spec.Steps {
-		if prev != nil {
-			step.DependsOn = []string{prev.ID}
-		}
-		prev = step
+// directRunPolicy maps the supported direct policy spellings to a policy.
+// success()/failure()/always() are included so a standalone expression can
+// participate in the same AND merge as their direct forms.
+func directRunPolicy(s string) (constant.RunPolicy, bool) {
+	switch s {
+	case string(constant.RunPolicyAlways), "always()":
+		return constant.RunPolicyAlways, true
+	case string(constant.RunPolicyOnSuccess), "success()":
+		return constant.RunPolicyOnSuccess, true
+	case string(constant.RunPolicyOnFailure), "failure()":
+		return constant.RunPolicyOnFailure, true
 	}
+	return "", false
+}
+
+// mergeRunPolicy implements AND semantics for direct policies. always is
+// neutral; onSuccess + onFailure is never. ok=false means Never.
+func mergeRunPolicy(a, b constant.RunPolicy) (constant.RunPolicy, bool) {
+	if a == constant.RunPolicyAlways {
+		return b, true
+	}
+	if b == constant.RunPolicyAlways {
+		return a, true
+	}
+	if a == b {
+		return a, true
+	}
+	return "", false
+}
+
+// combineWhen merges a parent group/parallel when with a child when.
+// always is neutral and cannot loosen a stricter parent policy.
+func combineWhen(parent, child *harness.When) *harness.When {
+	p := whenExpr(parent)
+	c := whenExpr(child)
+	switch {
+	case p == "":
+		return child
+	case c == "":
+		return parent
+	case p == c:
+		return &harness.When{Eval: p}
+	}
+
+	pp, pok := directRunPolicy(p)
+	cp, cok := directRunPolicy(c)
+	switch {
+	case pok && cok:
+		if merged, ok := mergeRunPolicy(pp, cp); ok {
+			return &harness.When{Eval: string(merged)}
+		}
+		return &harness.When{Eval: "false"}
+	case pok:
+		switch pp {
+		case constant.RunPolicyAlways:
+			return &harness.When{Eval: c}
+		case constant.RunPolicyOnSuccess:
+			return &harness.When{Eval: "success() && (" + c + ")"}
+		case constant.RunPolicyOnFailure:
+			return &harness.When{Eval: "failure() && (" + c + ")"}
+		}
+	case cok:
+		switch cp {
+		case constant.RunPolicyAlways:
+			return &harness.When{Eval: p}
+		case constant.RunPolicyOnSuccess:
+			return &harness.When{Eval: "(" + p + ") && success()"}
+		case constant.RunPolicyOnFailure:
+			return &harness.When{Eval: "(" + p + ") && failure()"}
+		}
+	default:
+		return &harness.When{Eval: "(" + p + ") && (" + c + ")"}
+	}
+	return child
 }
 
 // helper function converts the environment variables to a map,
@@ -92,50 +160,6 @@ func convertSecretEnv(src map[string]*manifest.Variable) []*engine.Secret {
 		}
 	}
 	return dst
-}
-
-// helper function modifies the pipeline dependency graph to
-// account for the clone step.
-func configureCloneDeps(spec *engine.Spec) {
-	var cloneID string
-	for _, step := range spec.Steps {
-		if step.Name == "clone" {
-			cloneID = step.ID
-			break
-		}
-	}
-	if cloneID == "" {
-		return
-	}
-	for _, step := range spec.Steps {
-		if step.Name == "clone" {
-			continue
-		}
-		if len(step.DependsOn) == 0 {
-			step.DependsOn = []string{cloneID}
-		}
-	}
-}
-
-// helper function modifies the pipeline dependency graph to
-// account for a disabled clone step.
-func removeCloneDeps(spec *engine.Spec) {
-	var cloneID string
-	for _, step := range spec.Steps {
-		if step.Name == "clone" {
-			cloneID = step.ID
-			break
-		}
-	}
-	if cloneID == "" {
-		return
-	}
-	for _, step := range spec.Steps {
-		if len(step.DependsOn) == 1 &&
-			step.DependsOn[0] == cloneID {
-			step.DependsOn = []string{}
-		}
-	}
 }
 
 // helper function modifies the pipeline dependency graph to

@@ -161,13 +161,26 @@ type MetricConfig struct {
 	Enabled bool `yaml:"enabled"`
 }
 
+// DefaultMaxParallelSteps 是单 runner 同时执行的 step 数默认值。
+const DefaultMaxParallelSteps uint = 8
+
 // CiConfig CI配置
 type CiConfig struct {
 	PluginsZipUrl     string   `envconfig:"GITFOX_CI_PLUGINS_ZIP_URL" default:"https://pkg.zentao.net/qucheng/gitfox/community/4.4/plugin.tar.gz"`
 	Runner            string   `envconfig:"GITFOX_CI_RUNNER"`
 	ParallelWorkers   uint     `envconfig:"GITFOX_CI_PARALLELWORKERS" default:"2"`
+	MaxParallelSteps  uint     `envconfig:"GITFOX_CI_PARALLELSTEPS" default:"8"`
 	ContainerNetworks []string `envconfig:"GITFOX_CI_CONTAINER_NETWORKS"`
 	ContainerVolume   string   `envconfig:"GITFOX_CI_CONTAINER_VOLUME"`
+}
+
+// MaxParallelStepsOrDefault 返回 engine2 runner 的 step 并发上限，
+// 未配置或配置为 0 时回退到 DefaultMaxParallelSteps。
+func (c CiConfig) MaxParallelStepsOrDefault() uint {
+	if c.MaxParallelSteps == 0 {
+		return DefaultMaxParallelSteps
+	}
+	return c.MaxParallelSteps
 }
 
 // GitspaceConfig Gitspace配置

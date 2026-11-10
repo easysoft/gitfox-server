@@ -227,7 +227,7 @@ func (t *triggerer) Trigger(
 	}
 
 	// 被 when 条件跳过的阶段，阶段内的任务也要落库为 skipped。
-	skippedSteps, err := t.skippedStageSteps(ctx, file.Data, stages)
+	skippedSteps, err := t.skippedStageSteps(ctx, file.Data, stages, execution)
 	if err != nil {
 		return nil, errors.WithI18nKey(
 			fmt.Errorf("could not parse skipped steps: %w", err),
@@ -279,7 +279,7 @@ func allStagesSkipped(stages []*stageModel.Stage) bool {
 }
 
 // skippedStageSteps 预解析流水线 YAML，取出各阶段的任务定义（键为阶段 code）。
-func (t *triggerer) skippedStageSteps(ctx context.Context, data []byte, stages []*stageModel.Stage) (map[string][]*v1yaml.Step, error) {
+func (t *triggerer) skippedStageSteps(ctx context.Context, data []byte, stages []*stageModel.Stage, execution *executionModel.Execution) (map[string][]*v1yaml.Step, error) {
 	hasSkipped := false
 	for _, stage := range stages {
 		if stage.Status == constant.CIStatusSkipped {
@@ -290,7 +290,7 @@ func (t *triggerer) skippedStageSteps(ctx context.Context, data []byte, stages [
 	if !hasSkipped {
 		return nil, nil
 	}
-	return manager.StageStepsFromYAML(data, manager.PipelineLookupFunc(ctx, t.pipelineService))
+	return manager.StageStepsFromYAML(data, manager.PipelineLookupFunc(ctx, t.pipelineService), execution)
 }
 
 // createSkippedStageSteps 把被 when 条件跳过的阶段内的任务也标记为 skipped。

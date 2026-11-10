@@ -32,7 +32,9 @@ func (v *Strategy) UnmarshalJSON(data []byte) error {
 	case "for":
 		v.Spec = new(For)
 	case "matrix":
-		v.Spec = new(Matrix)
+		// Matrix expansion is intentionally not supported: declare the
+		// parallel branches explicitly with type: parallel instead.
+		return fmt.Errorf("matrix strategy is not supported; use explicit type: parallel")
 	case "while":
 		v.Spec = new(While)
 	default:

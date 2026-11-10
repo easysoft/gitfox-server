@@ -297,6 +297,7 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 	}
 
 	// create the clone step
+	var cloneStep *engine.Step
 	if clone_.Disabled == false {
 		step := createClone(platform_, clone_)
 		step.ID = random()
@@ -308,6 +309,7 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 		step.Pull = engine.PullIfNotExists
 		step.Volumes = append(step.Volumes, mount)
 		spec.Steps = append(spec.Steps, step)
+		cloneStep = step
 
 		// if the clone image is customized, override
 		// the default image.
@@ -340,47 +342,33 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 		"env": envs,
 	}
 
-	// create steps
+	// compile the YAML step tree: parallel / group are flattened into engine
+	// steps, then DependsOn is wired from the tree. The clone step (when
+	// enabled) is the graph root; with clone disabled the first user node is.
+	cc := &compileContext{
+		ctx:         ctx,
+		stage:       stage,
+		spec:        spec,
+		args:        args,
+		inputs:      inputs,
+		envs:        envs,
+		stageLabels: stageLabels,
+		mount:       mount,
+	}
+
+	exits := []string{}
+	if cloneStep != nil {
+		exits = []string{cloneStep.ID}
+	}
 	for _, src := range stageSpec.Steps {
-		steps_, err := c.convertStep(stage, src, args)
+		node, err := c.compileNode(cc, src, nil)
 		if err != nil {
 			return nil, err
 		}
-		if len(steps_) != 0 {
-			for _, step_ := range steps_ {
-				// add secret function.
-				// register secrets with the step so we know
-				// to mask them.
-				inputs["secrets"] = map[string]interface{}{
-					"get": func(name string) string {
-						s, ok := c.findSecret(context.Background(), args, name)
-						if ok {
-							// regsiter secret so we know to mask
-							step_.Secrets = append(step_.Secrets, &engine.Secret{
-								Name: name,
-								Data: []byte(s),
-								Mask: true,
-							})
-						}
-						return s
-					},
-				}
-
-				step_.Envs = environ.Combine(envs, step_.Envs)
-				appendWorkspaceMount(ctx, step_, mount)
-				step_.Labels = stageLabels
-				step_.ExtraHosts = append(step_.ExtraHosts, c.ExtraHosts...)
-				step_.Privileged = c.isPrivileged(step_)
-				step_.ID = fmt.Sprintf("%s_%d", step_.ID, args.Build.ID)
-
-				// 根据 step 级 when 条件计算运行策略；条件无法求值时该步骤失败。
-				applyStepRunPolicy(ctx, step_, src.When, inputs)
-
-				spec.Steps = append(spec.Steps, step_)
-			}
-		}
+		exits = wireNode(node, exits)
 	}
 
+	var cleanStep *engine.Step
 	appendFinishFunc := func() {
 		step := createStageClean()
 		step.ID = random()
@@ -392,9 +380,13 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 		step.Volumes = append(step.Volumes, mount)
 		setupScript(step, "clean_stage", "linux")
 		spec.Steps = append(spec.Steps, step)
+		cleanStep = step
 	}
 	if platform_.Os != "windows" {
 		appendFinishFunc()
+	}
+	if cleanStep != nil {
+		cleanStep.DependsOn = dedupe(exits)
 	}
 
 	// create internal steps if build running in debug mode
@@ -427,14 +419,6 @@ func (c *CompilerImpl) Compile(ctx context.Context, args Args) (*engine.Spec, er
 				Labels: stageLabels,
 			},
 		})
-	}
-
-	if isGraph(spec) == false {
-		configureSerial(spec)
-	} else if clone_.Disabled == false {
-		configureCloneDeps(spec)
-	} else if clone_.Disabled == true {
-		removeCloneDeps(spec)
 	}
 
 	//
