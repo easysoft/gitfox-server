@@ -47,7 +47,13 @@ func (s *Store) Create(ctx context.Context, runner *runnerModel.Runner) error {
 		IsDefault: runner.IsDefault,
 	}
 
-	if err := db.Create(dbRunner).Error; err != nil {
+	createDB := db
+	// PMS legacy runner tables do not have hostID; omit the zero value so those
+	// environments can still register runners. A positive hostID still binds.
+	if runner.HostID == 0 {
+		createDB = db.Omit("HostID")
+	}
+	if err := createDB.Create(dbRunner).Error; err != nil {
 		return database.ProcessSQLErrorf(ctx, err)
 	}
 
