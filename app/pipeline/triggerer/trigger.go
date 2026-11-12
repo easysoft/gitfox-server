@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"runtime/debug"
-	"slices"
 	"strings"
 	"time"
 
@@ -307,6 +306,23 @@ func (t *triggerer) createSkippedStageSteps(ctx context.Context, stepsByStage ma
 	return nil
 }
 
+// directStageRunPolicy maps stage when literals to the persisted run policy.
+// pipeline* names are canonical; the original names remain compatibility aliases.
+func directStageRunPolicy(condition string) (string, bool) {
+	switch condition {
+	case string(constant.RunPolicyOnSuccess), "success", "success()",
+		v1yaml.WhenPipelineSuccess, v1yaml.WhenPipelineSuccess + "()":
+		return string(constant.RunPolicyOnSuccess), true
+	case string(constant.RunPolicyOnFailure), "failure", "failure()",
+		v1yaml.WhenPipelineFailure, v1yaml.WhenPipelineFailure + "()":
+		return string(constant.RunPolicyOnFailure), true
+	case string(constant.RunPolicyAlways), "always()":
+		return string(constant.RunPolicyAlways), true
+	default:
+		return "", false
+	}
+}
+
 // parseV1Stages tries to parse the yaml into a list of stages and returns an error
 // if we are unable to do so or the yaml contains something unexpected.
 // Currently, all the stages will be executed one after the other on completion.
@@ -373,7 +389,6 @@ func parseV1Stages(
 		// Expand expressions in strings and matrices
 		script.ExpandConfig(config, inputParams)
 
-		runPolicyList := constant.RunPolicyList
 		for idx, stage := range v.Stages {
 			// Only parse CI stages for now
 			switch stage.Spec.(type) {
@@ -386,9 +401,9 @@ func parseV1Stages(
 				if stage.When != nil {
 					if when := stage.When.Eval; when != "" {
 						trimmedWhen := strings.TrimSpace(when)
-						if slices.Contains(runPolicyList, trimmedWhen) {
+						if policy, ok := directStageRunPolicy(trimmedWhen); ok {
 							// Direct policy value, use it as-is
-							runPolicy = trimmedWhen
+							runPolicy = policy
 						} else {
 							// Evaluate as expression
 							onSuccess, onFailure, err := script.EvalWhen(trimmedWhen, inputParams)

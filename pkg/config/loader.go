@@ -55,6 +55,8 @@ func LoadConfig(mode string) (*Config, error) {
 		return nil, err
 	}
 
+	applyZentaoTablePrefixDefault(config)
+
 	// Datasource 为空时从拆分字段组合 DSN
 	if config.Database.Datasource == "" {
 		config.Database.Datasource = composeDatasource(config)
@@ -117,6 +119,13 @@ func LoadConfig(mode string) (*Config, error) {
 	}
 
 	return config, nil
+}
+
+func applyZentaoTablePrefixDefault(config *Config) {
+	config.Database.ZentaoTablePrefix = strings.TrimSpace(config.Database.ZentaoTablePrefix)
+	if config.Database.ZentaoTablePrefix == "" {
+		config.Database.ZentaoTablePrefix = defaultZentaoTablePrefix
+	}
 }
 
 // loadFromYaml loads the configuration from a YAML file based on the mode.

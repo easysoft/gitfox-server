@@ -6,6 +6,7 @@ package user
 
 import (
 	principal "github.com/easysoft/gitfox-community/app/model/user"
+	"github.com/easysoft/gitfox-community/pkg/database"
 )
 
 type User struct {
@@ -18,7 +19,7 @@ type User struct {
 }
 
 func (p *User) TableName() string {
-	return "zt_user"
+	return database.ZentaoTablePrefix + "user"
 }
 
 func (p *User) toUser() *principal.User {

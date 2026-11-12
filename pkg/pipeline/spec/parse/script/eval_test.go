@@ -50,6 +50,26 @@ func TestEvalTrue(t *testing.T) {
 			onfailure: false,
 		},
 		{
+			expr:      `pipelineSuccess()`,
+			onsuccess: true,
+			onfailure: false,
+		},
+		{
+			expr:      `pipelineFailure()`,
+			onsuccess: false,
+			onfailure: true,
+		},
+		{
+			expr:      `pipelineSuccess() || pipelineFailure()`,
+			onsuccess: true,
+			onfailure: true,
+		},
+		{
+			expr:      `success()`,
+			onsuccess: true,
+			onfailure: false,
+		},
+		{
 			expr:      `branch != "main" || failure()`,
 			data:      map[string]interface{}{"branch": "main"},
 			onsuccess: false,

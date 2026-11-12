@@ -42,9 +42,19 @@ func TestApplyStepRunPolicy(t *testing.T) {
 			want:  engine.RunOnFailure,
 		},
 		{
+			name:  "pipelineFailure 表达式",
+			whens: []*harness.When{{Eval: `${{ pipelineFailure() }}`}},
+			want:  engine.RunOnFailure,
+		},
+		{
 			name:  "直接写运行策略 always",
 			whens: []*harness.When{{Eval: "always"}},
 			want:  engine.RunAlways,
+		},
+		{
+			name:  "直接写运行策略 pipelineSuccess",
+			whens: []*harness.When{{Eval: "pipelineSuccess"}},
+			want:  engine.RunOnSuccess,
 		},
 		{
 			name:  "直接写运行策略 onFailure",
