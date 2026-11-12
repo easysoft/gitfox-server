@@ -83,15 +83,16 @@ func (p runPolicyPair) enginePolicy() engine.RunPolicy {
 }
 
 // directRunPolicy maps the supported direct policy spellings to a policy.
-// success()/failure()/always() are included so a standalone expression can
-// participate in the same AND merge as their direct forms.
+// pipelineSuccess, pipelineFailure, and always are the canonical condition names.
 func directRunPolicy(s string) (runPolicyPair, bool) {
 	switch s {
 	case string(constant.RunPolicyAlways), "always()":
 		return runPolicyAlways, true
-	case string(constant.RunPolicyOnSuccess), "success()":
+	case string(constant.RunPolicyOnSuccess), "success", "success()",
+		harness.WhenPipelineSuccess, harness.WhenPipelineSuccess + "()":
 		return runPolicyPair{onSuccess: true}, true
-	case string(constant.RunPolicyOnFailure), "failure()":
+	case string(constant.RunPolicyOnFailure), "failure", "failure()",
+		harness.WhenPipelineFailure, harness.WhenPipelineFailure + "()":
 		return runPolicyPair{onFailure: true}, true
 	}
 	return runPolicyPair{}, false

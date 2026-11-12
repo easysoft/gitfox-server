@@ -12,6 +12,7 @@ import (
 
 	"github.com/antonmedv/expr"
 	"github.com/drone/drone-go/drone"
+	harness "github.com/easysoft/gitfox-community/pkg/pipeline/spec"
 )
 
 // helper function a when clause.
@@ -19,18 +20,31 @@ func evalif(code string, inputs map[string]interface{}) (bool, bool, error) {
 	var evalFailure, evalAlways, onFailure, onSuccess bool
 
 	var isSuccess bool
+	pipelineSuccess := func() bool {
+		return isSuccess
+	}
+	pipelineFailure := func() bool {
+		evalFailure = true
+		return !isSuccess
+	}
+	always := func() bool {
+		evalAlways = true
+		return true
+	}
+
 	builtins := map[string]interface{}{
-		"success": func() bool {
-			return isSuccess
-		},
-		"failure": func() bool {
-			evalFailure = true
-			return !isSuccess
-		},
-		"always": func() bool {
-			evalAlways = true
-			return true
-		},
+		harness.WhenPipelineSuccess: pipelineSuccess,
+		harness.WhenPipelineFailure: pipelineFailure,
+		harness.WhenAlways:          always,
+
+		// Keep the original names as compatibility aliases.
+		"success": pipelineSuccess,
+		"failure": pipelineFailure,
+	}
+
+	// add input args to the predefined variables list.
+	for k, v := range inputs {
+		builtins[k] = v
 	}
 
 	// trim trailing whitespace
@@ -40,12 +54,6 @@ func evalif(code string, inputs map[string]interface{}) (bool, bool, error) {
 	if strings.HasPrefix(code, "${{") {
 		code = strings.TrimPrefix(code, "${{")
 		code = strings.TrimSuffix(code, "}}")
-	}
-
-	// add input args to the predefined
-	// variables list.
-	for k, v := range inputs {
-		builtins[k] = v
 	}
 
 	// compile the program
