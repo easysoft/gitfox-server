@@ -6,4 +6,9 @@ package yaml
 
 const (
 	RuntimeTypeAgent = "agent"
+
+	// Canonical condition names for pipeline when expressions.
+	WhenPipelineSuccess = "pipelineSuccess"
+	WhenPipelineFailure = "pipelineFailure"
+	WhenAlways          = "always"
 )

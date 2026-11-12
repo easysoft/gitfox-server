@@ -21,6 +21,7 @@ database:
   maxIdleConn: 10
   maxOpenConn: 100
   connMaxLifeTime: 3600s # 1800s
+  zentaoTablePrefix: zt_
 
 storage:
   storageType: filesystem

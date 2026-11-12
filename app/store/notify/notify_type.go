@@ -5,6 +5,7 @@
 package notify
 
 import (
+	"github.com/easysoft/gitfox-community/pkg/database"
 	"github.com/easysoft/gitfox-community/pkg/utils/datetime"
 	"gorm.io/gorm"
 )
@@ -27,7 +28,7 @@ type Notify struct {
 }
 
 func (n *Notify) TableName() string {
-	return "zt_notify"
+	return database.ZentaoTablePrefix + "notify"
 }
 
 func (n *Notify) BeforeCreate(tx *gorm.DB) error {

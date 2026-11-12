@@ -10,6 +10,7 @@ import (
 
 	"github.com/easysoft/gitfox-community/app/constant"
 	"github.com/easysoft/gitfox-community/app/model/auth"
+	"github.com/easysoft/gitfox-community/pkg/database"
 	"gorm.io/gorm"
 )
 
@@ -74,7 +75,7 @@ type Entry struct {
 }
 
 func (Entry) TableName() string {
-	return "zt_entry"
+	return database.ZentaoTablePrefix + "entry"
 }
 
 func (e *Entry) BeforeCreate(tx *gorm.DB) error {

@@ -66,6 +66,8 @@ type ServerConfig struct {
 	ShutdownTimeout time.Duration `yaml:"shutdownTimeout"` // 优雅关闭超时时间，默认 5s
 }
 
+const defaultZentaoTablePrefix = "zt_"
+
 // DatabaseConfig 数据库配置
 type DatabaseConfig struct {
 	Driver     string `envconfig:"GITFOX_DB_DRIVER" default:"mysql"`
@@ -77,11 +79,13 @@ type DatabaseConfig struct {
 	Name       string `envconfig:"GITFOX_DB_NAME"`
 	Timezone   string `envconfig:"GITFOX_DB_TIMEZONE" default:"Local"`
 
-	PrintSQL        bool          `yaml:"printSQL"`
-	SlowThreshold   time.Duration `yaml:"slowThreshold"` // 慢 SQL 阈值，<=0 时默认 500ms
-	MaxIdleConn     int           `yaml:"maxIdleConn"`
-	MaxOpenConn     int           `yaml:"maxOpenConn"`
-	ConnMaxLifeTime time.Duration `yaml:"connMaxLifeTime"`
+	// ZentaoTablePrefix 通过 YAML 配置，仅用于 ZenTao 相关表，不影响 Gitfox 固定的 ops_ 表前缀。
+	ZentaoTablePrefix string        `yaml:"zentaoTablePrefix" ignored:"true"`
+	PrintSQL          bool          `yaml:"printSQL"`
+	SlowThreshold     time.Duration `yaml:"slowThreshold"` // 慢 SQL 阈值，<=0 时默认 500ms
+	MaxIdleConn       int           `yaml:"maxIdleConn"`
+	MaxOpenConn       int           `yaml:"maxOpenConn"`
+	ConnMaxLifeTime   time.Duration `yaml:"connMaxLifeTime"`
 }
 
 // SQLiteConfig 缓存数据库配置

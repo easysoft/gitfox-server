@@ -58,6 +58,12 @@ func NewDB(cfg *config.Config, systemLog *SystemLog) (*gorm.DB, func(), error) {
 	}
 	systemLog.Infow("[Provider] Database connection established successfully", "driver", driver)
 
+	if err := database.SetZentaoTablePrefix(cfg.Database.ZentaoTablePrefix); err != nil {
+		systemLog.Errorw("[Provider] Failed to configure ZenTao table prefix", "error", err)
+		cleanup()
+		return nil, nil, err
+	}
+
 	// 包装 cleanup 函数以忽略错误，匹配 Wire 的 func() 签名
 	wrappedCleanup := func() {
 		if err := cleanup(); err != nil {
