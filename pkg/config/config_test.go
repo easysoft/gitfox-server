@@ -4,10 +4,10 @@
 package config
 
 import (
-	"os"
 	"testing"
 
 	"github.com/kelseyhightower/envconfig"
+	"gopkg.in/yaml.v3"
 )
 
 func TestCiConfigMaxParallelStepsOrDefault(t *testing.T) {
@@ -31,37 +31,41 @@ func TestCiConfigMaxParallelStepsOrDefault(t *testing.T) {
 	}
 }
 
-func TestCiConfigMaxParallelStepsEnv(t *testing.T) {
-	t.Run("默认 8", func(t *testing.T) {
-		old, had := os.LookupEnv("GITFOX_CI_PARALLEL_STEPS")
-		if err := os.Unsetenv("GITFOX_CI_PARALLEL_STEPS"); err != nil {
-			t.Fatalf("os.Unsetenv: %v", err)
-		}
-		t.Cleanup(func() {
-			if had {
-				_ = os.Setenv("GITFOX_CI_PARALLEL_STEPS", old)
-				return
+func TestCiConfigMaxParallelStepsYaml(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		want uint
+	}{
+		{name: "未配置时为 0，由 OrDefault 回退", in: "", want: 0},
+		{name: "yaml 中配置", in: "maxParallelSteps: 5\n", want: 5},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			var cfg CiConfig
+			if err := yaml.Unmarshal([]byte(test.in), &cfg); err != nil {
+				t.Fatalf("yaml.Unmarshal: %v", err)
 			}
-			_ = os.Unsetenv("GITFOX_CI_PARALLEL_STEPS")
+			if cfg.MaxParallelSteps != test.want {
+				t.Fatalf("MaxParallelSteps = %d, want %d", cfg.MaxParallelSteps, test.want)
+			}
 		})
+	}
+}
 
-		var cfg CiConfig
-		if err := envconfig.Process("", &cfg); err != nil {
-			t.Fatalf("envconfig.Process: %v", err)
-		}
-		if cfg.MaxParallelSteps != DefaultMaxParallelSteps {
-			t.Fatalf("MaxParallelSteps = %d, want %d", cfg.MaxParallelSteps, DefaultMaxParallelSteps)
-		}
-	})
+func TestCiConfigMaxParallelStepsNotFromEnv(t *testing.T) {
+	// 已迁移到 prod.yaml：旧的 GITFOX_CI_PARALLEL_STEPS 环境变量不应再覆盖 yaml 中的值。
+	t.Setenv("GITFOX_CI_PARALLEL_STEPS", "3")
 
-	t.Run("环境变量覆盖", func(t *testing.T) {
-		t.Setenv("GITFOX_CI_PARALLEL_STEPS", "3")
-		var cfg CiConfig
-		if err := envconfig.Process("", &cfg); err != nil {
-			t.Fatalf("envconfig.Process: %v", err)
-		}
-		if cfg.MaxParallelSteps != 3 {
-			t.Fatalf("MaxParallelSteps = %d, want 3", cfg.MaxParallelSteps)
-		}
-	})
+	var cfg CiConfig
+	if err := yaml.Unmarshal([]byte("maxParallelSteps: 5\n"), &cfg); err != nil {
+		t.Fatalf("yaml.Unmarshal: %v", err)
+	}
+	if err := envconfig.Process("", &cfg); err != nil {
+		t.Fatalf("envconfig.Process: %v", err)
+	}
+	if cfg.MaxParallelSteps != 5 {
+		t.Fatalf("MaxParallelSteps = %d, want 5 (env should be ignored)", cfg.MaxParallelSteps)
+	}
 }
