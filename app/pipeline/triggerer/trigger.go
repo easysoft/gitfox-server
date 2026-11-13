@@ -634,13 +634,15 @@ func validateV1StageApproval(stage *v1yaml.Stage) error {
 	default:
 		return fmt.Errorf("invalid approval mode %q in stage %q", a.Mode, stage.Id)
 	}
-	if a.Percent != 0 && (a.Percent < constant.MinStageApprovalPercent || a.Percent > constant.MaxStageApprovalPercent) {
+	if a.Percent != nil && (*a.Percent < constant.MinStageApprovalPercent || *a.Percent > constant.MaxStageApprovalPercent) {
 		return fmt.Errorf("invalid approval percent %d in stage %q: must be between %d and %d",
-			a.Percent, stage.Id, constant.MinStageApprovalPercent, constant.MaxStageApprovalPercent)
+			*a.Percent, stage.Id, constant.MinStageApprovalPercent, constant.MaxStageApprovalPercent)
 	}
 	if a.Timeout != "" {
-		if d, err := time.ParseDuration(a.Timeout); err != nil || d <= 0 {
-			return fmt.Errorf("invalid approval timeout %q in stage %q", a.Timeout, stage.Id)
+		d, err := time.ParseDuration(a.Timeout)
+		if err != nil || d < constant.MinStageApprovalTimeout || d > constant.MaxStageApprovalTimeout {
+			return fmt.Errorf("invalid approval timeout %q in stage %q: must be between %s and %s",
+				a.Timeout, stage.Id, formatApprovalBound(constant.MinStageApprovalTimeout), formatApprovalBound(constant.MaxStageApprovalTimeout))
 		}
 	}
 
@@ -662,13 +664,22 @@ func validateV1StageApproval(stage *v1yaml.Stage) error {
 	return nil
 }
 
-// stageApprovalPercent 归一化 approval 的 percent：0（省略）按默认值 100 落库，
+// formatApprovalBound 把审批超时边界的时长格式化成紧凑形式（1h0m0s → 1h），
+// 避免报错信息里出现无意义的 0m0s。
+func formatApprovalBound(d time.Duration) string {
+	if d%time.Hour == 0 {
+		return fmt.Sprintf("%dh", d/time.Hour)
+	}
+	return d.String()
+}
+
+// stageApprovalPercent 归一化 approval 的 percent：未配置（nil）按默认值 100 落库，
 // 让下游（付费版、前端展示）不必再区分「未配置」和「配置为全票」。
-func stageApprovalPercent(percent int) int {
-	if percent == 0 {
+func stageApprovalPercent(percent *int) int {
+	if percent == nil {
 		return constant.DefaultStageApprovalPercent
 	}
-	return percent
+	return *percent
 }
 
 // validateV1Step 校验 step 的 spec 完整性

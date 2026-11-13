@@ -29,6 +29,11 @@ storage:
 git:
   trace: true
 
+# CI 配置
+ci:
+  # 单个 runner 同时执行的 step 数，未配置时默认 8
+  maxParallelSteps: 8
+
 # webhook 配置
 webhook:
   allowLoopback: true

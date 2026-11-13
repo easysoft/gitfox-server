@@ -170,10 +170,13 @@ const DefaultMaxParallelSteps uint = 8
 
 // CiConfig CI配置
 type CiConfig struct {
-	PluginsZipUrl     string   `envconfig:"GITFOX_CI_PLUGINS_ZIP_URL" default:"https://pkg.zentao.net/qucheng/gitfox/community/4.4/plugin.tar.gz"`
-	Runner            string   `envconfig:"GITFOX_CI_RUNNER"`
-	ParallelWorkers   uint     `envconfig:"GITFOX_CI_PARALLELWORKERS" default:"2"`
-	MaxParallelSteps  uint     `envconfig:"GITFOX_CI_PARALLELSTEPS" default:"8"`
+	PluginsZipUrl   string `envconfig:"GITFOX_CI_PLUGINS_ZIP_URL" default:"https://pkg.zentao.net/qucheng/gitfox/community/4.4/plugin.tar.gz"`
+	Runner          string `envconfig:"GITFOX_CI_RUNNER"`
+	ParallelWorkers uint   `envconfig:"GITFOX_CI_PARALLEL_WORKERS" default:"2"`
+	// MaxParallelSteps 单个 runner 同时执行的 step 数上限。
+	// 仅从 YAML 的 ci.maxParallelSteps 读取，环境变量 GITFOX_CI_PARALLEL_STEPS 不再生效；
+	// 未配置时由 MaxParallelStepsOrDefault 回退到 DefaultMaxParallelSteps。
+	MaxParallelSteps  uint     `yaml:"maxParallelSteps" ignored:"true"`
 	ContainerNetworks []string `envconfig:"GITFOX_CI_CONTAINER_NETWORKS"`
 	ContainerVolume   string   `envconfig:"GITFOX_CI_CONTAINER_VOLUME"`
 }

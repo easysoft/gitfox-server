@@ -1,5 +1,7 @@
 package constant
 
+import "time"
+
 // StageApprovalStatus stage 审批状态。取值与禅道 DevOps 侧约定一致。
 type StageApprovalStatus string
 
@@ -31,4 +33,9 @@ const (
 	MaxStageApprovalPercent = 100
 	// DefaultStageApprovalPercent 未配置 percent 时的默认通过阈值：100 = 全员通过。
 	DefaultStageApprovalPercent = MaxStageApprovalPercent
+
+	// MinStageApprovalTimeout / MaxStageApprovalTimeout 审批超时配置的取值范围。
+	// 配置了超时才会开启超时自动拒绝，因此下限不能低于 1 小时（禅道只接受整数小时）。
+	MinStageApprovalTimeout = time.Hour
+	MaxStageApprovalTimeout = 72 * time.Hour
 )

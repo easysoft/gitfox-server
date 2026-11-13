@@ -38,19 +38,23 @@ func TestValidateV1StageApproval(t *testing.T) {
 		}},
 		{name: "percent max", approval: &v1yaml.Approval{
 			Approvers: v1yaml.CommaSeparated{"zhangsan"},
-			Percent:   constant.MaxStageApprovalPercent,
+			Percent:   intPtr(constant.MaxStageApprovalPercent),
 		}},
 		{name: "percent min", approval: &v1yaml.Approval{
 			Approvers: v1yaml.CommaSeparated{"zhangsan"},
-			Percent:   constant.MinStageApprovalPercent,
+			Percent:   intPtr(constant.MinStageApprovalPercent),
 		}},
+		{name: "percent zero", approval: &v1yaml.Approval{
+			Approvers: v1yaml.CommaSeparated{"zhangsan"},
+			Percent:   intPtr(0),
+		}, wantErr: "invalid approval percent"},
 		{name: "percent above max", approval: &v1yaml.Approval{
 			Approvers: v1yaml.CommaSeparated{"zhangsan"},
-			Percent:   constant.MaxStageApprovalPercent + 1,
+			Percent:   intPtr(constant.MaxStageApprovalPercent + 1),
 		}, wantErr: "invalid approval percent"},
 		{name: "negative percent", approval: &v1yaml.Approval{
 			Approvers: v1yaml.CommaSeparated{"zhangsan"},
-			Percent:   -1,
+			Percent:   intPtr(-1),
 		}, wantErr: "invalid approval percent"},
 		{name: "empty approvers", approval: &v1yaml.Approval{}, wantErr: "check 'approvers' key"},
 		{name: "too many approvers", approval: &v1yaml.Approval{Approvers: tooManyApprovers}, wantErr: "too many approvers"},
@@ -58,6 +62,14 @@ func TestValidateV1StageApproval(t *testing.T) {
 			Approvers: v1yaml.CommaSeparated{"zhangsan"},
 			Mode:      "xor",
 		}, wantErr: "invalid approval mode"},
+		{name: "timeout min", approval: &v1yaml.Approval{
+			Approvers: v1yaml.CommaSeparated{"zhangsan"},
+			Timeout:   "1h",
+		}},
+		{name: "timeout max", approval: &v1yaml.Approval{
+			Approvers: v1yaml.CommaSeparated{"zhangsan"},
+			Timeout:   "72h",
+		}},
 		{name: "invalid timeout", approval: &v1yaml.Approval{
 			Approvers: v1yaml.CommaSeparated{"zhangsan"},
 			Timeout:   "24",
@@ -66,6 +78,14 @@ func TestValidateV1StageApproval(t *testing.T) {
 			Approvers: v1yaml.CommaSeparated{"zhangsan"},
 			Timeout:   "0s",
 		}, wantErr: "invalid approval timeout"},
+		{name: "timeout below min", approval: &v1yaml.Approval{
+			Approvers: v1yaml.CommaSeparated{"zhangsan"},
+			Timeout:   "30m",
+		}, wantErr: "must be between 1h and 72h"},
+		{name: "timeout above max", approval: &v1yaml.Approval{
+			Approvers: v1yaml.CommaSeparated{"zhangsan"},
+			Timeout:   "73h",
+		}, wantErr: "must be between 1h and 72h"},
 		{name: "too long config", approval: &v1yaml.Approval{Approvers: longApprovers}, wantErr: "is too long"},
 	}
 
@@ -93,10 +113,12 @@ func TestValidateV1StageApproval(t *testing.T) {
 func TestStageApprovalPercentDefaultsToAll(t *testing.T) {
 	t.Parallel()
 
-	if got := stageApprovalPercent(0); got != constant.DefaultStageApprovalPercent {
+	if got := stageApprovalPercent(nil); got != constant.DefaultStageApprovalPercent {
 		t.Fatalf("percent = %d, want %d for an omitted percent", got, constant.DefaultStageApprovalPercent)
 	}
-	if got := stageApprovalPercent(60); got != 60 {
+	if got := stageApprovalPercent(intPtr(60)); got != 60 {
 		t.Fatalf("percent = %d, want 60 to be kept as configured", got)
 	}
 }
+
+func intPtr(i int) *int { return &i }
