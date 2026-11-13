@@ -33,16 +33,16 @@ func TestCiConfigMaxParallelStepsOrDefault(t *testing.T) {
 
 func TestCiConfigMaxParallelStepsEnv(t *testing.T) {
 	t.Run("默认 8", func(t *testing.T) {
-		old, had := os.LookupEnv("GITFOX_CI_PARALLELSTEPS")
-		if err := os.Unsetenv("GITFOX_CI_PARALLELSTEPS"); err != nil {
+		old, had := os.LookupEnv("GITFOX_CI_PARALLEL_STEPS")
+		if err := os.Unsetenv("GITFOX_CI_PARALLEL_STEPS"); err != nil {
 			t.Fatalf("os.Unsetenv: %v", err)
 		}
 		t.Cleanup(func() {
 			if had {
-				_ = os.Setenv("GITFOX_CI_PARALLELSTEPS", old)
+				_ = os.Setenv("GITFOX_CI_PARALLEL_STEPS", old)
 				return
 			}
-			_ = os.Unsetenv("GITFOX_CI_PARALLELSTEPS")
+			_ = os.Unsetenv("GITFOX_CI_PARALLEL_STEPS")
 		})
 
 		var cfg CiConfig
@@ -55,7 +55,7 @@ func TestCiConfigMaxParallelStepsEnv(t *testing.T) {
 	})
 
 	t.Run("环境变量覆盖", func(t *testing.T) {
-		t.Setenv("GITFOX_CI_PARALLELSTEPS", "3")
+		t.Setenv("GITFOX_CI_PARALLEL_STEPS", "3")
 		var cfg CiConfig
 		if err := envconfig.Process("", &cfg); err != nil {
 			t.Fatalf("envconfig.Process: %v", err)

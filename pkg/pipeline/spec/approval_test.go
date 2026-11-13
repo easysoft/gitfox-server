@@ -108,8 +108,8 @@ spec:
 	if withApproval.Timeout != "24h" {
 		t.Fatalf("expected timeout 24h, got %q", withApproval.Timeout)
 	}
-	if withApproval.Percent != 60 {
-		t.Fatalf("expected percent 60, got %d", withApproval.Percent)
+	if withApproval.Percent == nil || *withApproval.Percent != 60 {
+		t.Fatalf("expected percent 60, got %v", withApproval.Percent)
 	}
 
 	if pipeline.Stages[1].Approval != nil {
@@ -149,7 +149,48 @@ spec:
 	if !ok {
 		t.Fatalf("unexpected spec type %T", config.Spec)
 	}
-	if got := pipeline.Stages[0].Approval.Percent; got != 0 {
-		t.Fatalf("expected percent to stay unset (0) when omitted, got %d", got)
+	if got := pipeline.Stages[0].Approval.Percent; got != nil {
+		t.Fatalf("expected percent to be nil when omitted, got %d", *got)
+	}
+}
+
+// TestParsePipelineApprovalPercentZero 确认显式写 percent: 0 时解析结果是
+// 指向 0 的非 nil 指针，便于触发期区分「未配置」和「配置为 0」并拒绝后者。
+func TestParsePipelineApprovalPercentZero(t *testing.T) {
+	t.Parallel()
+
+	const pipelineYAML = `
+version: 1
+kind: pipeline
+spec:
+  stages:
+    - id: pkg_install
+      name: stageWithApproval
+      type: ci
+      approval:
+        approvers: zhangsan,lisi
+        percent: 0
+      spec:
+        steps:
+          - id: run
+            name: run
+            type: run
+            spec:
+              script:
+                - echo 1
+`
+
+	config, err := ParseString(pipelineYAML)
+	if err != nil {
+		t.Fatalf("parse pipeline failed: %v", err)
+	}
+
+	pipeline, ok := config.Spec.(*Pipeline)
+	if !ok {
+		t.Fatalf("unexpected spec type %T", config.Spec)
+	}
+	got := pipeline.Stages[0].Approval.Percent
+	if got == nil || *got != 0 {
+		t.Fatalf("expected percent pointer to 0, got %v", got)
 	}
 }

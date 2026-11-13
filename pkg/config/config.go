@@ -172,8 +172,8 @@ const DefaultMaxParallelSteps uint = 8
 type CiConfig struct {
 	PluginsZipUrl     string   `envconfig:"GITFOX_CI_PLUGINS_ZIP_URL" default:"https://pkg.zentao.net/qucheng/gitfox/community/4.4/plugin.tar.gz"`
 	Runner            string   `envconfig:"GITFOX_CI_RUNNER"`
-	ParallelWorkers   uint     `envconfig:"GITFOX_CI_PARALLELWORKERS" default:"2"`
-	MaxParallelSteps  uint     `envconfig:"GITFOX_CI_PARALLELSTEPS" default:"8"`
+	ParallelWorkers   uint     `envconfig:"GITFOX_CI_PARALLEL_WORKERS" default:"2"`
+	MaxParallelSteps  uint     `envconfig:"GITFOX_CI_PARALLEL_STEPS" default:"8"`
 	ContainerNetworks []string `envconfig:"GITFOX_CI_CONTAINER_NETWORKS"`
 	ContainerVolume   string   `envconfig:"GITFOX_CI_CONTAINER_VOLUME"`
 }

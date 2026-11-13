@@ -10,8 +10,10 @@ import (
 type Approval struct {
 	Approvers CommaSeparated `json:"approvers,omitempty"` // 逗号分隔的审批人账号，如 "zhangsan,lisi"
 	Mode      string         `json:"mode,omitempty"`      // and=会签(默认) / or=或签
-	Timeout   string         `json:"timeout,omitempty"`   // Go duration: 30m / 24h / 168h
-	Percent   int            `json:"percent,omitempty"`   // 会签通过阈值，1-100，省略 = 100（全票通过）
+	Timeout   string         `json:"timeout,omitempty"`   // Go duration，范围 1h-72h，如 1h / 24h / 72h
+	// Percent 会签通过阈值，1-100；省略（nil）= 100（全票通过）。
+	// 用指针区分「未配置」与「显式配置为 0」，后者在校验时报错。
+	Percent *int `json:"percent,omitempty"`
 }
 
 // CommaSeparated 逗号分隔的账号列表。
