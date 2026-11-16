@@ -84,11 +84,9 @@ task build          # 产物位于 bin/gitfox_linux
 | `GITFOX_DB_NAME` | 数据库名称 |
 | `GITFOX_DB_TIMEZONE` | 数据库时区，默认 `Asia/Shanghai` |
 | `GITFOX_DB_DATASOURCE` | 完整数据源（DSN），达梦等驱动需要 |
-|
 | `GITFOX_CI_PLUGINS_ZIP_URL` | CI 插件包下载地址 |
 | `GITFOX_LOG_LEVEL` | 日志级别，-1~5（debug~fatal） |
 | `GITFOX_DOCKER_HOST` | Docker daemon 地址，默认 `unix:///var/run/docker.sock` |
-
 
 > 首次启动会自动执行数据库迁移。请勿使用示例中的占位密码。
 
