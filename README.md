@@ -9,6 +9,8 @@
 
 GitFox 是一个用 Go 编写的一体化代码托管与 DevOps 平台，提供 Git 仓库托管、代码评审、CI/CD 流水线、制品库、代码扫描等能力，可与禅道（ZenTao）等项目管理/研发流程系统集成。
 
+前端项目地址：[https://github.com/easysoft/gitfox-front](https://github.com/easysoft/gitfox-front)。
+
 
 ## 功能特性
 
@@ -32,17 +34,27 @@ GitFox 是一个用 Go 编写的一体化代码托管与 DevOps 平台，提供 
 
 ## 快速开始
 
-### 1. 环境要求
+### 1. 使用 Docker Compose 快速部署
 
-| 工具 | 版本 | 说明 |
-| --- | --- | --- |
-| Go | 1.25+ | 编译与开发 |
-| Git | 2.30+ | 运行时依赖 |
-| Task | 3.0+ | 构建任务（`go install github.com/go-task/task/v3/cmd/task@latest`） |
-| MySQL | 8.0+ | 数据存储（也支持 SQLite/GaussDB/达梦） |
-| Docker | 最新稳定版 | Runner 执行流水线时需要 |
+需要安装 Docker 与 Docker Compose。
 
-### 2. 编译
+```bash
+git clone <本仓库地址>
+cd gitfox-community
+docker compose -f deploy/docker-compose.yaml up -d
+```
+
+`deploy/docker-compose.yaml` 会启动 MySQL（`zentao-db`）、Web 前端（`zentao`）与 `gitfox` 服务。部署前请按实际情况修改：
+
+- `GITFOX_SERVER_HOST`：对外访问的域名/IP
+- `GITFOX_DEVOPS_URL`：禅道服务地址（`http://<禅道地址>/api.php/v1`）
+- 各服务使用的镜像地址、数据库密码与数据卷路径
+
+默认映射端口：HTTP `3000`、SSH `3322`。启动后访问 `http://<服务器地址>:3000` 完成初始化。
+
+> 镜像默认指向内部仓库，公开部署时请替换为可访问的镜像地址。
+
+### 2. 编译（从源码构建）
 
 ```bash
 git clone <本仓库地址>
@@ -58,12 +70,21 @@ task build          # 产物位于 bin/gitfox_linux
 
 | 变量 | 说明 |
 | --- | --- |
-| `GITFOX_SERVER_HOST` | 对外访问域名/IP |
+| `GITFOX_WORKSPACE_ROOT_DIR` | 安装根目录，默认 `/data/gitfox-community` |
+| `GITFOX_SERVER_PROTO` | 对外访问协议：`http` / `https` |
+| `GITFOX_SERVER_HOST` | 对外访问域名/IP，用于生成仓库与 Webhook 等地址 |
 | `GITFOX_HTTP_PORT` / `GITFOX_SSH_PORT` | HTTP / SSH 端口 |
+| `GITFOX_REPO_URL_EXPOSE_PORT` | 仓库克隆地址是否附带端口 |
+| `GITFOX_DEVOPS_URL` | 禅道 API 地址，格式 `http://<禅道地址>/api.php/v1` |
 | `GITFOX_DB_DRIVER` | 数据库驱动：`mysql` / `sqlite` / `gaussdb` / `dm` |
 | `GITFOX_DB_HOST` / `GITFOX_DB_PORT` / `GITFOX_DB_USER` / `GITFOX_DB_PASSWORD` / `GITFOX_DB_NAME` | 数据库连接 |
-| `GITFOX_PIPELINE_AUTH_PASSWORD` | 流水线内部认证密码，**必须显式配置** |
+| `GITFOX_DB_TIMEZONE` | 数据库时区，默认 `Asia/Shanghai` |
+| `GITFOX_DB_DATASOURCE` | 完整数据源（DSN），达梦等驱动需要 |
+| `GITFOX_PIPELINE_AUTH_USERNAME` / `GITFOX_PIPELINE_AUTH_PASSWORD` | 流水线内部认证账号与密码，密码**必须显式配置** |
 | `GITFOX_CI_PLUGINS_ZIP_URL` | CI 插件包下载地址 |
+| `GITFOX_LOG_LEVEL` | 日志级别，`-1`~`5`（debug~fatal） |
+| `GITFOX_DOCKER_HOST` | Docker daemon 地址，默认 `unix:///var/run/docker.sock` |
+
 
 > 首次启动会自动执行数据库迁移。请勿使用示例中的占位密码。
 
@@ -76,7 +97,6 @@ task build          # 产物位于 bin/gitfox_linux
 ### 5. Docker
 
 ```bash
-# 需要先 task build，并准备 resources/ciPlugins/plugins.tar.gz
 docker build -f deploy/Dockerfile -t gitfox-community .
 docker compose -f deploy/docker-compose.yaml up -d
 ```
