@@ -77,12 +77,16 @@ task build          # 产物位于 bin/gitfox_linux
 | `GITFOX_REPO_URL_EXPOSE_PORT` | 仓库克隆地址是否附带端口 |
 | `GITFOX_DEVOPS_URL` | 禅道 API 地址，格式 `http://<禅道地址>/api.php/v1` |
 | `GITFOX_DB_DRIVER` | 数据库驱动：`mysql` / `sqlite` / `gaussdb` / `dm` |
-| `GITFOX_DB_HOST` / `GITFOX_DB_PORT` / `GITFOX_DB_USER` / `GITFOX_DB_PASSWORD` / `GITFOX_DB_NAME` | 数据库连接 |
+| `GITFOX_DB_HOST` | 数据库主机地址 |
+| `GITFOX_DB_PORT` | 数据库端口 |
+| `GITFOX_DB_USER` | 数据库用户名 |
+| `GITFOX_DB_PASSWORD` | 数据库密码 |
+| `GITFOX_DB_NAME` | 数据库名称 |
 | `GITFOX_DB_TIMEZONE` | 数据库时区，默认 `Asia/Shanghai` |
 | `GITFOX_DB_DATASOURCE` | 完整数据源（DSN），达梦等驱动需要 |
-| `GITFOX_PIPELINE_AUTH_USERNAME` / `GITFOX_PIPELINE_AUTH_PASSWORD` | 流水线内部认证账号与密码，密码**必须显式配置** |
+|
 | `GITFOX_CI_PLUGINS_ZIP_URL` | CI 插件包下载地址 |
-| `GITFOX_LOG_LEVEL` | 日志级别，`-1`~`5`（debug~fatal） |
+| `GITFOX_LOG_LEVEL` | 日志级别，-1~5（debug~fatal） |
 | `GITFOX_DOCKER_HOST` | Docker daemon 地址，默认 `unix:///var/run/docker.sock` |
 
 
